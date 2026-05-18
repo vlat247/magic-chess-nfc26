@@ -45,9 +45,11 @@ export const useGameStore = create<GameState>()(
         
         if (result.success) {
           const status = engine.getStatus()
+          const newMoveSan = result.moveDetails?.san || ""
+          const newHistory = [...state.history, newMoveSan]
           set({
             fen: result.fen,
-            history: engine.getHistory(),
+            history: newHistory,
             turn: status.turn,
             isCheck: status.isCheck,
             isCheckmate: status.isCheckmate,
@@ -69,7 +71,7 @@ export const useGameStore = create<GameState>()(
           const status = engine.getStatus()
           set({
             fen: result.fen,
-            history: engine.getHistory(),
+            history: state.history.slice(0, -1),
             turn: status.turn,
             isCheck: status.isCheck,
             isCheckmate: status.isCheckmate,

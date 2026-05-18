@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { useGame } from "@/hooks/use-game"
 import { GameBoard } from "@/components/arcane-chess/game-board"
 import { GameControls } from "@/components/arcane-chess/game-controls"

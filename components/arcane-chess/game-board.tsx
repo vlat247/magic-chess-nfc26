@@ -53,7 +53,7 @@ export function GameBoard() {
   }
 
   // Click on a square
-  const onSquareClick = (square: string) => {
+  const onSquareClick = ({ square }: { square: string }) => {
     // If game is over, freeze interactions
     if (isCheckmate || isStalemate || isDraw) return
 
@@ -85,7 +85,7 @@ export function GameBoard() {
   }
 
   // Drag and drop handler
-  const onPieceDrop = (sourceSquare: string, targetSquare: string): boolean => {
+  const onPieceDrop = ({ sourceSquare, targetSquare }: { sourceSquare: string; targetSquare: string }): boolean => {
     if (isCheckmate || isStalemate || isDraw) return false
     
     const success = makeMove(sourceSquare, targetSquare)
@@ -130,21 +130,22 @@ export function GameBoard() {
         <div className="relative border-4 border-[oklch(0.2_0.04_280)]">
           {/* Renders the actual Chessboard */}
           <Chessboard
-            position={fen}
-            onPieceDrop={onPieceDrop}
-            onSquareClick={onSquareClick}
-            boardWidth={boardWidth}
-            customLightSquareStyle={{
-              backgroundColor: "oklch(0.25 0.08 300)",
-              boxShadow: "inset 0 0 8px oklch(0.7 0.25 300 / 0.12)",
+            options={{
+              position: fen,
+              onPieceDrop: onPieceDrop,
+              onSquareClick: onSquareClick,
+              lightSquareStyle: {
+                backgroundColor: "oklch(0.25 0.08 300)",
+                boxShadow: "inset 0 0 8px oklch(0.7 0.25 300 / 0.12)",
+              },
+              darkSquareStyle: {
+                backgroundColor: "oklch(0.15 0.04 280)",
+              },
+              squareStyles: getCustomSquareStyles(),
+              animationDurationInMs: 250,
+              allowDragging: true,
+              boardOrientation: "white"
             }}
-            customDarkSquareStyle={{
-              backgroundColor: "oklch(0.15 0.04 280)",
-            }}
-            customSquareStyles={getCustomSquareStyles()}
-            animationDuration={250}
-            arePiecesDraggable={true}
-            boardOrientation="white"
           />
         </div>
       </div>
