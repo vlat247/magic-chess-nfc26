@@ -27,7 +27,7 @@ export function HeroSection() {
       {/* Background Elements (Overshadowed) */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-60">
         {/* Red Fire Cluster - Top Left */}
-        <div className="absolute top-[2%] left-[2%] w-32 h-32 md:w-64 md:h-64">
+        <div className="absolute top-[1%] left-[1%] w-32 h-32 md:w-64 md:h-64">
           <img src="/red-fire.png" alt="" className="absolute inset-0 w-full h-full object-contain opacity-70 animate-pulse animate-float -rotate-12" />
           <img src="/red-fire.png" alt="" className="absolute top-[80%] -right-[40%] w-1/3 h-1/3 object-contain opacity-40 brightness-50 animate-pulse animate-float rotate-45" style={{ animationDelay: '0.3s' }} />
           <img src="/red-fire.png" alt="" className="absolute -bottom-[30%] left-[40%] w-1/4 h-1/4 object-contain opacity-30 brightness-50 animate-pulse animate-float rotate-12" style={{ animationDelay: '0.7s' }} />
@@ -70,14 +70,9 @@ export function HeroSection() {
       
       {/* Content */}
       <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-        {/* Pixel badge */}
-        <div className="inline-block mb-6 px-4 py-2 bg-[oklch(0.15_0.03_280)] pixel-border">
-          <span className="text-[10px] md:text-xs text-neon-cyan tracking-wider">ARCANE CHESS</span>
-        </div>
-        
         {/* Main title */}
         <h1 
-          className="text-6xl md:text-7xl lg:text-8xl mb-4 text-glow-purple font-title"
+          className="text-7xl md:text-8xl lg:text-9xl mb-6 text-glow-purple font-title"
         >
           <span className="text-neon-purple">Chess</span>
           <span className="text-foreground"> & </span>
@@ -85,12 +80,12 @@ export function HeroSection() {
         </h1>
         
         {/* Subtitle */}
-        <p className="text-sm md:text-base lg:text-lg text-neon-cyan mb-4 text-glow-cyan">
+        <p className="text-base md:text-lg lg:text-xl text-neon-cyan mb-5 text-glow-cyan">
           Chess. But spells break the rules.
         </p>
         
         {/* Description */}
-        <p className="text-xs md:text-sm text-muted-foreground mb-8 max-w-xl mx-auto leading-relaxed">
+        <p className="text-sm md:text-base text-muted-foreground mb-10 max-w-xl mx-auto leading-relaxed">
           A fantasy chess platform with chaotic modes, AI coach, and competitive classic gameplay.
         </p>
         
@@ -103,7 +98,7 @@ export function HeroSection() {
           </Button>
           <Button 
             variant="outline"
-            className="px-8 py-6 bg-transparent border-2 border-neon-cyan text-neon-cyan hover:bg-neon-cyan/10 text-xs md:text-sm transition-all hover:scale-105"
+            className="px-8 py-6 bg-transparent border-2 border-neon-cyan text-neon-cyan hover:bg-neon-cyan/10 text-xs md:text-sm transition-all hover:scale-105 hover:text-white"
           >
             Explore Modes
           </Button>

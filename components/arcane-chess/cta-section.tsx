@@ -64,7 +64,7 @@ export function CTASection() {
           </Button>
           <Button 
             variant="outline"
-            className="px-10 py-6 bg-transparent border-2 border-neon-cyan text-neon-cyan hover:bg-neon-cyan/10 text-xs md:text-sm transition-all hover:scale-105"
+            className="px-10 py-6 bg-transparent border-2 border-neon-cyan text-neon-cyan hover:bg-neon-cyan/10 text-xs md:text-sm transition-all hover:scale-105 hover:text-white"
           >
             Join Community
           </Button>

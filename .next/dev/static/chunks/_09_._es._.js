@@ -244,7 +244,7 @@ function HeroSection() {
                 className: "absolute inset-0 overflow-hidden pointer-events-none opacity-60",
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "absolute top-[2%] left-[2%] w-32 h-32 md:w-64 md:h-64",
+                        className: "absolute top-[1%] left-[1%] w-32 h-32 md:w-64 md:h-64",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
                                 src: "/red-fire.png",
@@ -463,30 +463,15 @@ function HeroSection() {
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "relative z-10 text-center px-4 max-w-4xl mx-auto",
                 children: [
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "inline-block mb-6 px-4 py-2 bg-[oklch(0.15_0.03_280)] pixel-border",
-                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                            className: "text-[10px] md:text-xs text-neon-cyan tracking-wider",
-                            children: "ARCANE CHESS"
-                        }, void 0, false, {
-                            fileName: "[project]/components/arcane-chess/hero-section.tsx",
-                            lineNumber: 75,
-                            columnNumber: 11
-                        }, this)
-                    }, void 0, false, {
-                        fileName: "[project]/components/arcane-chess/hero-section.tsx",
-                        lineNumber: 74,
-                        columnNumber: 9
-                    }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
-                        className: "text-6xl md:text-7xl lg:text-8xl mb-4 text-glow-purple font-title",
+                        className: "text-7xl md:text-8xl lg:text-9xl mb-6 text-glow-purple font-title",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                 className: "text-neon-purple",
                                 children: "Chess"
                             }, void 0, false, {
                                 fileName: "[project]/components/arcane-chess/hero-section.tsx",
-                                lineNumber: 82,
+                                lineNumber: 77,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -494,7 +479,7 @@ function HeroSection() {
                                 children: " & "
                             }, void 0, false, {
                                 fileName: "[project]/components/arcane-chess/hero-section.tsx",
-                                lineNumber: 83,
+                                lineNumber: 78,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -502,29 +487,29 @@ function HeroSection() {
                                 children: "Magic"
                             }, void 0, false, {
                                 fileName: "[project]/components/arcane-chess/hero-section.tsx",
-                                lineNumber: 84,
+                                lineNumber: 79,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/arcane-chess/hero-section.tsx",
-                        lineNumber: 79,
+                        lineNumber: 74,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                        className: "text-sm md:text-base lg:text-lg text-neon-cyan mb-4 text-glow-cyan",
+                        className: "text-base md:text-lg lg:text-xl text-neon-cyan mb-5 text-glow-cyan",
                         children: "Chess. But spells break the rules."
                     }, void 0, false, {
                         fileName: "[project]/components/arcane-chess/hero-section.tsx",
-                        lineNumber: 88,
+                        lineNumber: 83,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                        className: "text-xs md:text-sm text-muted-foreground mb-8 max-w-xl mx-auto leading-relaxed",
+                        className: "text-sm md:text-base text-muted-foreground mb-10 max-w-xl mx-auto leading-relaxed",
                         children: "A fantasy chess platform with chaotic modes, AI coach, and competitive classic gameplay."
                     }, void 0, false, {
                         fileName: "[project]/components/arcane-chess/hero-section.tsx",
-                        lineNumber: 93,
+                        lineNumber: 88,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -535,22 +520,22 @@ function HeroSection() {
                                 children: "Play Now"
                             }, void 0, false, {
                                 fileName: "[project]/components/arcane-chess/hero-section.tsx",
-                                lineNumber: 99,
+                                lineNumber: 94,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
                                 variant: "outline",
-                                className: "px-8 py-6 bg-transparent border-2 border-neon-cyan text-neon-cyan hover:bg-neon-cyan/10 text-xs md:text-sm transition-all hover:scale-105",
+                                className: "px-8 py-6 bg-transparent border-2 border-neon-cyan text-neon-cyan hover:bg-neon-cyan/10 text-xs md:text-sm transition-all hover:scale-105 hover:text-white",
                                 children: "Explore Modes"
                             }, void 0, false, {
                                 fileName: "[project]/components/arcane-chess/hero-section.tsx",
-                                lineNumber: 104,
+                                lineNumber: 99,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/arcane-chess/hero-section.tsx",
-                        lineNumber: 98,
+                        lineNumber: 93,
                         columnNumber: 9
                     }, this)
                 ]
@@ -563,7 +548,7 @@ function HeroSection() {
                 className: "absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent"
             }, void 0, false, {
                 fileName: "[project]/components/arcane-chess/hero-section.tsx",
-                lineNumber: 114,
+                lineNumber: 109,
                 columnNumber: 7
             }, this)
         ]
@@ -588,7 +573,7 @@ function PixelChessboard() {
             }
         }, i, false, {
             fileName: "[project]/components/arcane-chess/hero-section.tsx",
-            lineNumber: 125,
+            lineNumber: 120,
             columnNumber: 7
         }, this);
     });
@@ -601,7 +586,7 @@ function PixelChessboard() {
         children: squares
     }, void 0, false, {
         fileName: "[project]/components/arcane-chess/hero-section.tsx",
-        lineNumber: 142,
+        lineNumber: 137,
         columnNumber: 5
     }, this);
 }
@@ -2257,7 +2242,7 @@ function CTASection() {
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
                                 variant: "outline",
-                                className: "px-10 py-6 bg-transparent border-2 border-neon-cyan text-neon-cyan hover:bg-neon-cyan/10 text-xs md:text-sm transition-all hover:scale-105",
+                                className: "px-10 py-6 bg-transparent border-2 border-neon-cyan text-neon-cyan hover:bg-neon-cyan/10 text-xs md:text-sm transition-all hover:scale-105 hover:text-white",
                                 children: "Join Community"
                             }, void 0, false, {
                                 fileName: "[project]/components/arcane-chess/cta-section.tsx",
@@ -2592,6 +2577,12 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist
 var _s = __turbopack_context__.k.signature();
 "use client";
 ;
+const COLORS = [
+    "rgba(168, 85, 247, ",
+    "rgba(34, 211, 238, ",
+    "rgba(250, 204, 21, ",
+    "rgba(219, 112, 246, "
+];
 function GlobalParticles() {
     _s();
     const canvasRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
@@ -2601,84 +2592,134 @@ function GlobalParticles() {
             if (!canvas) return;
             const ctx = canvas.getContext("2d");
             if (!ctx) return;
-            const resizeCanvas = {
-                "GlobalParticles.useEffect.resizeCanvas": ()=>{
+            // Size canvas to viewport (fixed position)
+            const resize = {
+                "GlobalParticles.useEffect.resize": ()=>{
                     canvas.width = window.innerWidth;
-                    canvas.height = document.documentElement.scrollHeight;
+                    canvas.height = window.innerHeight;
                 }
-            }["GlobalParticles.useEffect.resizeCanvas"];
-            resizeCanvas();
-            window.addEventListener("resize", resizeCanvas);
-            // Subtle colors — lower alpha ceiling so they stay in the bg
-            const colors = [
-                "rgba(168, 85, 247, ",
-                "rgba(34, 211, 238, ",
-                "rgba(250, 204, 21, ",
-                "rgba(219, 112, 246, "
-            ];
-            const particles = [];
-            // Fewer particles, very slow, very transparent
-            for(let i = 0; i < 70; i++){
-                particles.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    size: Math.random() * 2 + 1,
-                    speedX: (Math.random() - 0.5) * 0.25,
-                    speedY: (Math.random() - 0.5) * 0.25,
-                    color: colors[Math.floor(Math.random() * colors.length)],
-                    alpha: Math.random() * 0.18 + 0.04,
-                    pulse: Math.random() * Math.PI * 2
-                });
-            }
+            }["GlobalParticles.useEffect.resize"];
+            resize();
+            window.addEventListener("resize", resize);
+            // ── Ambient particles ─────────────────────────────────────
+            const ambient = Array.from({
+                length: 70
+            }, {
+                "GlobalParticles.useEffect.ambient": ()=>({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        size: Math.random() * 2 + 1,
+                        speedX: (Math.random() - 0.5) * 0.25,
+                        speedY: (Math.random() - 0.5) * 0.25,
+                        color: COLORS[Math.floor(Math.random() * COLORS.length)],
+                        alpha: Math.random() * 0.18 + 0.04,
+                        pulse: Math.random() * Math.PI * 2
+                    })
+            }["GlobalParticles.useEffect.ambient"]);
+            // ── Cursor trail ──────────────────────────────────────────
+            const trail = [];
+            let lastSpawn = 0;
+            const spawnTrail = {
+                "GlobalParticles.useEffect.spawnTrail": (mx, my)=>{
+                    const now = Date.now();
+                    if (now - lastSpawn < 25) return; // throttle: spawn every 25ms
+                    lastSpawn = now;
+                    const count = 3;
+                    for(let i = 0; i < count; i++){
+                        const maxLife = 45 + Math.random() * 35;
+                        trail.push({
+                            x: mx + (Math.random() - 0.5) * 10,
+                            y: my + (Math.random() - 0.5) * 10,
+                            size: Math.random() * 3 + 1.5,
+                            speedX: (Math.random() - 0.5) * 1.5,
+                            speedY: (Math.random() - 0.5) * 1.5 - 0.5,
+                            color: COLORS[Math.floor(Math.random() * COLORS.length)],
+                            alpha: 0.75 + Math.random() * 0.25,
+                            life: maxLife,
+                            maxLife
+                        });
+                    }
+                }
+            }["GlobalParticles.useEffect.spawnTrail"];
+            const onMouseMove = {
+                "GlobalParticles.useEffect.onMouseMove": (e)=>spawnTrail(e.clientX, e.clientY)
+            }["GlobalParticles.useEffect.onMouseMove"];
+            window.addEventListener("mousemove", onMouseMove);
+            // ── Render loop ────────────────────────────────────────────
             let animId;
-            const animate = {
-                "GlobalParticles.useEffect.animate": ()=>{
+            const draw = {
+                "GlobalParticles.useEffect.draw": ()=>{
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    particles.forEach({
-                        "GlobalParticles.useEffect.animate": (p)=>{
-                            p.x += p.speedX;
-                            p.y += p.speedY;
-                            p.pulse += 0.015;
-                            // Wrap
-                            if (p.x < 0) p.x = canvas.width;
-                            if (p.x > canvas.width) p.x = 0;
-                            if (p.y < 0) p.y = canvas.height;
-                            if (p.y > canvas.height) p.y = 0;
-                            const a = p.alpha * (0.5 + 0.5 * Math.sin(p.pulse));
-                            ctx.fillStyle = p.color + a + ")";
-                            ctx.shadowColor = p.color + "0.6)";
-                            ctx.shadowBlur = 6;
-                            const s = Math.ceil(p.size * (1 + 0.15 * Math.sin(p.pulse)));
-                            const px = Math.floor(p.x / 2) * 2;
-                            const py = Math.floor(p.y / 2) * 2;
-                            // Pixel cross for bigger, square for smaller
-                            if (p.size > 1.8) {
-                                ctx.fillRect(px, py - s, s, s * 3);
-                                ctx.fillRect(px - s, py, s * 3, s);
-                            } else {
-                                ctx.fillRect(px, py, s, s);
-                            }
+                    // Ambient
+                    for (const p of ambient){
+                        p.x += p.speedX;
+                        p.y += p.speedY;
+                        p.pulse += 0.015;
+                        if (p.x < 0) p.x = canvas.width;
+                        if (p.x > canvas.width) p.x = 0;
+                        if (p.y < 0) p.y = canvas.height;
+                        if (p.y > canvas.height) p.y = 0;
+                        const a = p.alpha * (0.5 + 0.5 * Math.sin(p.pulse));
+                        const s = Math.ceil(p.size * (1 + 0.15 * Math.sin(p.pulse)));
+                        const px = Math.floor(p.x / 2) * 2;
+                        const py = Math.floor(p.y / 2) * 2;
+                        ctx.shadowBlur = 5;
+                        ctx.shadowColor = p.color + "0.4)";
+                        ctx.fillStyle = p.color + a + ")";
+                        if (p.size > 1.8) {
+                            ctx.fillRect(px, py - s, s, s * 3);
+                            ctx.fillRect(px - s, py, s * 3, s);
+                        } else {
+                            ctx.fillRect(px, py, s, s);
                         }
-                    }["GlobalParticles.useEffect.animate"]);
-                    animId = requestAnimationFrame(animate);
+                    }
+                    // Trail (iterate backwards to safely splice)
+                    for(let i = trail.length - 1; i >= 0; i--){
+                        const p = trail[i];
+                        p.x += p.speedX;
+                        p.y += p.speedY;
+                        p.speedX *= 0.95;
+                        p.speedY *= 0.95;
+                        p.life--;
+                        if (p.life <= 0) {
+                            trail.splice(i, 1);
+                            continue;
+                        }
+                        const progress = p.life / p.maxLife;
+                        const a = p.alpha * progress;
+                        const s = Math.max(1, Math.ceil(p.size * progress));
+                        const px = Math.floor(p.x / 2) * 2;
+                        const py = Math.floor(p.y / 2) * 2;
+                        ctx.shadowBlur = 10;
+                        ctx.shadowColor = p.color + a + ")";
+                        ctx.fillStyle = p.color + a + ")";
+                        // Pixel cross shape
+                        ctx.fillRect(px, py - s, s, s * 3);
+                        ctx.fillRect(px - s, py, s * 3, s);
+                    }
+                    animId = requestAnimationFrame(draw);
                 }
-            }["GlobalParticles.useEffect.animate"];
-            animate();
+            }["GlobalParticles.useEffect.draw"];
+            draw();
             return ({
                 "GlobalParticles.useEffect": ()=>{
                     cancelAnimationFrame(animId);
-                    window.removeEventListener("resize", resizeCanvas);
+                    window.removeEventListener("resize", resize);
+                    window.removeEventListener("mousemove", onMouseMove);
                 }
             })["GlobalParticles.useEffect"];
         }
     }["GlobalParticles.useEffect"], []);
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("canvas", {
         ref: canvasRef,
-        className: "fixed inset-0 pointer-events-none z-0 opacity-60",
+        className: "fixed inset-0 pointer-events-none",
+        style: {
+            zIndex: 9999
+        },
         "aria-hidden": "true"
     }, void 0, false, {
         fileName: "[project]/components/arcane-chess/global-particles.tsx",
-        lineNumber: 103,
+        lineNumber: 152,
         columnNumber: 5
     }, this);
 }
