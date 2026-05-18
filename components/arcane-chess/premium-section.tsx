@@ -46,7 +46,7 @@ export function PremiumSection() {
           
           {/* CTA Button */}
           <Button className="w-full py-6 bg-neon-gold hover:bg-neon-gold/80 text-accent-foreground text-xs md:text-sm pixel-border-gold glow-gold transition-all hover:scale-105">
-            Upgrade Now
+            Upgrade Now $9.9/month
           </Button>
           
           {/* Shimmer effect */}

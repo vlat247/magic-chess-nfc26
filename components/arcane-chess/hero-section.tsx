@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { MagicParticles } from "./magic-particles"
 
@@ -91,11 +92,13 @@ export function HeroSection() {
         
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button 
-            className="px-8 py-6 bg-neon-purple hover:bg-neon-purple/80 text-primary-foreground text-xs md:text-sm pixel-border glow-purple transition-all hover:scale-105"
-          >
-            Play Now
-          </Button>
+          <Link href="/play" passHref>
+            <Button 
+              className="px-8 py-6 bg-neon-purple hover:bg-neon-purple/80 text-primary-foreground text-xs md:text-sm pixel-border glow-purple transition-all hover:scale-105 cursor-pointer"
+            >
+              Play Now
+            </Button>
+          </Link>
           <Button 
             variant="outline"
             className="px-8 py-6 bg-transparent border-2 border-neon-cyan text-neon-cyan hover:bg-neon-cyan/10 text-xs md:text-sm transition-all hover:scale-105 hover:text-white"
