@@ -4,6 +4,8 @@ import { useState, useEffect, useCallback, useMemo } from "react"
 import dynamic from "next/dynamic"
 import { useGameStore } from "../../store/game-store"
 import { useChessAI } from "../../hooks/use-chess-ai"
+import { useAuth } from "../../hooks/use-auth"
+import { saveMatch } from "../../actions/matches"
 
 // Dynamically import Chessboard from react-chessboard to prevent Next.js SSR crashes
 // since react-chessboard accesses window and document for drag-and-drop.
@@ -30,9 +32,61 @@ export function GameBoard() {
   const setAiLevel = useGameStore((state) => state.setAiLevel)
   const isThinking = useGameStore((state) => state.isThinking)
   const evaluation = useGameStore((state) => state.evaluation)
+  const history = useGameStore((state) => state.history)
+  const winner = useGameStore((state) => state.winner)
+
+  const { user } = useAuth()
+  const [hasSavedMatch, setHasSavedMatch] = useState(false)
 
   // Initialize AI hook
   useChessAI()
+
+  // Reset saved match state if game is restarted/reset (history is cleared)
+  useEffect(() => {
+    if (history.length === 0) {
+      setHasSavedMatch(false)
+    }
+  }, [history])
+
+  // Auto-save match when game concludes
+  useEffect(() => {
+    const checkAndSaveMatch = async () => {
+      const isGameOver = isCheckmate || isStalemate || isDraw
+      if (isGameOver && !hasSavedMatch && user) {
+        setHasSavedMatch(true) // prevent duplicates
+        try {
+          // Helper to rebuild standard PGN from SAN history
+          let pgnString = ""
+          for (let i = 0; i < history.length; i += 2) {
+            const moveNum = Math.floor(i / 2) + 1
+            const whiteMove = history[i]
+            const blackMove = history[i + 1] ? ` ${history[i + 1]}` : ""
+            pgnString += `${moveNum}. ${whiteMove}${blackMove} `
+          }
+          pgnString = pgnString.trim()
+
+          // Map match details
+          const opponentName = aiLevel !== "none" ? `Stockfish AI (${aiLevel})` : "Local Spellcaster"
+          const matchMode = aiLevel !== "none" ? "ai" : "pvp"
+          const matchWinner = isDraw || isStalemate ? "draw" : (winner === "w" ? "white" : "black")
+
+          await saveMatch({
+            opponentName,
+            pgn: pgnString || "1. e4 e5", // Fallback if history empty
+            winner: matchWinner,
+            mode: matchMode,
+          })
+          console.log("Match successfully saved to Supabase.")
+        } catch (err) {
+          console.error("Failed to auto-save completed match:", err)
+          setHasSavedMatch(false) // Allow retry if saving failed
+        }
+      }
+    }
+
+    checkAndSaveMatch()
+  }, [isCheckmate, isStalemate, isDraw, hasSavedMatch, user, history, aiLevel, winner])
+
   
   // Local interaction states
   const [selectedSquare, setSelectedSquare] = useState<string | null>(null)

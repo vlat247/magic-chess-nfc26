@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Press_Start_2P, Geist, Jacquard_24 } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+import { AuthProvider } from '@/providers/auth-provider'
 import './globals.css'
 
 const pressStart = Press_Start_2P({ 
@@ -51,9 +52,12 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${pressStart.variable} ${geist.variable} ${jacquard.variable} bg-background`}>
       <body className="font-sans antialiased bg-background text-foreground">
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>
   )
 }
+
