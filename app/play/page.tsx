@@ -7,6 +7,7 @@ import { GameControls } from "@/components/arcane-chess/game-controls"
 import { MoveHistory } from "@/components/arcane-chess/move-history"
 import { GameStatus } from "@/components/arcane-chess/game-status"
 import { MagicParticles } from "@/components/arcane-chess/magic-particles"
+import { Header } from "@/components/arcane-chess/header"
 
 export default function PlayChessPage() {
   const isHydrated = useGameStore((state) => state.isHydrated)
@@ -49,7 +50,8 @@ export default function PlayChessPage() {
   }
 
   return (
-    <main className="relative min-h-screen bg-gradient-to-b from-[oklch(0.08_0.02_280)] via-[oklch(0.12_0.04_280)] to-[oklch(0.15_0.06_300)] overflow-x-hidden py-8 px-4 flex flex-col items-center justify-start">
+    <main className="relative min-h-screen bg-gradient-to-b from-[oklch(0.08_0.02_280)] via-[oklch(0.12_0.04_280)] to-[oklch(0.15_0.06_300)] overflow-x-hidden pt-24 pb-8 px-4 flex flex-col items-center justify-start">
+      <Header />
       {/* Background Ambience Layering */}
       <MagicParticles />
       
