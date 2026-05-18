@@ -1,11 +1,16 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useMemo } from "react"
 import { ScrollText } from "lucide-react"
-import { useGame } from "../../hooks/use-game"
+import { useGameStore } from "../../store/game-store"
 
+/**
+ * Performance-optimized MoveHistory component.
+ * Subscribes exclusively to the history array. This shields the ledger from redraws
+ * unless a new move is successfully recorded (e.g. ignoring active piece hover/selection clicks).
+ */
 export function MoveHistory() {
-  const { history } = useGame()
+  const history = useGameStore((state) => state.history)
   const scrollRef = useRef<HTMLDivElement>(null)
 
   // Autoscroll the move history ledger to the bottom when moves are performed
@@ -15,8 +20,8 @@ export function MoveHistory() {
     }
   }, [history])
 
-  // Group flat moves list into pairs: [whiteMove, blackMove?]
-  const groupMoves = () => {
+  // Group flat moves list into pairs: [whiteMove, blackMove?] (memoized computation)
+  const movePairs = useMemo(() => {
     const pairs: { round: number; white: string; black?: string }[] = []
     for (let i = 0; i < history.length; i += 2) {
       pairs.push({
@@ -26,9 +31,7 @@ export function MoveHistory() {
       })
     }
     return pairs
-  }
-
-  const movePairs = groupMoves()
+  }, [history])
 
   return (
     <div 

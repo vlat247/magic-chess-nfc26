@@ -3,10 +3,20 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Undo2, RotateCcw, Home } from "lucide-react"
-import { useGame } from "../../hooks/use-game"
+import { useGameStore } from "../../store/game-store"
 
+/**
+ * Performance-optimized GameControls component.
+ * Uses fine-grained selectors (e.g. tracking a boolean history flag) to avoid
+ * re-drawing button matrices when regular turns take place.
+ */
 export function GameControls() {
-  const { undoMove, resetGame, history } = useGame()
+  const undoMove = useGameStore((state) => state.undoMove)
+  const resetGame = useGameStore((state) => state.resetGame)
+  // Subscribes to a simple boolean flag derived from history length.
+  // This shields the controls from rerendering on every single move, only updating when the match begins/ends.
+  const isUndoDisabled = useGameStore((state) => state.history.length === 0)
+  
   const [showConfirmReset, setShowConfirmReset] = useState(false)
 
   // Autoreset the reset confirmation state after 3 seconds of inactivity
@@ -28,8 +38,6 @@ export function GameControls() {
       setShowConfirmReset(true)
     }
   }
-
-  const isUndoDisabled = history.length === 0
 
   return (
     <div className="flex flex-col gap-4 w-full">

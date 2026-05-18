@@ -1,10 +1,20 @@
 "use client"
 
 import { Shield, Sparkles, Swords, Crown } from "lucide-react"
-import { useGame } from "../../hooks/use-game"
+import { useGameStore } from "../../store/game-store"
 
+/**
+ * Performance-optimized GameStatus component.
+ * Uses individual field selectors to subscribe exclusively to the visual turn and win/draw status triggers,
+ * ensuring no redrawing occurs during general board operations (like square click hover overlays).
+ */
 export function GameStatus() {
-  const { turn, isCheck, isCheckmate, isStalemate, isDraw, winner } = useGame()
+  const turn = useGameStore((state) => state.turn)
+  const isCheck = useGameStore((state) => state.isCheck)
+  const isCheckmate = useGameStore((state) => state.isCheckmate)
+  const isStalemate = useGameStore((state) => state.isStalemate)
+  const isDraw = useGameStore((state) => state.isDraw)
+  const winner = useGameStore((state) => state.winner)
 
   return (
     <div className="flex flex-col gap-4 w-full select-none">

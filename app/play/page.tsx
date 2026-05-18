@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { useGame } from "@/hooks/use-game"
+import { useGameStore } from "@/store/game-store"
 import { GameBoard } from "@/components/arcane-chess/game-board"
 import { GameControls } from "@/components/arcane-chess/game-controls"
 import { MoveHistory } from "@/components/arcane-chess/move-history"
@@ -9,7 +9,7 @@ import { GameStatus } from "@/components/arcane-chess/game-status"
 import { MagicParticles } from "@/components/arcane-chess/magic-particles"
 
 export default function PlayChessPage() {
-  const { isHydrated } = useGame()
+  const isHydrated = useGameStore((state) => state.isHydrated)
 
   // High-fidelity themed Loading hydration safeties to prevent Next.js mismatches
   if (!isHydrated) {
