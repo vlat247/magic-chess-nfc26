@@ -2,8 +2,9 @@
 
 import React, { useState, useMemo } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Trophy, Search, MapPin, Flame, Star, ShieldCheck } from 'lucide-react'
+import { Trophy, Search, MapPin, Flame, ShieldCheck } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { FantasyPixelCard } from '@/components/ui/fantasy-pixel-card'
 
 interface LeaderboardUser {
   id: string
@@ -68,11 +69,6 @@ export function LeaderboardTabs({ initialUsers, currentUser }: LeaderboardTabsPr
     return filteredUsers.slice(0, 3)
   }, [filteredUsers])
 
-  // Remaining users
-  const listUsers = useMemo(() => {
-    return filteredUsers.slice(3)
-  }, [filteredUsers])
-
   // Helper to get initials
   const getInitials = (name: string) => {
     return name.substring(0, 2).toUpperCase()
@@ -88,60 +84,62 @@ export function LeaderboardTabs({ initialUsers, currentUser }: LeaderboardTabsPr
   }, [podiumUsers])
 
   return (
-    <div className="flex flex-col gap-8 w-full">
+    <div className="flex flex-col gap-8 w-full relative z-10 animate-in fade-in duration-300">
       
-      {/* ── SEARCH & FILTER CONTROLS ─────────────────────────────────────── */}
-      <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+      {/* ── SEARCH & FILTER CONTROLS (Lobby tab and config style) ─────────────────────────────────────── */}
+      <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-6">
         
-        {/* Toggle tabs */}
-        <div className="flex bg-[oklch(0.08_0.02_280)] p-1 border border-[oklch(0.2_0.04_280)] rounded-md self-start">
+        {/* Toggle tabs (Muted gunmetal/steel style matching profile-tabs) */}
+        <div className="flex border-b-2 border-[#2D3748] bg-[#2D3748]/30 backdrop-blur-md font-mono text-[9px] tracking-widest relative rounded-none self-start shrink-0">
           <button
             onClick={() => { setActiveTab('global'); setSearchQuery('') }}
             className={cn(
-              "px-4 py-2 font-mono text-[10px] tracking-widest cursor-pointer transition-all duration-200 uppercase",
+              "px-6 py-4 border-b-2 font-bold cursor-pointer transition-all duration-300 uppercase flex items-center gap-2 shrink-0 relative rounded-none",
               activeTab === 'global'
-                ? "bg-purple-600/30 text-purple-300 border border-purple-500/50 shadow-[0_0_10px_rgba(168,85,247,0.2)]"
-                : "text-muted-foreground hover:bg-white/5"
+                ? "border-[#BFC7D5] text-[#BFC7D5] bg-[#BFC7D5]/5 font-bold"
+                : "border-transparent text-[#8D99AE] hover:text-[#BFC7D5] hover:bg-[#2D3748]/20"
             )}
           >
+            <Trophy className="h-3.5 w-3.5" />
             GLOBAL MASTERS
           </button>
           
           <button
             onClick={() => { setActiveTab('city'); setSearchQuery('') }}
             className={cn(
-              "px-4 py-2 font-mono text-[10px] tracking-widest cursor-pointer transition-all duration-200 uppercase",
+              "px-6 py-4 border-b-2 font-bold cursor-pointer transition-all duration-300 uppercase flex items-center gap-2 shrink-0 relative rounded-none",
               activeTab === 'city'
-                ? "bg-purple-600/30 text-purple-300 border border-purple-500/50 shadow-[0_0_10px_rgba(168,85,247,0.2)]"
-                : "text-muted-foreground hover:bg-white/5"
+                ? "border-[#BFC7D5] text-[#BFC7D5] bg-[#BFC7D5]/5 font-bold"
+                : "border-transparent text-[#8D99AE] hover:text-[#BFC7D5] hover:bg-[#2D3748]/20"
             )}
           >
+            <MapPin className="h-3.5 w-3.5" />
             CITY GUILDS
           </button>
         </div>
 
-        {/* Search and City Selectors */}
-        <div className="flex items-center gap-3 flex-1 max-w-md w-full self-stretch">
+        {/* Search and City Selectors (Lobby input style) */}
+        <div className="flex items-center gap-3 flex-1 max-w-md w-full self-stretch md:self-auto">
           <div className="relative flex-1">
             <input
               type="text"
-              placeholder="Search Summoners..."
+              placeholder="SEARCH SUMMONERS..."
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="w-full p-2.5 pl-9 bg-[oklch(0.08_0.02_280)] border border-[oklch(0.2_0.04_280)] font-mono text-[10px] text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-neon-purple transition-colors"
+              className="w-full p-3.5 pl-9 bg-[#1E2530] border-2 border-[#4A5568] font-mono text-[9px] sm:text-[10px] text-white placeholder:text-[#4A5568] focus:border-[#8D99AE] focus:outline-none transition-all rounded-none hover:border-[#8D99AE] tracking-widest"
             />
-            <Search className="absolute left-3 top-3 h-3.5 w-3.5 text-muted-foreground/60" />
+            <Search className="absolute left-3 top-4.5 h-3.5 w-3.5 text-[#4A5568]" />
           </div>
 
           {activeTab === 'city' && (
             <select
               value={selectedCity}
               onChange={e => setSelectedCity(e.target.value)}
-              className="p-2.5 bg-[oklch(0.08_0.02_280)] border border-[oklch(0.2_0.04_280)] font-mono text-[10px] text-foreground focus:outline-none focus:border-neon-purple cursor-pointer"
+              className="p-3.5 bg-[#1E2530] border-2 border-[#4A5568] font-mono text-[9px] sm:text-[10px] text-white focus:border-[#8D99AE] hover:border-[#8D99AE] focus:outline-none transition-all rounded-none cursor-pointer tracking-widest"
             >
               {uniqueCities.map(city => (
-                <option key={city} value={city} className="bg-[oklch(0.08_0.02_280)] text-foreground">
-                  {city}
+                <option key={city} value={city} className="bg-[#1E2530] text-white">
+                  {city.toUpperCase()}
                 </option>
               ))}
             </select>
@@ -149,213 +147,220 @@ export function LeaderboardTabs({ initialUsers, currentUser }: LeaderboardTabsPr
         </div>
       </div>
 
-      {/* ── 3D PODIUM SECTION ─────────────────────────────────────────────── */}
+      {/* ── PODIUM SECTION (Mettalic & Retro 3D columns) ─────────────────────────────────────────────── */}
       {podiumOrder.length > 0 && searchQuery === '' && (
-        <section className="flex flex-col items-center justify-end min-h-[380px] pt-10 border border-[oklch(0.22_0.06_300)] bg-[oklch(0.09_0.025_280)] relative overflow-hidden p-6">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_50%,rgba(10,5,25,0.7)_100%)] z-0 pointer-events-none" />
-          
-          <div className="flex items-end justify-center gap-4 sm:gap-12 relative z-10 w-full max-w-3xl h-full mt-auto">
-            {podiumOrder.map(({ user, rank }) => {
-              const username = user.username ?? 'Mage'
-              const rating = user.rating
-              const level = user.level ?? 1
-              const streak = user.win_streak ?? 0
-              const city = user.city
-              const isCurrentUser = currentUser?.id === user.id
-
-              // Theme variables based on ranking
-              const theme = 
-                rank === 1 ? { border: 'border-2 border-neon-gold glow-gold', text: 'text-neon-gold', name: '1st', barColor: 'bg-gradient-to-t from-yellow-600/30 to-yellow-400/10 border-t-2 border-t-neon-gold', height: 'h-40 sm:h-48' } :
-                rank === 2 ? { border: 'border-2 border-neon-cyan glow-cyan', text: 'text-neon-cyan', name: '2nd', barColor: 'bg-gradient-to-t from-cyan-600/20 to-cyan-400/5 border-t-2 border-t-neon-cyan', height: 'h-32 sm:h-38' } :
-                { border: 'border-2 border-neon-purple glow-purple', text: 'text-neon-purple', name: '3rd', barColor: 'bg-gradient-to-t from-purple-600/20 to-purple-400/5 border-t-2 border-t-neon-purple', height: 'h-24 sm:h-28' }
-
-              return (
-                <div key={user.id} className="flex flex-col items-center justify-end flex-1 max-w-[180px] h-full text-center">
-                  
-                  {/* User Profile Info above Podium Bar */}
-                  <div className="flex flex-col items-center gap-1.5 mb-3 w-full relative">
-                    
-                    {/* Avatar with Glow Border */}
-                    <div className={cn("rounded-full p-0.5 shrink-0 relative transition-transform duration-300 hover:scale-105", theme.border)}>
-                      <Avatar className="h-14 w-14 sm:h-18 sm:w-18">
-                        <AvatarImage src={user.avatar_url || ''} className="object-cover" />
-                        <AvatarFallback className="font-mono text-xs" style={{ background: 'oklch(0.18 0.06 300)', color: 'oklch(0.8 0.2 300)' }}>
-                          {getInitials(username)}
-                        </AvatarFallback>
-                      </Avatar>
-
-                      {/* Level Ring Badge */}
-                      <span className="absolute -bottom-1 -right-1 bg-black border border-muted-foreground/60 text-[7px] text-foreground font-mono w-5 h-5 flex items-center justify-center rounded-full leading-none">
-                        {level}
-                      </span>
-                    </div>
-
-                    {/* Username & Pro check */}
-                    <div className="flex items-center gap-1 mt-1">
-                      <span className={cn("font-mono text-[9px] sm:text-[10px] tracking-wide truncate max-w-[80px] sm:max-w-[120px] font-bold block", isCurrentUser ? 'text-neon-pink' : 'text-foreground')}>
-                        {username}
-                      </span>
-                      {user.is_pro && (
-                        <ShieldCheck className="h-3 w-3 text-neon-gold shrink-0" />
-                      )}
-                    </div>
-
-                    {/* Location */}
-                    {city && (
-                      <span className="font-mono text-[7px] text-muted-foreground/80 flex items-center gap-0.5 uppercase">
-                        <MapPin className="h-2 w-2 text-neon-cyan shrink-0" />
-                        {city}
-                      </span>
-                    )}
-
-                    {/* ELO Display */}
-                    <span className="font-mono text-xs sm:text-sm font-bold text-foreground block tabular-nums mt-0.5">
-                      ⚔️ {rating}
-                    </span>
-
-                    {/* Streak flame */}
-                    {streak >= 2 && (
-                      <span className="font-mono text-[7px] text-red-400 bg-red-950/40 border border-red-500/20 px-1.5 py-0.5 flex items-center gap-0.5 mt-0.5">
-                        <Flame className="h-2.5 w-2.5 animate-pulse text-red-400" />
-                        STREAK {streak}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Visual Podium Base Column */}
-                  <div className={cn("w-full relative flex items-center justify-center", theme.height, theme.barColor)}>
-                    <div className="absolute inset-0 pointer-events-none bg-black/10" />
-                    
-                    {/* Rank Number Inside Base */}
-                    <div className="flex flex-col items-center justify-center">
-                      <span className={cn("font-title text-4xl sm:text-5xl font-bold opacity-80 text-glow-gold", theme.text)}>
-                        {rank}
-                      </span>
-                      <span className="font-mono text-[7px] tracking-widest text-muted-foreground uppercase opacity-60">
-                        RANK
-                      </span>
-                    </div>
-                  </div>
-
-                </div>
-              )
-            })}
-          </div>
-        </section>
-      )}
-
-      {/* ── LIST LEADERBOARD TABLE ───────────────────────────────────────── */}
-      <section className="flex flex-col gap-4">
-        <div className="flex items-center gap-3">
-          <Trophy className="h-4 w-4 text-neon-cyan" style={{ filter: 'drop-shadow(0 0 6px oklch(0.7 0.2 195))' }} />
-          <h2 className="font-mono text-xs tracking-widest text-neon-cyan uppercase">Summoner rankings</h2>
-          <div className="flex-1 h-px bg-neon-cyan opacity-20" />
-        </div>
-
-        <div className="border border-[oklch(0.22_0.06_300)] bg-[oklch(0.09_0.025_280)] overflow-hidden font-mono text-[9px] sm:text-[10px] tracking-wider relative">
-          
-          {/* Header */}
-          <div className="grid grid-cols-12 p-3 bg-[oklch(0.07_0.02_280)] border-b border-[oklch(0.2_0.04_280)] text-muted-foreground uppercase text-[8px] tracking-widest">
-            <div className="col-span-1 text-center">RANK</div>
-            <div className="col-span-4 sm:col-span-5 pl-2">SUMMONER</div>
-            <div className="col-span-3 sm:col-span-2 text-center">RATING</div>
-            <div className="col-span-2 text-center hidden sm:block">RECORD</div>
-            <div className="col-span-2 text-center">STREAK</div>
-            <div className="col-span-2 sm:col-span-2 text-center">CITY</div>
-          </div>
-
-          {/* List display */}
-          <div className="divide-y divide-[oklch(0.18_0.03_280)]">
-            {filteredUsers.length === 0 ? (
-              <div className="p-8 text-center text-muted-foreground uppercase font-mono text-[10px] tracking-widest">
-                No Summoners Have Conquered These Filters Yet.
-              </div>
-            ) : (
-              filteredUsers.map((user, idx) => {
-                const rank = idx + 1
+        <FantasyPixelCard theme="default" title="PODIUM MASTERS">
+          <div className="flex flex-col items-center justify-end min-h-[340px] pt-12 relative overflow-hidden select-none">
+            <div className="flex items-end justify-center gap-4 sm:gap-12 relative z-10 w-full max-w-3xl h-full mt-auto">
+              {podiumOrder.map(({ user, rank }) => {
                 const username = user.username ?? 'Mage'
                 const rating = user.rating
-                const wins = user.wins ?? 0
-                const losses = user.losses ?? 0
                 const level = user.level ?? 1
                 const streak = user.win_streak ?? 0
                 const city = user.city
                 const isCurrentUser = currentUser?.id === user.id
-                
-                // Color modifiers for top 3 in the regular table view
-                const rankColor = 
-                  rank === 1 ? 'text-neon-gold font-bold text-glow-gold' :
-                  rank === 2 ? 'text-neon-cyan font-bold' :
-                  rank === 3 ? 'text-neon-purple font-bold' :
-                  isCurrentUser ? 'text-neon-pink font-bold' : 'text-foreground';
+
+                // Retro theme configurations based on placement (Gold, Silver, Bronze/Gunmetal)
+                const theme = 
+                  rank === 1 ? { border: 'border-2 border-[#FACC15] bg-[#FACC15]/5 shadow-[2px_2px_0px_#000000]', text: 'text-[#FACC15] text-glow-gold font-bold', name: '1st', barColor: 'bg-[#FACC15]/10 border-t-2 border-t-[#FACC15]', height: 'h-40 sm:h-48' } :
+                  rank === 2 ? { border: 'border-2 border-[#BFC7D5] bg-[#BFC7D5]/5 shadow-[2px_2px_0px_#000000]', text: 'text-[#BFC7D5] font-bold', name: '2nd', barColor: 'bg-[#BFC7D5]/10 border-t-2 border-t-[#BFC7D5]', height: 'h-32 sm:h-38' } :
+                  { border: 'border-2 border-[#8D99AE] bg-[#8D99AE]/5 shadow-[2px_2px_0px_#000000]', text: 'text-[#8D99AE] font-bold', name: '3rd', barColor: 'bg-[#8D99AE]/10 border-t-2 border-t-[#8D99AE]', height: 'h-24 sm:h-28' }
 
                 return (
-                  <div key={user.id} className={cn("grid grid-cols-12 p-3.5 items-center hover:bg-white/[0.02] transition-colors", isCurrentUser && 'bg-white/[0.015] border-l-2 border-l-neon-pink')}>
-                    {/* Rank */}
-                    <div className={cn("col-span-1 text-center font-bold", rankColor)}>
-                      #{rank}
-                    </div>
+                  <div key={user.id} className="flex flex-col items-center justify-end flex-1 max-w-[180px] h-full text-center">
+                    
+                    {/* User Profile Info above Podium Bar */}
+                    <div className="flex flex-col items-center gap-1.5 mb-3.5 w-full relative">
+                      
+                      {/* Square Avatar with pixel border */}
+                      <div className={cn("rounded-none p-0.5 shrink-0 relative transition-transform duration-300 hover:scale-105", theme.border)}>
+                        <Avatar className="h-14 w-14 sm:h-16 sm:w-16 rounded-none">
+                          <AvatarImage src={user.avatar_url || ''} className="object-cover rounded-none" />
+                          <AvatarFallback className="font-mono text-xs rounded-none" style={{ background: 'oklch(0.18 0.06 300)', color: 'oklch(0.8 0.2 300)' }}>
+                            {getInitials(username)}
+                          </AvatarFallback>
+                        </Avatar>
 
-                    {/* Summoner Name + Level */}
-                    <div className="col-span-4 sm:col-span-5 pl-2 flex items-center gap-2">
-                      <Avatar className="h-6 w-6 border border-muted-foreground/30">
-                        <AvatarImage src={user.avatar_url || ''} />
-                        <AvatarFallback className="text-[8px]">{getInitials(username)}</AvatarFallback>
-                      </Avatar>
-
-                      <div className="flex flex-col leading-none">
-                        <div className="flex items-center gap-1">
-                          <span className={cn("font-bold", rankColor)}>{username}</span>
-                          {user.is_pro && (
-                            <ShieldCheck className="h-3 w-3 text-neon-gold shrink-0" />
-                          )}
-                        </div>
-                        <span className="text-[7px] text-muted-foreground uppercase mt-0.5">LEVEL {level}</span>
-                      </div>
-                    </div>
-
-                    {/* Rating */}
-                    <div className="col-span-3 sm:col-span-2 text-center font-bold text-foreground tabular-nums">
-                      ⚔️ {rating}
-                    </div>
-
-                    {/* Record */}
-                    <div className="col-span-2 text-center text-muted-foreground hidden sm:block tabular-nums text-[9px]">
-                      {wins}W / {losses}L
-                    </div>
-
-                    {/* Streak */}
-                    <div className="col-span-2 text-center">
-                      {streak >= 2 ? (
-                        <span className="inline-flex items-center gap-0.5 text-red-400 bg-red-950/20 border border-red-500/20 px-1 py-0.5 rounded-sm text-[8px]">
-                          <Flame className="h-2.5 w-2.5 animate-pulse text-red-400" />
-                          {streak} 🔥
+                        {/* Level Square Badge */}
+                        <span className="absolute -bottom-1 -right-1 bg-[#1E2530] border border-[#4A5568] text-[7px] text-white font-mono w-5 h-5 flex items-center justify-center rounded-none font-bold leading-none shadow-[2px_2px_0px_#000000]">
+                          {level}
                         </span>
-                      ) : (
-                        <span className="text-muted-foreground/60 text-[8px]">—</span>
-                      )}
-                    </div>
+                      </div>
 
-                    {/* City */}
-                    <div className="col-span-2 text-center text-[8px] sm:text-[9px] uppercase truncate text-muted-foreground">
-                      {city ? (
-                        <span className="flex items-center justify-center gap-0.5">
-                          <MapPin className="h-2 w-2 text-neon-cyan shrink-0" />
+                      {/* Username & Pro check */}
+                      <div className="flex items-center gap-1 mt-1">
+                        <span className={cn("font-mono text-[9px] sm:text-[10px] tracking-widest truncate max-w-[80px] sm:max-w-[120px] font-bold block uppercase", isCurrentUser ? 'text-[#FACC15]' : 'text-zinc-100')}>
+                          {username}
+                        </span>
+                        {user.is_pro && (
+                          <ShieldCheck className="h-3.5 w-3.5 text-[#FACC15] shrink-0" />
+                        )}
+                      </div>
+
+                      {/* Location */}
+                      {city && (
+                        <span className="font-mono text-[7px] text-[#8D99AE]/80 flex items-center gap-0.5 uppercase tracking-wider">
+                          <MapPin className="h-2 w-2 text-[#8D99AE] shrink-0" />
                           {city}
                         </span>
-                      ) : (
-                        <span className="opacity-40">—</span>
                       )}
+
+                      {/* ELO Display */}
+                      <span className="font-mono text-xs sm:text-xs font-bold text-zinc-100 block mt-0.5 uppercase tracking-widest">
+                        ⚔️ {rating} ELO
+                      </span>
+
+                      {/* Streak flame */}
+                      {streak >= 2 && (
+                        <span className="font-mono text-[7px] text-[#FACC15] bg-[#FACC15]/10 border border-[#FACC15]/20 px-1.5 py-0.5 flex items-center gap-0.5 mt-0.5 rounded-none shadow-[2px_2px_0px_#000000]">
+                          <Flame className="h-2.5 w-2.5 animate-pulse text-[#FACC15]" />
+                          STREAK {streak}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Visual Podium Base Column */}
+                    <div className={cn("w-full relative flex items-center justify-center border-x-2 border-[#4A5568] bg-[#1E2530]/40 rounded-none shadow-[4px_4px_0px_#000000]", theme.height, theme.barColor)}>
+                      <div className="absolute inset-0 pointer-events-none bg-black/10" />
+                      
+                      {/* Corner markings for podium bases */}
+                      <div className="absolute top-1.5 left-1.5 w-1 h-1 bg-[#4A5568]/40" />
+                      <div className="absolute top-1.5 right-1.5 w-1 h-1 bg-[#4A5568]/40" />
+
+                      {/* Rank Number Inside Base */}
+                      <div className="flex flex-col items-center justify-center">
+                        <span className={cn("font-mono text-3xl sm:text-4xl font-bold opacity-80", theme.text)}>
+                          #{rank}
+                        </span>
+                        <span className="font-mono text-[7px] tracking-widest text-zinc-500 uppercase font-bold">
+                          RANK
+                        </span>
+                      </div>
                     </div>
 
                   </div>
                 )
-              })
-            )}
+              })}
+            </div>
           </div>
-          
-        </div>
-      </section>
+        </FantasyPixelCard>
+      )}
+
+      {/* ── LIST LEADERBOARD TABLE (High-contrast Lobby styling) ───────────────────────────────────────── */}
+      <div className="flex flex-col gap-4">
+        <FantasyPixelCard theme="default" title="RANKING REGISTRY" noPadding>
+          <div className="overflow-x-auto w-full font-mono text-[9px] sm:text-[10px] tracking-widest">
+            {/* Header */}
+            <div className="grid grid-cols-12 p-4 bg-[#2D3748]/60 border-b-2 border-[#4A5568] text-[#8D99AE] uppercase text-[8px] tracking-widest font-bold min-w-[600px]">
+              <div className="col-span-1 text-center">RANK</div>
+              <div className="col-span-4 pl-2">SUMMONER</div>
+              <div className="col-span-2 text-center">RATING</div>
+              <div className="col-span-2 text-center">RECORD</div>
+              <div className="col-span-1 text-center">STREAK</div>
+              <div className="col-span-2 text-center">GUILD</div>
+            </div>
+
+            {/* List display */}
+            <div className="divide-y divide-[#4A5568]/40 min-w-[600px]">
+              {filteredUsers.length === 0 ? (
+                <div className="p-10 text-center text-[#8D99AE] uppercase font-mono text-[10px] tracking-widest">
+                  No Summoners Have Conquered These Realms Yet.
+                </div>
+              ) : (
+                filteredUsers.map((user, idx) => {
+                  const rank = idx + 1
+                  const username = user.username ?? 'Mage'
+                  const rating = user.rating
+                  const wins = user.wins ?? 0
+                  const losses = user.losses ?? 0
+                  const level = user.level ?? 1
+                  const streak = user.win_streak ?? 0
+                  const city = user.city
+                  const isCurrentUser = currentUser?.id === user.id
+                  
+                  // Color modifiers matching the lobby's steel, silver, and gold accents
+                  const rankColor = 
+                    rank === 1 ? 'text-[#FACC15] font-bold text-glow-gold' :
+                    rank === 2 ? 'text-[#BFC7D5] font-bold' :
+                    rank === 3 ? 'text-[#8D99AE] font-bold' :
+                    isCurrentUser ? 'text-[#FACC15] font-bold' : 'text-zinc-300';
+
+                  return (
+                    <div 
+                      key={user.id} 
+                      className={cn(
+                        "grid grid-cols-12 p-3.5 items-center hover:bg-[#2D3748]/20 transition-all duration-200", 
+                        isCurrentUser && 'bg-[#FACC15]/5 border-l-4 border-l-[#FACC15]'
+                      )}
+                    >
+                      {/* Rank */}
+                      <div className={cn("col-span-1 text-center font-bold text-[10px]", rankColor)}>
+                        #{rank}
+                      </div>
+
+                      {/* Summoner Name + Level */}
+                      <div className="col-span-4 pl-2 flex items-center gap-2.5">
+                        <div className="p-0.5 bg-[#1E2530] border border-[#4A5568] shrink-0 rounded-none shadow-[1px_1px_0px_#000000]">
+                          <Avatar className="h-6 w-6 rounded-none">
+                            <AvatarImage src={user.avatar_url || ''} className="rounded-none object-cover" />
+                            <AvatarFallback className="text-[8px] rounded-none">{getInitials(username)}</AvatarFallback>
+                          </Avatar>
+                        </div>
+
+                        <div className="flex flex-col leading-none">
+                          <div className="flex items-center gap-1.5">
+                            <span className={cn("font-bold uppercase text-[10px] tracking-wide", rankColor)}>{username}</span>
+                            {user.is_pro && (
+                              <ShieldCheck className="h-3.5 w-3.5 text-[#FACC15] shrink-0" />
+                            )}
+                          </div>
+                          <span className="text-[7px] text-[#8D99AE] uppercase mt-0.5 font-semibold">LEVEL {level}</span>
+                        </div>
+                      </div>
+
+                      {/* Rating */}
+                      <div className="col-span-2 text-center font-bold text-zinc-100 tabular-nums">
+                        ⚔️ {rating}
+                      </div>
+
+                      {/* Record */}
+                      <div className="col-span-2 text-center text-[#8D99AE] tabular-nums text-[9px]">
+                        {wins}W / {losses}L
+                      </div>
+
+                      {/* Streak */}
+                      <div className="col-span-1 text-center">
+                        {streak >= 2 ? (
+                          <span className="inline-flex items-center gap-0.5 text-[#FACC15] bg-[#FACC15]/10 border border-[#FACC15]/20 px-1.5 py-0.5 rounded-none text-[8px] font-bold shadow-[1.5px_1.5px_0px_#000000]">
+                            <Flame className="h-2.5 w-2.5 animate-pulse text-[#FACC15]" />
+                            {streak} 🔥
+                          </span>
+                        ) : (
+                          <span className="text-zinc-600 text-[8px]">—</span>
+                        )}
+                      </div>
+
+                      {/* City */}
+                      <div className="col-span-2 text-center text-[8px] sm:text-[9px] uppercase truncate text-[#8D99AE]">
+                        {city ? (
+                          <span className="flex items-center justify-center gap-1 text-[8px]">
+                            <MapPin className="h-2 w-2 text-[#8D99AE] shrink-0" />
+                            {city}
+                          </span>
+                        ) : (
+                          <span className="opacity-40">—</span>
+                        )}
+                      </div>
+
+                    </div>
+                  )
+                })
+              )}
+            </div>
+            
+          </div>
+        </FantasyPixelCard>
+      </div>
 
     </div>
   )

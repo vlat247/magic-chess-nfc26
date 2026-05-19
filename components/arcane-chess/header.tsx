@@ -6,7 +6,7 @@ import { useAuth } from '@/hooks/use-auth'
 import { AuthModal } from '@/components/auth/auth-modal'
 import { logout } from '@/actions/auth'
 import { Trophy, Swords, User, LogOut, ChevronDown, LayoutGrid, Store } from 'lucide-react'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+
 
 export function Header() {
   const { user, profile, isLoading } = useAuth()
@@ -21,10 +21,10 @@ export function Header() {
       <header
         className="fixed top-0 left-0 right-0 z-50 px-4 md:px-8 py-3"
         style={{
-          background: 'oklch(0.09 0.025 280 / 0.85)',
+          background: 'rgba(12, 15, 22, 0.5)',
           backdropFilter: 'blur(12px)',
-          borderBottom: '1px solid oklch(0.7 0.25 300 / 0.15)',
-          boxShadow: '0 1px 0 0 oklch(0.7 0.25 300 / 0.08)',
+          borderBottom: '1px solid rgba(141, 153, 174, 0.15)',
+          boxShadow: '0 1px 0 0 rgba(141, 153, 174, 0.08)',
         }}
       >
         <div className="max-w-7xl mx-auto flex items-center justify-between relative">
@@ -34,8 +34,9 @@ export function Header() {
             <div
               className="flex h-8 w-8 items-center justify-center transition-all duration-200 group-hover:scale-110"
               style={{
-                background: 'oklch(0.14 0.05 300)',
-                color: 'oklch(0.8 0.2 300)',
+                background: '#2D3748',
+                border: '1px solid #4A5568',
+                color: '#FACC15',
               }}
             >
               {/* Pixel crown/king chess piece SVG */}
@@ -64,9 +65,9 @@ export function Header() {
                 key={href}
                 href={href}
                 className="flex items-center gap-1.5 font-sans text-[10px] tracking-widest uppercase transition-colors duration-200 cursor-pointer"
-                style={{ color: 'oklch(0.55 0.05 280)' }}
-                onMouseEnter={e => (e.currentTarget.style.color = 'oklch(0.85 0.05 280)')}
-                onMouseLeave={e => (e.currentTarget.style.color = 'oklch(0.55 0.05 280)')}
+                style={{ color: '#8D99AE' }}
+                onMouseEnter={e => (e.currentTarget.style.color = '#FACC15')}
+                onMouseLeave={e => (e.currentTarget.style.color = '#8D99AE')}
               >
                 <Icon className="h-3 w-3" />
                 {label}
@@ -82,29 +83,9 @@ export function Header() {
                   <div className="relative">
                     <button
                       onClick={() => setDropdownOpen(!dropdownOpen)}
-                      className="flex items-center gap-2.5 px-2.5 py-1.5 transition-all select-none cursor-pointer border border-[#4A5568]/45 hover:border-[#8D99AE]/60 bg-[#1E2530]/40 rounded-none shadow-[2px_2px_0px_#000000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_#000000]"
+                      className="flex items-center gap-2 px-3 py-1.5 transition-all select-none cursor-pointer border border-[#4A5568]/45 hover:border-[#8D99AE]/60 bg-[#1E2530]/40 rounded-none shadow-[2px_2px_0px_#000000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_#000000]"
                     >
-                      <Avatar className="h-7 w-7 rounded-none border border-[#4A5568] shrink-0">
-                        <AvatarImage src={profile?.avatar_url || ''} className="object-cover rounded-none" />
-                        <AvatarFallback
-                          className="text-[9px] font-mono rounded-none font-bold"
-                          style={{ background: '#2D3748', color: '#BFC7D5' }}
-                        >
-                          {username.substring(0, 2).toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="hidden sm:flex flex-col items-start leading-none text-left font-mono gap-0.5">
-                        <span className="text-[10px] font-bold text-zinc-100 uppercase tracking-wider">{username}</span>
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-[8px] flex items-center gap-0.5 text-[#FACC15] font-bold">
-                            <Trophy className="h-2.5 w-2.5 shrink-0" />
-                            {rating}
-                          </span>
-                          <span className="text-[7px] border border-[#4A5568]/50 px-1 py-0.5 bg-[#2D3748]/30 text-[#8D99AE] leading-none uppercase font-bold">
-                            LVL {profile?.level ?? 1}
-                          </span>
-                        </div>
-                      </div>
+                      <span className="font-mono text-[10px] font-bold text-zinc-100 uppercase tracking-wider">{username}</span>
                       <ChevronDown className="h-3 w-3 text-[#8D99AE] ml-0.5 shrink-0" />
                     </button>
 
@@ -112,80 +93,57 @@ export function Header() {
                       <>
                         <div className="fixed inset-0 z-40" onClick={() => setDropdownOpen(false)} />
                         <div
-                          className="absolute right-0 mt-2 w-44 p-1 z-50 animate-in fade-in slide-in-from-top-2 duration-150"
+                          className="absolute right-0 mt-2 w-44 p-1 z-50 animate-in fade-in slide-in-from-top-2 duration-150 border border-[#4A5568]"
                           style={{
-                            background: 'oklch(0.11 0.03 280)',
-                            boxShadow: '0 0 0 1px oklch(0.7 0.25 300 / 0.3), 0 12px 40px oklch(0.7 0.25 300 / 0.15)',
+                            background: '#1E2530',
+                            boxShadow: '4px 4px 0px #000000',
                           }}
                         >
                           <div
                             className="px-3 py-2"
-                            style={{ borderBottom: '1px solid oklch(0.2 0.04 280)' }}
+                            style={{ borderBottom: '1px solid #4A5568' }}
                           >
-                            <p className="font-sans text-[9px]" style={{ color: 'oklch(0.5 0.05 280)' }}>Summoner</p>
-                            <p className="font-sans text-[10px] mt-0.5 truncate" style={{ color: 'oklch(0.85 0.05 280)' }}>{username}</p>
+                            <p className="font-sans text-[9px]" style={{ color: '#8D99AE' }}>Summoner</p>
+                            <p className="font-sans text-[10px] mt-0.5 truncate" style={{ color: '#BFC7D5' }}>{username}</p>
                           </div>
 
                           <Link href="/profile" onClick={() => setDropdownOpen(false)}>
-                            <button
-                              className="w-full flex items-center gap-2 px-3 py-2 font-sans text-[10px] text-left select-none cursor-pointer transition-colors"
-                              style={{ color: 'oklch(0.7 0.05 280)' }}
-                              onMouseEnter={e => (e.currentTarget.style.color = 'oklch(0.9 0.2 300)')}
-                              onMouseLeave={e => (e.currentTarget.style.color = 'oklch(0.7 0.05 280)')}
-                            >
-                              <User className="h-3.5 w-3.5" style={{ color: 'oklch(0.65 0.2 300)' }} />
+                            <button className="w-full flex items-center gap-2 px-3 py-2 font-sans text-[10px] text-left select-none cursor-pointer text-[#8D99AE] hover:text-[#FACC15] transition-colors duration-200 group">
+                              <User className="h-3.5 w-3.5 text-[#8D99AE] group-hover:text-[#FACC15] transition-colors duration-200" />
                               Profile
                             </button>
                           </Link>
 
                           <Link href="/play" onClick={() => setDropdownOpen(false)}>
-                            <button
-                              className="w-full flex items-center gap-2 px-3 py-2 font-sans text-[10px] text-left select-none cursor-pointer transition-colors"
-                              style={{ color: 'oklch(0.7 0.05 280)' }}
-                              onMouseEnter={e => (e.currentTarget.style.color = 'oklch(0.9 0.2 300)')}
-                              onMouseLeave={e => (e.currentTarget.style.color = 'oklch(0.7 0.05 280)')}
-                            >
-                              <Swords className="h-3.5 w-3.5" style={{ color: 'oklch(0.65 0.2 300)' }} />
+                            <button className="w-full flex items-center gap-2 px-3 py-2 font-sans text-[10px] text-left select-none cursor-pointer text-[#8D99AE] hover:text-[#FACC15] transition-colors duration-200 group">
+                              <Swords className="h-3.5 w-3.5 text-[#8D99AE] group-hover:text-[#FACC15] transition-colors duration-200" />
                               Play
                             </button>
                           </Link>
 
                           <Link href="/leaderboard" onClick={() => setDropdownOpen(false)}>
-                            <button
-                              className="w-full flex items-center gap-2 px-3 py-2 font-sans text-[10px] text-left select-none cursor-pointer transition-colors"
-                              style={{ color: 'oklch(0.7 0.05 280)' }}
-                              onMouseEnter={e => (e.currentTarget.style.color = 'oklch(0.7 0.2 195)')}
-                              onMouseLeave={e => (e.currentTarget.style.color = 'oklch(0.7 0.05 280)')}
-                            >
-                              <Trophy className="h-3.5 w-3.5" style={{ color: 'oklch(0.7 0.2 195)' }} />
+                            <button className="w-full flex items-center gap-2 px-3 py-2 font-sans text-[10px] text-left select-none cursor-pointer text-[#8D99AE] hover:text-[#FACC15] transition-colors duration-200 group">
+                              <Trophy className="h-3.5 w-3.5 text-[#8D99AE] group-hover:text-[#FACC15] transition-colors duration-200" />
                               Rankings
                             </button>
                           </Link>
 
                           <Link href="/premium" onClick={() => setDropdownOpen(false)}>
-                            <button
-                              className="w-full flex items-center gap-2 px-3 py-2 font-sans text-[10px] text-left select-none cursor-pointer transition-colors"
-                              style={{ color: 'oklch(0.8 0.18 85)' }}
-                              onMouseEnter={e => (e.currentTarget.style.color = 'oklch(0.9 0.22 85)')}
-                              onMouseLeave={e => (e.currentTarget.style.color = 'oklch(0.8 0.18 85)')}
-                            >
-                              <span className="text-xs">👑</span>
+                            <button className="w-full flex items-center gap-2 px-3 py-2 font-sans text-[10px] text-left select-none cursor-pointer text-[#8D99AE] hover:text-[#FACC15] transition-colors duration-200 group">
+                              <span className="text-xs shrink-0">👑</span>
                               Premium Vault
                             </button>
                           </Link>
 
-                          <div style={{ borderTop: '1px solid oklch(0.2 0.04 280)', margin: '4px 0' }} />
+                          <div className="border-t border-[#4A5568]" style={{ margin: '4px 0' }} />
 
                           <form action={logout}>
                             <button
                               type="submit"
                               onClick={() => setDropdownOpen(false)}
-                              className="w-full flex items-center gap-2 px-3 py-2 font-sans text-[10px] text-left select-none cursor-pointer transition-colors"
-                              style={{ color: 'oklch(0.65 0.18 20)' }}
-                              onMouseEnter={e => (e.currentTarget.style.color = 'oklch(0.75 0.2 20)')}
-                              onMouseLeave={e => (e.currentTarget.style.color = 'oklch(0.65 0.18 20)')}
+                              className="w-full flex items-center gap-2 px-3 py-2 font-sans text-[10px] text-left select-none cursor-pointer text-[#8D99AE] hover:text-[#EF4444] transition-colors duration-200 group"
                             >
-                              <LogOut className="h-3.5 w-3.5" />
+                              <LogOut className="h-3.5 w-3.5 text-[#8D99AE] group-hover:text-[#EF4444] transition-colors duration-200" />
                               Sign out
                             </button>
                           </form>
@@ -196,24 +154,7 @@ export function Header() {
                 ) : (
                   <button
                     onClick={() => setAuthModalOpen(true)}
-                    className="font-sans text-[10px] tracking-widest px-4 py-2 transition-all duration-200 active:scale-95 cursor-pointer"
-                    style={{
-                      background: 'oklch(0.14 0.05 300)',
-                      boxShadow: '0 0 0 1px oklch(0.7 0.25 300 / 0.5)',
-                      color: 'oklch(0.8 0.2 300)',
-                    }}
-                    onMouseEnter={e => {
-                      const el = e.currentTarget
-                      el.style.background = 'oklch(0.18 0.07 300)'
-                      el.style.boxShadow = '0 0 0 1px oklch(0.7 0.25 300), 0 0 20px oklch(0.7 0.25 300 / 0.3)'
-                      el.style.color = 'oklch(0.95 0.15 300)'
-                    }}
-                    onMouseLeave={e => {
-                      const el = e.currentTarget
-                      el.style.background = 'oklch(0.14 0.05 300)'
-                      el.style.boxShadow = '0 0 0 1px oklch(0.7 0.25 300 / 0.5)'
-                      el.style.color = 'oklch(0.8 0.2 300)'
-                    }}
+                    className="font-sans text-[10px] tracking-widest px-4 py-2 transition-all duration-200 active:scale-95 cursor-pointer bg-[#1E2530] hover:bg-[#2D3748] border border-[#4A5568] hover:border-[#FACC15] text-[#8D99AE] hover:text-[#FACC15] hover:shadow-[0_0_10px_rgba(250,204,21,0.2)] shadow-[2px_2px_0px_#000000] rounded-none uppercase"
                   >
                     SIGN IN
                   </button>

@@ -70,14 +70,19 @@ export default async function ProfilePage() {
   const joinDate = new Date(user.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
 
   return (
-    <main className="relative min-h-screen bg-[#0a0a0f] overflow-x-hidden pt-20 pb-16">
+    <main className="relative min-h-screen bg-[#0C0F16] overflow-x-hidden pt-20 pb-16">
       <Header />
 
-      {/* Subtle background gradient */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-violet-950/20 via-transparent to-amber-950/10" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(120,80,255,0.08),transparent)]" />
-      </div>
+      {/* Grid effects (Muted steel grid matching rankings) */}
+      <div
+        className="absolute inset-0 opacity-8 animate-grid pointer-events-none"
+        style={{
+          backgroundImage: `linear-gradient(rgba(141, 153, 174, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(141, 153, 174, 0.08) 1px, transparent 1px)`,
+          backgroundSize: '20px 20px',
+        }}
+      />
+      <div className="absolute inset-0 pointer-events-none opacity-20 animate-scanlines mix-blend-overlay z-0" />
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_20%,rgba(6,8,12,0.99)_100%)] z-0" />
 
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
         <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6">

@@ -5,16 +5,33 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 
-export async function loginWithProvider(provider: 'google' | 'github') {
+export async function signInWithEmail(formData: { email: string; password: string }) {
   const supabase = await createClient()
-  
-  // We determine the origin based on env or default to localhost
-  const origin = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
-  
-  const { data, error } = await supabase.auth.signInWithOAuth({
-    provider,
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: formData.email,
+    password: formData.password,
+  })
+
+  if (error) {
+    throw new Error(error.message)
+  }
+
+  redirect('/profile')
+}
+
+export async function signUpWithEmail(formData: { email: string; username: string; password: string }) {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase.auth.signUp({
+    email: formData.email,
+    password: formData.password,
     options: {
-      redirectTo: `${origin}/auth/callback`,
+      data: {
+        user_name: formData.username,
+        is_guest: false,
+        avatar_url: `https://api.dicebear.com/7.x/bottts/svg?seed=${formData.username}`,
+      },
     },
   })
 
@@ -22,9 +39,11 @@ export async function loginWithProvider(provider: 'google' | 'github') {
     throw new Error(error.message)
   }
 
-  if (data.url) {
-    redirect(data.url)
+  if (data.session) {
+    redirect('/profile')
   }
+
+  return { emailVerificationRequired: true }
 }
 
 export async function loginAsGuest() {
