@@ -6,6 +6,7 @@ import { useAuth } from '@/hooks/use-auth'
 import { AuthModal } from '@/components/auth/auth-modal'
 import { logout } from '@/actions/auth'
 import { Trophy, Swords, User, LogOut, ChevronDown, LayoutGrid, Store } from 'lucide-react'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 export function Header() {
   const { user, profile, isLoading } = useAuth()
@@ -81,10 +82,30 @@ export function Header() {
                   <div className="relative">
                     <button
                       onClick={() => setDropdownOpen(!dropdownOpen)}
-                      className="flex items-center gap-2 px-1 py-1.5 transition-all select-none cursor-pointer"
+                      className="flex items-center gap-2.5 px-2.5 py-1.5 transition-all select-none cursor-pointer border border-[#4A5568]/45 hover:border-[#8D99AE]/60 bg-[#1E2530]/40 rounded-none shadow-[2px_2px_0px_#000000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_#000000]"
                     >
-                    <span className="font-sans text-sm" style={{ color: 'oklch(0.85 0.05 280)' }}>{username}</span>
-                      <ChevronDown className="h-3 w-3" style={{ color: 'oklch(0.5 0.05 280)' }} />
+                      <Avatar className="h-7 w-7 rounded-none border border-[#4A5568] shrink-0">
+                        <AvatarImage src={profile?.avatar_url || ''} className="object-cover rounded-none" />
+                        <AvatarFallback
+                          className="text-[9px] font-mono rounded-none font-bold"
+                          style={{ background: '#2D3748', color: '#BFC7D5' }}
+                        >
+                          {username.substring(0, 2).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="hidden sm:flex flex-col items-start leading-none text-left font-mono gap-0.5">
+                        <span className="text-[10px] font-bold text-zinc-100 uppercase tracking-wider">{username}</span>
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-[8px] flex items-center gap-0.5 text-[#FACC15] font-bold">
+                            <Trophy className="h-2.5 w-2.5 shrink-0" />
+                            {rating}
+                          </span>
+                          <span className="text-[7px] border border-[#4A5568]/50 px-1 py-0.5 bg-[#2D3748]/30 text-[#8D99AE] leading-none uppercase font-bold">
+                            LVL {profile?.level ?? 1}
+                          </span>
+                        </div>
+                      </div>
+                      <ChevronDown className="h-3 w-3 text-[#8D99AE] ml-0.5 shrink-0" />
                     </button>
 
                     {dropdownOpen && (

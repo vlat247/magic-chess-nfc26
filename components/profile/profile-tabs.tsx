@@ -54,6 +54,7 @@ const standardAchievements = [
 
 export function ProfileTabs({ userId, profile, matches, achievements, isPro }: ProfileTabsProps) {
   const [activeTab, setActiveTab] = useState<'lobby' | 'armory' | 'spellbook' | 'settings'>('lobby')
+  const [armoryTab, setArmoryTab] = useState<'board' | 'piece' | 'spell'>('board')
   const [isPending, startTransition] = useTransition()
 
   // Account Settings state
@@ -128,7 +129,7 @@ export function ProfileTabs({ userId, profile, matches, achievements, isPro }: P
       
       {/* ── INTERACTIVE TAB SELECTORS ────────────────────────────────────── */}
       <div 
-        className="flex border-b border-white/[0.08] bg-zinc-950/20 backdrop-blur-md overflow-x-auto scrollbar-none font-mono text-[9px] tracking-widest relative rounded-t-xl"
+        className="flex border-b-2 border-[#2D3748] bg-[#2D3748]/30 backdrop-blur-md overflow-x-auto scrollbar-none font-mono text-[9px] tracking-widest relative rounded-none"
       >
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id
@@ -138,19 +139,12 @@ export function ProfileTabs({ userId, profile, matches, achievements, isPro }: P
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={cn(
-                "px-6 py-4 border-b-2 font-bold cursor-pointer transition-all duration-300 uppercase flex items-center gap-2 shrink-0 relative",
+                "px-6 py-4 border-b-2 font-bold cursor-pointer transition-all duration-300 uppercase flex items-center gap-2 shrink-0 relative rounded-none",
                 isActive
-                  ? "border-white text-white"
-                  : "border-transparent text-zinc-500 hover:text-zinc-300"
+                  ? "border-[#BFC7D5] text-[#BFC7D5] bg-[#BFC7D5]/5"
+                  : "border-transparent text-[#8D99AE] hover:text-[#BFC7D5] hover:bg-[#2D3748]/20"
               )}
             >
-              {isActive && (
-                <motion.div 
-                  layoutId="activeTabGlow"
-                  className="absolute inset-0 bg-white/[0.02] -z-10"
-                  transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                />
-              )}
               <Icon className="h-3.5 w-3.5" />
               {tab.label}
             </button>
@@ -178,228 +172,235 @@ export function ProfileTabs({ userId, profile, matches, achievements, isPro }: P
 
             {/* TAB 2: COSMETICS ARMORY */}
             {activeTab === 'armory' && (
-              <div className="flex flex-col gap-8">
+              <div className="flex flex-col gap-6">
                 
-                {/* Board Themes Section */}
-                <div className="flex flex-col gap-4">
-                  <div className="flex items-center gap-3">
-                    <Sparkles className="h-4 w-4 text-amber-400/80" />
-                    <h3 className="font-mono text-[10px] text-amber-400/80 tracking-widest uppercase font-bold">BOARD STYLES (THEMES)</h3>
-                    <div className="flex-1 h-px bg-white/[0.06]" />
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {boardThemes.map((board) => {
-                      const isEquipped = equippedBoard === board.id
-                      const isLocked = board.premium && !isPro
-                      
-                      return (
-                        <motion.div 
-                          key={board.id}
-                          whileHover={{ y: -3 }}
-                          className={cn(
-                            "p-5 border bg-zinc-950/40 backdrop-blur-md flex flex-col justify-between min-h-[180px] relative transition-all duration-300 group rounded-xl",
-                            isEquipped ? 'border-amber-500/40 bg-zinc-900/30' : 'border-white/[0.06] hover:border-white/20',
-                            board.glow
-                          )}
-                        >
-                          {/* Corner markers */}
-                          <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-white/10 group-hover:border-white/20 transition-colors" />
-                          <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-white/10 group-hover:border-white/20 transition-colors" />
-
-                          <div className="flex flex-col gap-2">
-                            <div className="flex justify-between items-start min-h-[18px]">
-                              <span />
-                              {isLocked ? (
-                                <span className="text-amber-400 text-[7px] border border-amber-500/20 bg-amber-500/5 px-2 py-0.5 flex items-center gap-1 font-mono uppercase font-bold tracking-widest rounded">
-                                  <Lock className="h-2 w-2" /> PRO
-                                </span>
-                              ) : isEquipped ? (
-                                <span className="text-amber-400 text-[7px] border border-amber-500/20 bg-amber-500/5 px-2 py-0.5 flex items-center gap-1 font-mono uppercase font-bold tracking-widest rounded">
-                                  EQUIPPED
-                                </span>
-                              ) : null}
-                            </div>
-
-                            <h4 className="font-sans text-[13px] font-bold text-zinc-100 tracking-wide group-hover:text-amber-400 transition-colors duration-300">{board.name}</h4>
-                            <p className="font-sans text-[10px] text-zinc-400/90 leading-relaxed mt-1.5 tracking-normal normal-case">{board.desc.toLowerCase()}</p>
-                          </div>
-
-                          <div className="mt-4">
-                            {isLocked ? (
-                              <button
-                                onClick={() => window.location.href = '/premium'}
-                                className="w-full text-center py-2 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 hover:border-amber-400 text-amber-400 font-mono text-[8px] tracking-widest uppercase cursor-pointer transition-all duration-300 font-bold hover:scale-[1.01] rounded"
-                              >
-                                UNLOCK WITH PRO
-                              </button>
-                            ) : (
-                              <button
-                                disabled={isEquipped}
-                                onClick={() => handleEquipCosmetic('board', board.id)}
-                                className={cn(
-                                  "w-full text-center py-2 font-mono text-[8px] tracking-widest uppercase cursor-pointer transition-all duration-300 font-bold rounded",
-                                  isEquipped 
-                                    ? "bg-amber-500/10 border border-amber-500/20 text-amber-400 cursor-default"
-                                    : "bg-zinc-900/60 border border-white/[0.08] hover:border-white/20 text-zinc-300 hover:text-white hover:bg-zinc-800/80"
-                                )}
-                              >
-                                {isEquipped ? 'Attuned' : 'Equip Theme'}
-                              </button>
-                            )}
-                          </div>
-                        </motion.div>
-                      )
-                    })}
-                  </div>
+                {/* Armory Category Sub-Tabs */}
+                <div className="flex border-b border-[#2D3748] bg-[#2D3748]/10 backdrop-blur-md rounded-none font-mono text-[8px] tracking-widest uppercase">
+                  {([
+                    { key: 'board' as const, label: 'Board Themes', icon: <Sparkles className="h-3 w-3" /> },
+                    { key: 'piece' as const, label: 'Piece Art', icon: <Swords className="h-3 w-3" /> },
+                    { key: 'spell' as const, label: 'Spell Casting VFX', icon: <Wand2 className="h-3 w-3" /> },
+                  ]).map((tab) => {
+                    const isActive = armoryTab === tab.key
+                    return (
+                      <button
+                        key={tab.key}
+                        onClick={() => setArmoryTab(tab.key)}
+                        className={`flex items-center gap-1.5 px-4 py-3 border-b-2 font-bold cursor-pointer transition-all duration-200 relative uppercase rounded-none
+                          ${isActive
+                            ? 'border-[#FACC15] text-[#FACC15] bg-[#FACC15]/5'
+                            : 'border-transparent text-[#8D99AE] hover:text-[#BFC7D5] hover:bg-[#2D3748]/20'
+                          }`}
+                      >
+                        {tab.icon}
+                        {tab.label}
+                      </button>
+                    )
+                  })}
                 </div>
 
-                {/* Piece Customizer Section */}
-                <div className="flex flex-col gap-4">
-                  <div className="flex items-center gap-3">
-                    <Swords className="h-4 w-4 text-cyan-400/80" />
-                    <h3 className="font-mono text-[10px] text-cyan-400/80 tracking-widest uppercase font-bold">PIECE ART DESIGN</h3>
-                    <div className="flex-1 h-px bg-white/[0.06]" />
-                  </div>
+                {/* Sub-tab items grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                  {armoryTab === 'board' && boardThemes.map((board) => {
+                    const isEquipped = equippedBoard === board.id
+                    const isLocked = board.premium && !isPro
+                    
+                    return (
+                      <div 
+                        key={board.id}
+                        className={cn(
+                          "p-4 border bg-[#1E2530]/40 flex flex-col justify-between min-h-[150px] relative transition-all duration-200 group rounded-none",
+                          isEquipped ? 'pixel-border-yellow' : 'pixel-border-gunmetal hover:pixel-border-silver'
+                        )}
+                      >
+                        {/* Corner markers for equipped */}
+                        {isEquipped && (
+                          <>
+                            <div className="absolute top-1 left-1 w-1.5 h-1.5 bg-[#FACC15]" />
+                            <div className="absolute top-1 right-1 w-1.5 h-1.5 bg-[#FACC15]" />
+                            <div className="absolute bottom-1 left-1 w-1.5 h-1.5 bg-[#FACC15]" />
+                            <div className="absolute bottom-1 right-1 w-1.5 h-1.5 bg-[#FACC15]" />
+                          </>
+                        )}
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    {pieceStyles.map((piece) => {
-                      const isEquipped = equippedPiece === piece.id
-                      const isLocked = piece.premium && !isPro
-
-                      return (
-                        <motion.div 
-                          key={piece.id}
-                          whileHover={{ y: -3 }}
-                          className={cn(
-                            "p-5 border bg-zinc-950/40 backdrop-blur-md flex flex-col justify-between min-h-[180px] relative transition-all duration-300 group rounded-xl",
-                            isEquipped ? 'border-cyan-500/40 bg-zinc-900/30' : 'border-white/[0.06] hover:border-white/20',
-                            piece.glow
-                          )}
-                        >
-                          {/* Corner markers */}
-                          <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-white/10 group-hover:border-white/20 transition-colors" />
-                          <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-white/10 group-hover:border-white/20 transition-colors" />
-
-                          <div className="flex flex-col gap-2">
-                            <div className="flex justify-between items-start min-h-[18px]">
-                              <span />
-                              {isLocked ? (
-                                <span className="text-amber-400 text-[7px] border border-amber-500/20 bg-amber-500/5 px-2 py-0.5 flex items-center gap-1 font-mono uppercase font-bold tracking-widest rounded">
-                                  <Lock className="h-2 w-2" /> PRO
-                                </span>
-                              ) : isEquipped ? (
-                                <span className="text-cyan-400 text-[7px] border border-cyan-500/20 bg-cyan-500/5 px-2 py-0.5 flex items-center gap-1 font-mono uppercase font-bold tracking-widest rounded">
-                                  EQUIPPED
-                                </span>
-                              ) : null}
-                            </div>
-
-                            <h4 className="font-sans text-[13px] font-bold text-zinc-100 tracking-wide group-hover:text-cyan-400 transition-colors duration-300">{piece.name}</h4>
-                            <p className="font-sans text-[10px] text-zinc-400/90 leading-relaxed mt-1.5 tracking-normal normal-case">{piece.desc.toLowerCase()}</p>
-                          </div>
-
-                          <div className="mt-4">
+                        <div className="flex flex-col gap-2">
+                          <div className="flex justify-between items-start min-h-[16px]">
+                            <span className="font-mono text-[8px] tracking-wider text-[#8D99AE] uppercase font-bold">BOARD THEME</span>
                             {isLocked ? (
-                              <button
-                                onClick={() => window.location.href = '/premium'}
-                                className="w-full text-center py-2 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 hover:border-amber-400 text-amber-400 font-mono text-[8px] tracking-widest uppercase cursor-pointer transition-all duration-300 font-bold hover:scale-[1.01] rounded"
-                              >
-                                UNLOCK WITH PRO
-                              </button>
-                            ) : (
-                              <button
-                                disabled={isEquipped}
-                                onClick={() => handleEquipCosmetic('piece', piece.id)}
-                                className={cn(
-                                  "w-full text-center py-2 font-mono text-[8px] tracking-widest uppercase cursor-pointer transition-all duration-300 font-bold rounded",
-                                  isEquipped 
-                                    ? "bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 cursor-default"
-                                    : "bg-zinc-900/60 border border-white/[0.08] hover:border-white/20 text-zinc-300 hover:text-white hover:bg-zinc-800/80"
-                                )}
-                              >
-                                {isEquipped ? 'Attuned' : 'Equip Pieces'}
-                              </button>
-                            )}
+                              <span className="text-[#FACC15] text-[7px] border border-[#FACC15]/20 bg-[#FACC15]/5 px-2 py-0.5 flex items-center gap-1 font-mono uppercase font-bold tracking-widest rounded-none">
+                                <Lock className="h-2 w-2" /> PRO
+                              </span>
+                            ) : isEquipped ? (
+                              <span className="text-[#FACC15] text-[7px] border border-[#FACC15]/20 bg-[#FACC15]/5 px-2 py-0.5 flex items-center gap-1 font-mono uppercase font-bold tracking-widest rounded-none font-bold">
+                                EQUIPPED
+                              </span>
+                            ) : null}
                           </div>
-                        </motion.div>
-                      )
-                    })}
-                  </div>
-                </div>
 
-                {/* Spell VFX Section */}
-                <div className="flex flex-col gap-4">
-                  <div className="flex items-center gap-3">
-                    <Wand2 className="h-4 w-4 text-violet-400/80" />
-                    <h3 className="font-mono text-[10px] text-violet-400/80 tracking-widest uppercase font-bold">SPELL CASTING EFFECTS</h3>
-                    <div className="flex-1 h-px bg-white/[0.06]" />
-                  </div>
+                          <h4 className="font-mono text-[11px] font-bold text-zinc-100 uppercase tracking-wider group-hover:text-[#BFC7D5] transition-colors">{board.name}</h4>
+                          <p className="font-sans text-[9px] text-[#8D99AE] leading-normal tracking-wide lowercase">{board.desc}</p>
+                        </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    {spellEffects.map((spell) => {
-                      const isEquipped = equippedSpell === spell.id
-                      const isLocked = spell.premium && !isPro
-
-                      return (
-                        <motion.div 
-                          key={spell.id}
-                          whileHover={{ y: -3 }}
-                          className={cn(
-                            "p-5 border bg-zinc-950/40 backdrop-blur-md flex flex-col justify-between min-h-[180px] relative transition-all duration-300 group rounded-xl",
-                            isEquipped ? 'border-violet-500/40 bg-zinc-900/30' : 'border-white/[0.06] hover:border-white/20',
-                            spell.glow
+                        <div className="mt-4">
+                          {isLocked ? (
+                            <button
+                              onClick={() => window.location.href = '/premium'}
+                              className="w-full text-center py-2 bg-[#2D3748] hover:bg-[#4A5568] border-2 border-zinc-950 text-[#BFC7D5] font-mono text-[8px] tracking-widest uppercase cursor-pointer transition-all rounded-none shadow-[4px_4px_0px_#000000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0px_#000000] font-bold"
+                            >
+                              UNLOCK PRO SKIN
+                            </button>
+                          ) : (
+                            <button
+                              disabled={isEquipped}
+                              onClick={() => handleEquipCosmetic('board', board.id)}
+                              className={cn(
+                                "w-full text-center py-2 font-mono text-[8px] tracking-widest uppercase transition-all font-bold rounded-none border-2 border-zinc-950",
+                                isEquipped 
+                                  ? "bg-[#FACC15]/10 text-[#FACC15] border-[#FACC15]/30 cursor-default"
+                                  : "bg-[#8D99AE] hover:bg-[#A3B0C7] text-zinc-950 cursor-pointer shadow-[4px_4px_0px_#000000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0px_#000000]"
+                              )}
+                            >
+                              {isEquipped ? 'ATTUNED' : 'EQUIP THEME'}
+                            </button>
                           )}
-                        >
-                          {/* Corner markers */}
-                          <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-white/10 group-hover:border-white/20 transition-colors" />
-                          <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-white/10 group-hover:border-white/20 transition-colors" />
+                        </div>
+                      </div>
+                    )
+                  })}
 
-                          <div className="flex flex-col gap-2">
-                            <div className="flex justify-between items-start min-h-[18px]">
-                              <span />
-                              {isLocked ? (
-                                <span className="text-amber-400 text-[7px] border border-amber-500/20 bg-amber-500/5 px-2 py-0.5 flex items-center gap-1 font-mono uppercase font-bold tracking-widest rounded">
-                                  <Lock className="h-2 w-2" /> PRO
-                                </span>
-                              ) : isEquipped ? (
-                                <span className="text-violet-400 text-[7px] border border-violet-500/20 bg-violet-500/5 px-2 py-0.5 flex items-center gap-1 font-mono uppercase font-bold tracking-widest rounded">
-                                  EQUIPPED
-                                </span>
-                              ) : null}
-                            </div>
+                  {armoryTab === 'piece' && pieceStyles.map((piece) => {
+                    const isEquipped = equippedPiece === piece.id
+                    const isLocked = piece.premium && !isPro
 
-                            <h4 className="font-sans text-[13px] font-bold text-zinc-100 tracking-wide group-hover:text-violet-400 transition-colors duration-300">{spell.name}</h4>
-                            <p className="font-sans text-[10px] text-zinc-400/90 leading-relaxed mt-1.5 tracking-normal normal-case">{spell.desc.toLowerCase()}</p>
-                          </div>
+                    return (
+                      <div 
+                        key={piece.id}
+                        className={cn(
+                          "p-4 border bg-[#1E2530]/40 flex flex-col justify-between min-h-[150px] relative transition-all duration-200 group rounded-none",
+                          isEquipped ? 'pixel-border-yellow' : 'pixel-border-gunmetal hover:pixel-border-silver'
+                        )}
+                      >
+                        {/* Corner markers for equipped */}
+                        {isEquipped && (
+                          <>
+                            <div className="absolute top-1 left-1 w-1.5 h-1.5 bg-[#FACC15]" />
+                            <div className="absolute top-1 right-1 w-1.5 h-1.5 bg-[#FACC15]" />
+                            <div className="absolute bottom-1 left-1 w-1.5 h-1.5 bg-[#FACC15]" />
+                            <div className="absolute bottom-1 right-1 w-1.5 h-1.5 bg-[#FACC15]" />
+                          </>
+                        )}
 
-                          <div className="mt-4">
+                        <div className="flex flex-col gap-2">
+                          <div className="flex justify-between items-start min-h-[16px]">
+                            <span className="font-mono text-[8px] tracking-wider text-[#8D99AE] uppercase font-bold">PIECE DESIGN</span>
                             {isLocked ? (
-                              <button
-                                onClick={() => window.location.href = '/premium'}
-                                className="w-full text-center py-2 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 hover:border-amber-400 text-amber-400 font-mono text-[8px] tracking-widest uppercase cursor-pointer transition-all duration-300 font-bold hover:scale-[1.01] rounded"
-                              >
-                                UNLOCK WITH PRO
-                              </button>
-                            ) : (
-                              <button
-                                disabled={isEquipped}
-                                onClick={() => handleEquipCosmetic('spell', spell.id)}
-                                className={cn(
-                                  "w-full text-center py-2 font-mono text-[8px] tracking-widest uppercase cursor-pointer transition-all duration-300 font-bold rounded",
-                                  isEquipped 
-                                    ? "bg-violet-500/10 border border-violet-500/20 text-violet-400 cursor-default"
-                                    : "bg-zinc-900/60 border border-white/[0.08] hover:border-white/20 text-zinc-300 hover:text-white hover:bg-zinc-800/80"
-                                )}
-                              >
-                                {isEquipped ? 'Attuned' : 'Equip VFX'}
-                              </button>
-                            )}
+                              <span className="text-[#FACC15] text-[7px] border border-[#FACC15]/20 bg-[#FACC15]/5 px-2 py-0.5 flex items-center gap-1 font-mono uppercase font-bold tracking-widest rounded-none">
+                                <Lock className="h-2 w-2" /> PRO
+                              </span>
+                            ) : isEquipped ? (
+                              <span className="text-[#FACC15] text-[7px] border border-[#FACC15]/20 bg-[#FACC15]/5 px-2 py-0.5 flex items-center gap-1 font-mono uppercase font-bold tracking-widest rounded-none font-bold">
+                                EQUIPPED
+                              </span>
+                            ) : null}
                           </div>
-                        </motion.div>
-                      )
-                    })}
-                  </div>
+
+                          <h4 className="font-mono text-[11px] font-bold text-zinc-100 uppercase tracking-wider group-hover:text-[#BFC7D5] transition-colors">{piece.name}</h4>
+                          <p className="font-sans text-[9px] text-[#8D99AE] leading-normal tracking-wide lowercase">{piece.desc}</p>
+                        </div>
+
+                        <div className="mt-4">
+                          {isLocked ? (
+                            <button
+                              onClick={() => window.location.href = '/premium'}
+                              className="w-full text-center py-2 bg-[#2D3748] hover:bg-[#4A5568] border-2 border-zinc-950 text-[#BFC7D5] font-mono text-[8px] tracking-widest uppercase cursor-pointer transition-all rounded-none shadow-[4px_4px_0px_#000000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0px_#000000] font-bold"
+                            >
+                              UNLOCK PRO SKIN
+                            </button>
+                          ) : (
+                            <button
+                              disabled={isEquipped}
+                              onClick={() => handleEquipCosmetic('piece', piece.id)}
+                              className={cn(
+                                "w-full text-center py-2 font-mono text-[8px] tracking-widest uppercase transition-all font-bold rounded-none border-2 border-zinc-950",
+                                isEquipped 
+                                  ? "bg-[#FACC15]/10 text-[#FACC15] border-[#FACC15]/30 cursor-default"
+                                  : "bg-[#8D99AE] hover:bg-[#A3B0C7] text-zinc-950 cursor-pointer shadow-[4px_4px_0px_#000000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0px_#000000]"
+                              )}
+                            >
+                              {isEquipped ? 'ATTUNED' : 'EQUIP PIECES'}
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    )
+                  })}
+
+                  {armoryTab === 'spell' && spellEffects.map((spell) => {
+                    const isEquipped = equippedSpell === spell.id
+                    const isLocked = spell.premium && !isPro
+
+                    return (
+                      <div 
+                        key={spell.id}
+                        className={cn(
+                          "p-4 border bg-[#1E2530]/40 flex flex-col justify-between min-h-[150px] relative transition-all duration-200 group rounded-none",
+                          isEquipped ? 'pixel-border-yellow' : 'pixel-border-gunmetal hover:pixel-border-silver'
+                        )}
+                      >
+                        {/* Corner markers for equipped */}
+                        {isEquipped && (
+                          <>
+                            <div className="absolute top-1 left-1 w-1.5 h-1.5 bg-[#FACC15]" />
+                            <div className="absolute top-1 right-1 w-1.5 h-1.5 bg-[#FACC15]" />
+                            <div className="absolute bottom-1 left-1 w-1.5 h-1.5 bg-[#FACC15]" />
+                            <div className="absolute bottom-1 right-1 w-1.5 h-1.5 bg-[#FACC15]" />
+                          </>
+                        )}
+
+                        <div className="flex flex-col gap-2">
+                          <div className="flex justify-between items-start min-h-[16px]">
+                            <span className="font-mono text-[8px] tracking-wider text-[#8D99AE] uppercase font-bold">SPELL EFFECT</span>
+                            {isLocked ? (
+                              <span className="text-[#FACC15] text-[7px] border border-[#FACC15]/20 bg-[#FACC15]/5 px-2 py-0.5 flex items-center gap-1 font-mono uppercase font-bold tracking-widest rounded-none">
+                                <Lock className="h-2 w-2" /> PRO
+                              </span>
+                            ) : isEquipped ? (
+                              <span className="text-[#FACC15] text-[7px] border border-[#FACC15]/20 bg-[#FACC15]/5 px-2 py-0.5 flex items-center gap-1 font-mono uppercase font-bold tracking-widest rounded-none font-bold">
+                                EQUIPPED
+                              </span>
+                            ) : null}
+                          </div>
+
+                          <h4 className="font-mono text-[11px] font-bold text-zinc-100 uppercase tracking-wider group-hover:text-[#BFC7D5] transition-colors">{spell.name}</h4>
+                          <p className="font-sans text-[9px] text-[#8D99AE] leading-normal tracking-wide lowercase">{spell.desc}</p>
+                        </div>
+
+                        <div className="mt-4">
+                          {isLocked ? (
+                            <button
+                              onClick={() => window.location.href = '/premium'}
+                              className="w-full text-center py-2 bg-[#2D3748] hover:bg-[#4A5568] border-2 border-zinc-950 text-[#BFC7D5] font-mono text-[8px] tracking-widest uppercase cursor-pointer transition-all rounded-none shadow-[4px_4px_0px_#000000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0px_#000000] font-bold"
+                            >
+                              UNLOCK PRO SKIN
+                            </button>
+                          ) : (
+                            <button
+                              disabled={isEquipped}
+                              onClick={() => handleEquipCosmetic('spell', spell.id)}
+                              className={cn(
+                                "w-full text-center py-2 font-mono text-[8px] tracking-widest uppercase transition-all font-bold rounded-none border-2 border-zinc-950",
+                                isEquipped 
+                                  ? "bg-[#FACC15]/10 text-[#FACC15] border-[#FACC15]/30 cursor-default"
+                                  : "bg-[#8D99AE] hover:bg-[#A3B0C7] text-zinc-950 cursor-pointer shadow-[4px_4px_0px_#000000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0px_#000000]"
+                              )}
+                            >
+                              {isEquipped ? 'ATTUNED' : 'EQUIP VFX'}
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    )
+                  })}
                 </div>
 
               </div>
@@ -410,20 +411,22 @@ export function ProfileTabs({ userId, profile, matches, achievements, isPro }: P
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                 
                 {/* Left: Progression stats */}
-                <div className="lg:col-span-4 border border-white/[0.08] bg-zinc-950/40 backdrop-blur-md p-6 flex flex-col gap-6 items-center text-center relative justify-center min-h-[300px] group rounded-xl shadow-md">
-                  <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-white/10" />
-                  <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-white/10" />
+                <div className="lg:col-span-4 border-2 pixel-border-steel bg-[#1E2530]/40 backdrop-blur-md p-6 flex flex-col gap-6 items-center text-center relative justify-center min-h-[300px] group rounded-none shadow-md">
+                  <div className="absolute top-1.5 left-1.5 w-1 h-1 bg-[#8D99AE]/40" />
+                  <div className="absolute top-1.5 right-1.5 w-1 h-1 bg-[#8D99AE]/40" />
+                  <div className="absolute bottom-1.5 left-1.5 w-1 h-1 bg-[#8D99AE]/40" />
+                  <div className="absolute bottom-1.5 right-1.5 w-1 h-1 bg-[#8D99AE]/40" />
                   
                   <span className="font-mono text-[8px] text-zinc-500 tracking-widest uppercase absolute top-4">SUMMONER LEVEL STATUS</span>
                   
-                  {/* Level Badge Circle */}
-                  <div className="relative w-28 h-28 flex items-center justify-center border border-white/[0.08] rounded-full mt-6 bg-zinc-900/30">
-                    <div className="absolute w-[88%] h-[88%] border border-white/5 rounded-full border-dotted" />
+                  {/* Level Badge Block */}
+                  <div className="relative w-28 h-28 flex items-center justify-center border-2 border-[#4A5568] bg-[#1E2530] rounded-none mt-6 shadow-[4px_4px_0px_#000000]">
+                    <div className="absolute w-[88%] h-[88%] border border-[#4A5568]/40 rounded-none border-dotted" />
                     <div className="flex flex-col items-center justify-center">
-                      <span className="font-mono text-5xl text-zinc-100 leading-none font-bold mt-1">
+                      <span className="font-mono text-5xl text-[#BFC7D5] leading-none font-bold mt-1">
                         {profile?.level ?? 1}
                       </span>
-                      <span className="font-mono text-[6px] tracking-widest text-zinc-500 uppercase font-bold mt-1">
+                      <span className="font-mono text-[6px] tracking-widest text-[#8D99AE] uppercase font-bold mt-1">
                         LEVEL
                       </span>
                     </div>
@@ -435,10 +438,10 @@ export function ProfileTabs({ userId, profile, matches, achievements, isPro }: P
                       <span>{profile?.xp ? profile.xp % 1000 : 0} / 1000 XP</span>
                       <span>{xpNeeded} XP TO LEVEL { (profile?.level ?? 1) + 1 }</span>
                     </div>
-                    <Progress value={xpProgress} className="h-2 bg-zinc-950 border border-white/[0.06] shrink-0" />
+                    <Progress value={xpProgress} className="h-2 bg-[#1E2530] border border-[#4A5568] shrink-0 rounded-none" />
                   </div>
                   
-                  <span className="font-mono text-[8px] text-zinc-300 uppercase font-bold tracking-widest border border-white/[0.08] bg-zinc-900/50 px-3 py-1.5 mt-1 rounded">
+                  <span className="font-mono text-[8px] text-[#BFC7D5] uppercase font-bold tracking-widest border-2 border-[#4A5568] bg-[#2D3748]/50 px-3 py-1.5 mt-1 rounded-none">
                     TOTAL EXPERIENCE: {profile?.xp ?? 0} XP
                   </span>
 
@@ -447,9 +450,9 @@ export function ProfileTabs({ userId, profile, matches, achievements, isPro }: P
                 {/* Right: Achievements grids */}
                 <div className="lg:col-span-8 flex flex-col gap-4">
                   <div className="flex items-center gap-3">
-                    <Star className="h-4 w-4 text-amber-400" />
-                    <h3 className="font-mono text-[10px] text-amber-400/80 tracking-widest uppercase font-bold">SPELLBOOK TRIUMPHS (ACHIEVEMENTS)</h3>
-                    <div className="flex-1 h-px bg-white/[0.06]" />
+                    <Star className="h-4 w-4 text-[#FACC15]" />
+                    <h3 className="font-mono text-[10px] text-[#FACC15] tracking-widest uppercase font-bold">SPELLBOOK TRIUMPHS (ACHIEVEMENTS)</h3>
+                    <div className="flex-1 h-px bg-[#4A5568]/40" />
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -457,45 +460,46 @@ export function ProfileTabs({ userId, profile, matches, achievements, isPro }: P
                       const unlocked = achievements?.some(a => a.name.toLowerCase() === ach.name.toLowerCase())
                       const Icon = ach.icon
                       return (
-                        <motion.div 
+                        <div 
                           key={ach.name}
-                          whileHover={unlocked ? { y: -2, scale: 1.01 } : {}}
                           className={cn(
-                            "p-4 border font-mono text-[9px] tracking-wider relative flex gap-4 items-center transition-all duration-300 rounded-xl",
+                            "p-4 border-2 font-mono text-[9px] tracking-wider relative flex gap-4 items-center transition-all duration-300 rounded-none",
                             unlocked 
-                              ? 'border-amber-500/30 bg-zinc-900/20 shadow-sm' 
-                              : 'border-white/[0.04] bg-zinc-950/20 opacity-40 shadow-none'
+                              ? 'border-[#FACC15] bg-[#FACC15]/5 shadow-[2px_2px_0px_#000000]' 
+                              : 'border-[#4A5568] bg-[#1E2530]/20 opacity-40 shadow-none'
                           )}
                         >
-                          {/* Corner bracket */}
+                          {/* Corner notched indicators for unlocked achievements */}
                           {unlocked && (
                             <>
-                              <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-amber-500/40" />
-                              <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-amber-500/40" />
+                              <div className="absolute top-1 left-1 w-1 h-1 bg-[#FACC15]" />
+                              <div className="absolute top-1 right-1 w-1 h-1 bg-[#FACC15]" />
+                              <div className="absolute bottom-1 left-1 w-1 h-1 bg-[#FACC15]" />
+                              <div className="absolute bottom-1 right-1 w-1 h-1 bg-[#FACC15]" />
                             </>
                           )}
 
-                          {/* Trophy icon border */}
+                          {/* Icon border */}
                           <div className={cn(
-                            "w-10 h-10 shrink-0 flex items-center justify-center border transition-all duration-300 rounded-lg",
-                            unlocked ? 'border-amber-500/30 bg-amber-500/5 text-amber-400' : 'border-white/[0.08] text-zinc-600 bg-zinc-950'
+                            "w-10 h-10 shrink-0 flex items-center justify-center border-2 transition-all duration-300 rounded-none",
+                            unlocked ? 'border-[#FACC15]/40 bg-[#FACC15]/5 text-[#FACC15]' : 'border-[#4A5568] text-zinc-650 bg-zinc-950'
                           )}>
                             <Icon className="h-5 w-5" />
                           </div>
 
                           <div className="flex flex-col gap-0.5 leading-none">
                             <div className="flex items-center gap-1.5 flex-wrap">
-                              <span className={cn("font-bold text-[10px] tracking-wide", unlocked ? 'text-amber-200' : 'text-zinc-500')}>{ach.name}</span>
+                              <span className={cn("font-bold text-[10px] tracking-wide uppercase", unlocked ? 'text-zinc-100' : 'text-[#8D99AE]')}>{ach.name}</span>
                               {unlocked && (
                                 <CheckCircle2 className="h-3 w-3 text-emerald-400" />
                               )}
                             </div>
-                            <span className="text-[8px] text-zinc-400 mt-1 leading-normal tracking-wide">{ach.desc}</span>
-                            <span className={cn("text-[7px] uppercase mt-1 tracking-wider font-bold", unlocked ? 'text-zinc-300' : 'text-zinc-600')}>
+                            <span className="text-[8px] text-[#8D99AE] mt-1 leading-normal tracking-wide lowercase">{ach.desc}</span>
+                            <span className={cn("text-[7px] uppercase mt-1 tracking-wider font-bold", unlocked ? 'text-[#BFC7D5]' : 'text-[#4A5568]')}>
                               +{ach.xp} XP REWARD
                             </span>
                           </div>
-                        </motion.div>
+                        </div>
                       )
                     })}
                   </div>
@@ -506,15 +510,15 @@ export function ProfileTabs({ userId, profile, matches, achievements, isPro }: P
 
             {/* TAB 4: ACCOUNT CONFIGS */}
             {activeTab === 'settings' && (
-              <div className="max-w-md mx-auto border border-white/[0.08] bg-zinc-950/40 backdrop-blur-md p-6 sm:p-8 relative rounded-xl shadow-lg">
+              <div className="max-w-md mx-auto border-2 pixel-border-steel bg-[#1E2530]/40 backdrop-blur-md p-6 sm:p-8 relative rounded-none shadow-lg">
                 
                 {/* Corner accents */}
-                <div className="absolute top-0 left-0 w-2.5 h-2.5 border-t border-l border-white/20 rounded-tl-lg" />
-                <div className="absolute top-0 right-0 w-2.5 h-2.5 border-t border-r border-white/20 rounded-tr-lg" />
-                <div className="absolute bottom-0 left-0 w-2.5 h-2.5 border-b border-l border-white/20 rounded-bl-lg" />
-                <div className="absolute bottom-0 right-0 w-2.5 h-2.5 border-b border-r border-white/20 rounded-br-lg" />
+                <div className="absolute top-1.5 left-1.5 w-1 h-1 bg-[#8D99AE]/40" />
+                <div className="absolute top-1.5 right-1.5 w-1 h-1 bg-[#8D99AE]/40" />
+                <div className="absolute bottom-1.5 left-1.5 w-1 h-1 bg-[#8D99AE]/40" />
+                <div className="absolute bottom-1.5 right-1.5 w-1 h-1 bg-[#8D99AE]/40" />
 
-                <div className="flex flex-col gap-1 text-center border-b border-white/[0.06] pb-4 mb-6">
+                <div className="flex flex-col gap-1 text-center border-b border-[#4A5568]/40 pb-4 mb-6">
                   <Settings className="h-5 w-5 text-zinc-400 mx-auto animate-spin" style={{ animationDuration: '6s' }} />
                   <h3 className="font-mono text-xs text-white uppercase tracking-widest mt-2 font-bold">SANCTUM PARAMETERS</h3>
                   <p className="font-mono text-[8px] text-zinc-500 uppercase tracking-widest mt-1">Adjust username and guild location to join rankings</p>
@@ -530,7 +534,7 @@ export function ProfileTabs({ userId, profile, matches, achievements, isPro }: P
                       required
                       value={username}
                       onChange={e => setUsername(e.target.value)}
-                      className="p-3 bg-zinc-900/50 border border-white/[0.08] text-[10px] text-white focus:outline-none focus:border-white/20 transition-all font-mono hover:border-white/10 rounded"
+                      className="p-3 bg-[#1E2530] border-2 border-[#4A5568] text-[10px] text-white focus:outline-none focus:border-[#8D99AE] hover:border-[#8D99AE] transition-all font-mono placeholder:text-[#4A5568] rounded-none"
                     />
                   </div>
 
@@ -543,14 +547,14 @@ export function ProfileTabs({ userId, profile, matches, achievements, isPro }: P
                         value={city}
                         onChange={e => setCity(e.target.value)}
                         placeholder="e.g. Astana, London, Tokyo"
-                        className="w-full p-3 pl-8 bg-zinc-900/50 border border-white/[0.08] text-[10px] text-white focus:outline-none focus:border-white/20 transition-all font-mono placeholder:text-zinc-600 hover:border-white/10 rounded"
+                        className="w-full p-3 pl-8 bg-[#1E2530] border-2 border-[#4A5568] text-[10px] text-white focus:outline-none focus:border-[#8D99AE] hover:border-[#8D99AE] transition-all font-mono placeholder:text-[#4A5568] rounded-none"
                       />
-                      <MapPin className="absolute left-2.5 top-3.5 h-3.5 w-3.5 text-zinc-500" />
+                      <MapPin className="absolute left-2.5 top-3.5 h-3.5 w-3.5 text-[#4A5568]" />
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-2.5 border border-white/[0.08] bg-zinc-900/30 p-3.5 leading-relaxed text-zinc-400 uppercase text-[8px] mt-1 tracking-wider rounded">
-                    <Crown className="h-4 w-4 shrink-0 text-amber-400" />
+                  <div className="flex items-start gap-2.5 border-2 border-[#4A5568] bg-[#2D3748]/30 p-3.5 leading-relaxed text-[#8D99AE] uppercase text-[8px] mt-1 tracking-wider rounded-none">
+                    <Crown className="h-4 w-4 shrink-0 text-[#FACC15]" />
                     <span>SPECIFYING A GUILD LOCATION ENABLES LOCALIZED RANKINGS FILTERING IN THE HALL OF MASTERS LEADERBOARD.</span>
                   </div>
 
@@ -558,7 +562,7 @@ export function ProfileTabs({ userId, profile, matches, achievements, isPro }: P
                   <button
                     type="submit"
                     disabled={isPending}
-                    className="w-full py-3.5 bg-white hover:bg-zinc-200 text-zinc-950 font-mono font-bold text-[9px] sm:text-[10px] tracking-widest cursor-pointer active:scale-[0.98] transition-all uppercase disabled:opacity-50 mt-2 rounded"
+                    className="w-full py-3.5 bg-[#8D99AE] hover:bg-[#A3B0C7] text-zinc-950 font-mono font-bold text-[9px] sm:text-[10px] tracking-widest cursor-pointer transition-all uppercase disabled:opacity-50 mt-2 rounded-none border-2 border-zinc-950 shadow-[4px_4px_0px_#000000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0px_#000000]"
                   >
                     APPLY PARAMETER ATTUNEMENT
                   </button>

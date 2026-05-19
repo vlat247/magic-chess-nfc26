@@ -29,25 +29,25 @@ const AI_LEVELS: {
     level: 'none',
     label: 'Local PvP',
     desc: 'Pass & play with a friend',
-    accentColor: 'text-zinc-300',
+    accentColor: 'text-[#8D99AE]',
   },
   {
     level: 'easy',
     label: 'Novice AI',
     desc: 'A gentle sparring partner',
-    accentColor: 'text-emerald-400',
+    accentColor: 'text-[#8D99AE]',
   },
   {
     level: 'medium',
     label: 'Adept AI',
     desc: 'A balanced challenge',
-    accentColor: 'text-amber-400',
+    accentColor: 'text-[#BFC7D5]',
   },
   {
     level: 'hard',
     label: 'Master AI',
     desc: 'Relentless and merciless',
-    accentColor: 'text-rose-400',
+    accentColor: 'text-[#FACC15]',
   },
 ]
 
@@ -64,7 +64,7 @@ export function GameModeHub({ userId, username }: GameModeHubProps) {
   return (
     <div className="flex flex-col">
       {/* Tab bar */}
-      <div className="flex border-b border-white/[0.08] mb-5 bg-zinc-950/20 backdrop-blur-md rounded-t-xl font-mono text-[9px] tracking-widest uppercase">
+      <div className="flex border-b-2 border-[#2D3748] mb-5 bg-[#2D3748]/30 backdrop-blur-md rounded-none font-mono text-[9px] tracking-widest uppercase">
         {([
           { key: 'local' as Tab, label: 'Local & AI', icon: <Cpu className="h-3.5 w-3.5" /> },
           { key: 'online' as Tab, label: 'Online', icon: <Users className="h-3.5 w-3.5" /> },
@@ -75,10 +75,10 @@ export function GameModeHub({ userId, username }: GameModeHubProps) {
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
               id={`hub-tab-${tab.key}`}
-              className={`flex items-center gap-2 px-6 py-4 border-b-2 font-bold cursor-pointer transition-all duration-300 relative uppercase
+              className={`flex items-center gap-2 px-6 py-4 border-b-2 font-bold cursor-pointer transition-all duration-300 relative uppercase rounded-none
                 ${isActive
-                  ? 'border-white text-white bg-white/[0.02]'
-                  : 'border-transparent text-zinc-500 hover:text-zinc-300'
+                  ? 'border-[#BFC7D5] text-[#BFC7D5] bg-[#BFC7D5]/5'
+                  : 'border-transparent text-[#8D99AE] hover:text-[#BFC7D5] hover:bg-[#2D3748]/20'
                 }`}
             >
               {tab.icon}
@@ -94,7 +94,7 @@ export function GameModeHub({ userId, username }: GameModeHubProps) {
           <div className="flex flex-col gap-4">
             <FantasyPixelCard theme="purple" title="SPARRING ARENA">
               <div className="flex flex-col gap-4 p-1">
-                <p className="text-[9px] font-mono text-zinc-400 uppercase tracking-widest leading-relaxed">
+                <p className="text-[9px] font-mono text-[#8D99AE] uppercase tracking-widest leading-relaxed">
                   Select your opponent type, then enter the battle.
                 </p>
 
@@ -102,24 +102,43 @@ export function GameModeHub({ userId, username }: GameModeHubProps) {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-1">
                   {AI_LEVELS.map(({ level, label, desc, accentColor }) => {
                     const isSelected = selectedAi === level
+                    
+                    // Difficulty colors for retro pixel theme
+                    let themeBorder = 'border-[#4A5568] bg-[#2D3748]/20 hover:border-[#8D99AE]'
+                    let cornerColor = 'bg-[#4A5568]/40 group-hover:bg-[#8D99AE]/40'
+                    if (isSelected) {
+                      if (level === 'none') {
+                        themeBorder = 'border-[#4A5568] bg-[#4A5568]/10 text-[#8D99AE] shadow-[4px_4px_0px_#000000]'
+                        cornerColor = 'bg-[#4A5568]'
+                      } else if (level === 'easy') {
+                        themeBorder = 'border-[#8D99AE] bg-[#8D99AE]/10 text-[#8D99AE] shadow-[4px_4px_0px_#000000]'
+                        cornerColor = 'bg-[#8D99AE]'
+                      } else if (level === 'medium') {
+                        themeBorder = 'border-[#BFC7D5] bg-[#BFC7D5]/10 text-[#BFC7D5] shadow-[4px_4px_0px_#000000]'
+                        cornerColor = 'bg-[#BFC7D5]'
+                      } else if (level === 'hard') {
+                        themeBorder = 'border-[#FACC15] bg-[#FACC15]/10 text-[#FACC15] shadow-[4px_4px_0px_#000000]'
+                        cornerColor = 'bg-[#FACC15]'
+                      }
+                    }
+
                     return (
                       <button
                         key={level}
                         onClick={() => setSelectedAi(level)}
                         id={`ai-level-${level}`}
-                        className={`relative flex flex-col gap-1.5 p-4 border text-left transition-all duration-300 cursor-pointer rounded-xl group
-                          ${isSelected
-                            ? 'border-white/30 bg-zinc-900/40 shadow-sm'
-                            : 'border-white/[0.06] bg-zinc-950/20 hover:border-white/20 hover:bg-zinc-900/30'
-                          }
+                        className={`relative flex flex-col gap-1.5 p-4 border-2 text-left transition-all duration-200 cursor-pointer rounded-none group
+                          ${themeBorder}
                         `}
                       >
-                        {/* Corner markers */}
-                        <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-white/10 group-hover:border-white/20 transition-colors" />
-                        <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-white/10 group-hover:border-white/20 transition-colors" />
+                        {/* Corner notched pixel blocks */}
+                        <div className={`absolute top-1.5 left-1.5 w-1 h-1 transition-colors ${cornerColor}`} />
+                        <div className={`absolute top-1.5 right-1.5 w-1 h-1 transition-colors ${cornerColor}`} />
+                        <div className={`absolute bottom-1.5 left-1.5 w-1 h-1 transition-colors ${cornerColor}`} />
+                        <div className={`absolute bottom-1.5 right-1.5 w-1 h-1 transition-colors ${cornerColor}`} />
 
                         <div className="flex items-center justify-between">
-                          <div className={`p-1.5 rounded-lg bg-zinc-950 border border-white/[0.06] group-hover:border-white/10 transition-colors ${isSelected ? accentColor : 'text-zinc-500'}`}>
+                          <div className={`p-1.5 rounded-none bg-[#1E2530] border-2 border-[#4A5568] transition-colors ${isSelected ? accentColor : 'text-[#4A5568]'}`}>
                             {level === 'none'
                               ? <UserIcon className="h-3.5 w-3.5 shrink-0" />
                               : <Bot className="h-3.5 w-3.5 shrink-0" />
@@ -129,10 +148,10 @@ export function GameModeHub({ userId, username }: GameModeHubProps) {
                             <span className={`text-[10px] font-bold ${accentColor}`}>✓</span>
                           )}
                         </div>
-                        <span className={`font-mono text-[10px] font-bold uppercase tracking-wider ${isSelected ? 'text-zinc-100' : 'text-zinc-400'}`}>
+                        <span className={`font-mono text-[10px] font-bold uppercase tracking-wider ${isSelected ? 'text-zinc-100' : 'text-[#8D99AE]'}`}>
                           {label}
                         </span>
-                        <span className={`text-[9px] font-sans leading-normal ${isSelected ? 'text-zinc-400' : 'text-zinc-600'}`}>
+                        <span className={`text-[9px] font-sans leading-normal ${isSelected ? 'text-[#BFC7D5]' : 'text-[#4A5568]'}`}>
                           {desc.toLowerCase()}
                         </span>
                       </button>
@@ -144,7 +163,7 @@ export function GameModeHub({ userId, username }: GameModeHubProps) {
                 <button
                   onClick={handlePlayLocal}
                   id="enter-battle-btn"
-                  className="w-full flex items-center justify-center gap-2 py-3.5 mt-2 bg-white hover:bg-zinc-200 text-zinc-950 font-mono font-bold text-[9px] sm:text-[10px] tracking-widest cursor-pointer active:scale-[0.98] transition-all uppercase rounded shadow"
+                  className="w-full mt-3 flex items-center justify-center gap-2 py-3.5 bg-[#8D99AE] hover:bg-[#A3B0C7] text-zinc-950 font-mono font-bold text-[9px] sm:text-[10px] tracking-widest cursor-pointer transition-all uppercase rounded-none border-2 border-zinc-950 shadow-[4px_4px_0px_#000000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0px_#000000]"
                 >
                   <Swords className="h-4 w-4" />
                   ENTER BATTLE

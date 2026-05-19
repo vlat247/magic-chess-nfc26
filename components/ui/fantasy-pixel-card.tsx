@@ -16,24 +16,28 @@ interface FantasyPixelCardProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const THEME_STYLES = {
   cyan: {
-    border: 'border-white/[0.06] group-hover:border-white/20',
-    titleText: 'text-zinc-200 group-hover:text-white',
-    titleBg: 'border-white/[0.08] bg-zinc-950/80',
+    borderClass: 'pixel-border-silver',
+    titleText: 'text-[#BFC7D5] group-hover:text-white',
+    titleBg: 'border-2 border-[#BFC7D5]/40 bg-zinc-950/95',
+    cornerClass: 'bg-[#BFC7D5]/40 group-hover:bg-[#BFC7D5]/80',
   },
   purple: {
-    border: 'border-white/[0.06] group-hover:border-white/20',
-    titleText: 'text-zinc-200 group-hover:text-white',
-    titleBg: 'border-white/[0.08] bg-zinc-950/80',
+    borderClass: 'pixel-border-darkmetal',
+    titleText: 'text-[#8D99AE] group-hover:text-white',
+    titleBg: 'border-2 border-[#2D3748] bg-zinc-950/95',
+    cornerClass: 'bg-[#2D3748] group-hover:bg-[#4A5568]',
   },
   gold: {
-    border: 'border-white/[0.06] group-hover:border-white/20',
-    titleText: 'text-amber-500/80 group-hover:text-amber-400',
-    titleBg: 'border-amber-500/20 bg-zinc-950/80',
+    borderClass: 'pixel-border-yellow',
+    titleText: 'text-[#FACC15] group-hover:text-amber-300 text-glow-gold',
+    titleBg: 'border-2 border-[#FACC15]/40 bg-zinc-950/95',
+    cornerClass: 'bg-[#FACC15]/40 group-hover:bg-[#FACC15]/80',
   },
   default: {
-    border: 'border-white/[0.06] group-hover:border-white/20',
-    titleText: 'text-zinc-400 group-hover:text-zinc-200',
-    titleBg: 'border-white/[0.08] bg-zinc-950/80',
+    borderClass: 'pixel-border-steel',
+    titleText: 'text-[#8D99AE] group-hover:text-[#BFC7D5]',
+    titleBg: 'border-2 border-[#8D99AE]/40 bg-zinc-950/95',
+    cornerClass: 'bg-[#8D99AE]/40 group-hover:bg-[#8D99AE]/80',
   },
 }
 
@@ -52,27 +56,18 @@ export function FantasyPixelCard({
   return (
     <div
       className={cn(
-        'relative group w-full overflow-hidden rounded-xl border transition-all duration-300',
-        styles.border,
-        'bg-zinc-950/40 backdrop-blur-xl shadow-lg',
+        'relative group w-full overflow-hidden rounded-none transition-all duration-300',
+        styles.borderClass,
+        'bg-zinc-950/60 backdrop-blur-xl',
         className
       )}
       {...props}
     >
-      {/* Subtle corner markers */}
-      <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-white/10 group-hover:border-white/20 transition-colors z-20" />
-      <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-white/10 group-hover:border-white/20 transition-colors z-20" />
-
-      {/* Behind Glow Layer (Pulses softly on hover) - DISABLED / CLEAN */}
-      {glowOnHover && (
-        <div
-          className="absolute inset-0 -z-10 opacity-0 group-hover:opacity-100 transition-all duration-500 rounded-xl"
-          style={{
-            boxShadow: `0 0 25px rgba(255, 255, 255, 0.02)`,
-            filter: 'blur(8px)',
-          }}
-        />
-      )}
+      {/* Subtle corner pixel blocks */}
+      <div className={cn("absolute top-1.5 left-1.5 w-1 h-1 transition-colors z-20", styles.cornerClass)} />
+      <div className={cn("absolute top-1.5 right-1.5 w-1 h-1 transition-colors z-20", styles.cornerClass)} />
+      <div className={cn("absolute bottom-1.5 left-1.5 w-1 h-1 transition-colors z-20", styles.cornerClass)} />
+      <div className={cn("absolute bottom-1.5 right-1.5 w-1 h-1 transition-colors z-20", styles.cornerClass)} />
 
       {/* Interactive Metallic Shimmer Sheen on Hover */}
       {shimmer && (
@@ -95,7 +90,7 @@ export function FantasyPixelCard({
         <div className="absolute top-3.5 left-4.5 z-20 pointer-events-none select-none">
           <div
             className={cn(
-              "px-3 py-1 rounded border text-[8px] font-mono tracking-widest uppercase font-bold",
+              "px-3 py-1 rounded-none text-[8px] font-mono tracking-widest uppercase font-bold",
               styles.titleText,
               styles.titleBg
             )}

@@ -46,6 +46,13 @@
   --neon-pink: oklch(0.7 0.22 330);
   --deep-purple: oklch(0.2 0.08 280);
   --dark-bg: oklch(0.08 0.02 280);
+
+  /* Metallic pixel theme colors */
+  --metal-silver: #BFC7D5;
+  --metal-steel: #8D99AE;
+  --metal-gunmetal: #4A5568;
+  --metal-darkmetal: #2D3748;
+  --metal-yellow: #FACC15;
 }
 
 .dark {
@@ -131,6 +138,13 @@
   --color-neon-pink: var(--neon-pink);
   --color-deep-purple: var(--deep-purple);
   --color-dark-bg: var(--dark-bg);
+
+  /* Metallic theme colors */
+  --color-metal-silver: var(--metal-silver);
+  --color-metal-steel: var(--metal-steel);
+  --color-metal-gunmetal: var(--metal-gunmetal);
+  --color-metal-darkmetal: var(--metal-darkmetal);
+  --color-metal-yellow: var(--metal-yellow);
 }
 
 @layer base {
@@ -142,26 +156,103 @@
   }
 }
 
-/* Pixel border utility */
+/* Pixel border utilities */
 .pixel-border {
   box-shadow: 
-    0 0 0 2px var(--neon-purple),
-    0 0 0 4px oklch(0.12 0.02 280),
-    inset 0 0 0 2px oklch(0.2 0.04 280);
+    0 0 0 2px var(--metal-steel),
+    0 0 0 4px oklch(0.08 0.02 280),
+    inset 0 0 0 2px oklch(0.15 0.03 280);
+  transition: box-shadow 0.25s steps(4);
 }
 
-.pixel-border-cyan {
+.pixel-border-silver {
   box-shadow: 
-    0 0 0 2px var(--neon-cyan),
-    0 0 0 4px oklch(0.12 0.02 280),
-    inset 0 0 0 2px oklch(0.2 0.04 280);
+    0 0 0 2px var(--metal-silver),
+    0 0 0 4px oklch(0.08 0.02 280),
+    inset 0 0 0 2px oklch(0.15 0.03 280);
+  transition: box-shadow 0.25s steps(4);
 }
 
-.pixel-border-gold {
+.pixel-border-steel {
   box-shadow: 
-    0 0 0 2px var(--neon-gold),
-    0 0 0 4px oklch(0.12 0.02 280),
-    inset 0 0 0 2px oklch(0.2 0.04 280);
+    0 0 0 2px var(--metal-steel),
+    0 0 0 4px oklch(0.08 0.02 280),
+    inset 0 0 0 2px oklch(0.15 0.03 280);
+  transition: box-shadow 0.25s steps(4);
+}
+
+.pixel-border-gunmetal {
+  box-shadow: 
+    0 0 0 2px var(--metal-gunmetal),
+    0 0 0 4px oklch(0.08 0.02 280),
+    inset 0 0 0 2px oklch(0.15 0.03 280);
+  transition: box-shadow 0.25s steps(4);
+}
+
+.pixel-border-darkmetal {
+  box-shadow: 
+    0 0 0 2px var(--metal-darkmetal),
+    0 0 0 4px oklch(0.08 0.02 280),
+    inset 0 0 0 2px oklch(0.15 0.03 280);
+  transition: box-shadow 0.25s steps(4);
+}
+
+.pixel-border-yellow {
+  box-shadow: 
+    0 0 0 2px var(--metal-yellow),
+    0 0 0 4px oklch(0.08 0.02 280),
+    inset 0 0 0 2px oklch(0.15 0.03 280);
+  transition: box-shadow 0.25s steps(4);
+}
+
+/* Hover effects for pixel borders */
+.pixel-border:hover {
+  box-shadow: 
+    0 0 0 2px var(--metal-steel),
+    0 0 0 4px oklch(0.08 0.02 280),
+    inset 0 0 0 2px oklch(0.3 0.05 280),
+    0 4px 0px var(--metal-steel);
+}
+
+.pixel-border-silver:hover {
+  box-shadow: 
+    0 0 0 2px var(--metal-silver),
+    0 0 0 4px oklch(0.08 0.02 280),
+    inset 0 0 0 2px oklch(0.3 0.05 280),
+    0 4px 0px var(--metal-silver);
+}
+
+.pixel-border-steel:hover {
+  box-shadow: 
+    0 0 0 2px var(--metal-steel),
+    0 0 0 4px oklch(0.08 0.02 280),
+    inset 0 0 0 2px oklch(0.3 0.05 280),
+    0 4px 0px var(--metal-steel);
+}
+
+.pixel-border-gunmetal:hover {
+  box-shadow: 
+    0 0 0 2px var(--metal-gunmetal),
+    0 0 0 4px oklch(0.08 0.02 280),
+    inset 0 0 0 2px oklch(0.3 0.05 280),
+    0 4px 0px var(--metal-gunmetal);
+}
+
+.pixel-border-darkmetal:hover {
+  box-shadow: 
+    0 0 0 2px var(--metal-darkmetal),
+    0 0 0 4px oklch(0.08 0.02 280),
+    inset 0 0 0 2px oklch(0.3 0.05 280),
+    0 4px 0px var(--metal-darkmetal);
+}
+
+.pixel-border-yellow:hover {
+  box-shadow: 
+    0 0 0 2px var(--metal-yellow),
+    0 0 0 4px oklch(0.08 0.02 280),
+    inset 0 0 0 2px oklch(0.3 0.05 280),
+    0 4px 0px var(--metal-yellow),
+    0 0 15px rgba(250, 204, 21, 0.4);
 }
 
 /* Glow effects */

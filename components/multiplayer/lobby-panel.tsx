@@ -130,7 +130,7 @@ export function LobbyPanel({ userId: userIdProp, username: usernameProp }: Lobby
   }
 
   return (
-    <div className="flex flex-col gap-6 w-full max-w-md mx-auto relative z-10">
+    <div className="flex flex-col gap-6 w-full relative z-10">
 
       {/* Header */}
       <div className="text-center">
@@ -150,28 +150,33 @@ export function LobbyPanel({ userId: userIdProp, username: usernameProp }: Lobby
             TIME CONTROL SETTING
           </label>
           <div className="grid grid-cols-3 gap-2.5">
-            {TIME_CONTROLS.map((tc) => (
-              <button
-                key={tc.seconds}
-                onClick={() => setSelectedTimeControl(tc.seconds)}
-                className={`flex flex-col items-center gap-1 py-3 px-2 border rounded-lg transition-all duration-300 font-mono text-[10px] tracking-wider uppercase group relative
-                  ${selectedTimeControl === tc.seconds
-                    ? 'border-amber-500/30 text-amber-400 bg-amber-500/5 font-bold'
-                    : 'border-white/[0.06] text-zinc-500 hover:border-white/20 hover:text-zinc-300 bg-zinc-950/20'
-                  }`}
-              >
-                {/* Corner markers for selected */}
-                {selectedTimeControl === tc.seconds && (
-                  <>
-                    <div className="absolute top-0 left-0 w-1 h-1 border-t border-l border-amber-500/40" />
-                    <div className="absolute bottom-0 right-0 w-1 h-1 border-b border-r border-amber-500/40" />
-                  </>
-                )}
-                <span className="text-base">{tc.icon}</span>
-                <span>{tc.label}</span>
-                <span className="text-[8px] opacity-60 leading-none mt-1">{tc.subLabel}</span>
-              </button>
-            ))}
+            {TIME_CONTROLS.map((tc) => {
+              const isSelected = selectedTimeControl === tc.seconds
+              return (
+                <button
+                  key={tc.seconds}
+                  onClick={() => setSelectedTimeControl(tc.seconds)}
+                  className={`flex flex-col items-center gap-1 py-3 px-2 border-2 transition-all duration-200 font-mono text-[9px] sm:text-[10px] tracking-wider uppercase group relative rounded-none cursor-pointer
+                    ${isSelected
+                      ? 'border-[#FACC15] text-[#FACC15] bg-[#FACC15]/10 shadow-[4px_4px_0px_#000000] font-bold'
+                      : 'border-[#4A5568] text-[#8D99AE] hover:border-[#8D99AE] hover:text-[#BFC7D5] bg-[#2D3748]/40'
+                    }`}
+                >
+                  {/* Corner pixel markers for selected */}
+                  {isSelected && (
+                    <>
+                      <div className="absolute top-1 left-1 w-1.5 h-1.5 bg-[#FACC15]" />
+                      <div className="absolute top-1 right-1 w-1.5 h-1.5 bg-[#FACC15]" />
+                      <div className="absolute bottom-1 left-1 w-1.5 h-1.5 bg-[#FACC15]" />
+                      <div className="absolute bottom-1 right-1 w-1.5 h-1.5 bg-[#FACC15]" />
+                    </>
+                  )}
+                  <span className="text-base">{tc.icon}</span>
+                  <span>{tc.label}</span>
+                  <span className="text-[8px] opacity-60 leading-none mt-1">{tc.subLabel}</span>
+                </button>
+              )
+            })}
           </div>
         </div>
       </FantasyPixelCard>
@@ -181,21 +186,22 @@ export function LobbyPanel({ userId: userIdProp, username: usernameProp }: Lobby
         <div className="flex flex-col gap-3 p-1">
           <div className="flex items-center gap-2">
             <Plus className="h-3.5 w-3.5 text-zinc-400" />
-            <span className="font-mono text-[9px] tracking-widest text-zinc-300 uppercase font-bold">CREATE PRIVATE ROOM</span>
+            <span className="font-mono text-[9px] tracking-widest text-[#BFC7D5] uppercase font-bold">CREATE PRIVATE ROOM</span>
           </div>
-          <p className="font-mono text-[9px] text-zinc-500 leading-relaxed uppercase tracking-wide">
+          <p className="font-mono text-[9px] text-[#8D99AE] leading-relaxed uppercase tracking-wide">
             Initiate a localized arena room and dispatch the attunement identifier link to your opponent.
           </p>
           <button
             onClick={handleCreateRoom}
             disabled={isCreating}
-            className="flex items-center justify-center gap-2 py-3.5 bg-white hover:bg-zinc-200 text-zinc-950 font-mono font-bold text-[9px] sm:text-[10px] tracking-widest cursor-pointer active:scale-[0.98] transition-all uppercase rounded shadow disabled:opacity-50 disabled:cursor-not-allowed w-full mt-1"
+            className="w-full mt-2 flex items-center justify-center gap-2 py-3.5 bg-[#BFC7D5] hover:bg-[#D9E1EE] text-zinc-950 font-mono font-bold text-[9px] sm:text-[10px] tracking-widest cursor-pointer transition-all uppercase rounded-none border-2 border-zinc-950 shadow-[4px_4px_0px_#000000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0px_#000000] disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none"
             id="create-room-btn"
           >
-            {isCreating
-              ? <><Loader2 className="h-3.5 w-3.5 animate-spin" /> CONJURING ROOM...</>
-              : <><Plus className="h-3.5 w-3.5" /> CREATE ROOM</>
-            }
+            {isCreating ? (
+              <><div className="w-3.5 h-3.5 border-2 border-zinc-950 border-t-transparent animate-spin rounded-none" /> CONJURING ROOM...</>
+            ) : (
+              <><Plus className="h-3.5 w-3.5" /> CREATE ROOM</>
+            )}
           </button>
         </div>
       </FantasyPixelCard>
@@ -205,7 +211,7 @@ export function LobbyPanel({ userId: userIdProp, username: usernameProp }: Lobby
         <div className="flex flex-col gap-3 p-1">
           <div className="flex items-center gap-2">
             <ArrowRight className="h-3.5 w-3.5 text-zinc-400" />
-            <span className="font-mono text-[9px] tracking-widest text-zinc-300 uppercase font-bold">JOIN BY ROOM ID</span>
+            <span className="font-mono text-[9px] tracking-widest text-[#8D99AE] uppercase font-bold">JOIN BY ROOM ID</span>
           </div>
           <div className="flex gap-2 mt-1">
             <input
@@ -214,17 +220,17 @@ export function LobbyPanel({ userId: userIdProp, username: usernameProp }: Lobby
               onChange={(e) => setJoinRoomId(e.target.value.toUpperCase())}
               placeholder="ENTER ROOM ID..."
               maxLength={10}
-              className="flex-1 bg-zinc-900/50 border border-white/[0.08] px-3 py-2.5 font-mono text-[10px] text-white tracking-widest placeholder:text-zinc-600 focus:border-white/20 focus:outline-none transition-all rounded hover:border-white/10"
+              className="flex-1 bg-[#1E2530] border-2 border-[#4A5568] px-3 py-2.5 font-mono text-[10px] text-white tracking-widest placeholder:text-[#4A5568] focus:border-[#8D99AE] focus:outline-none transition-all rounded-none hover:border-[#8D99AE]"
               id="join-room-input"
               onKeyDown={(e) => e.key === 'Enter' && handleJoinRoom()}
             />
             <button
               onClick={handleJoinRoom}
               disabled={isJoining || !joinRoomId.trim()}
-              className="px-5 bg-white hover:bg-zinc-200 text-zinc-950 font-mono text-[9px] font-bold tracking-widest uppercase cursor-pointer active:scale-[0.98] transition-all rounded disabled:opacity-40 disabled:cursor-not-allowed"
+              className="px-5 bg-[#8D99AE] hover:bg-[#A3B0C7] text-zinc-950 font-mono text-[9px] font-bold tracking-widest uppercase cursor-pointer transition-all rounded-none border-2 border-zinc-950 shadow-[4px_4px_0px_#000000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0px_#000000] disabled:opacity-40 disabled:cursor-not-allowed disabled:pointer-events-none"
               id="join-room-btn"
             >
-              {isJoining ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : 'JOIN'}
+              {isJoining ? <div className="w-3.5 h-3.5 border-2 border-zinc-950 border-t-transparent animate-spin rounded-none" /> : 'JOIN'}
             </button>
           </div>
         </div>
@@ -234,24 +240,24 @@ export function LobbyPanel({ userId: userIdProp, username: usernameProp }: Lobby
       <FantasyPixelCard theme="gold" title="BATTLE ARENA">
         <div className="flex flex-col gap-3 p-1">
           <div className="flex items-center gap-2">
-            <Zap className="h-3.5 w-3.5 text-amber-500/80" />
-            <span className="font-mono text-[9px] tracking-widest text-zinc-300 uppercase font-bold">QUICKMATCH</span>
+            <Zap className="h-3.5 w-3.5 text-[#FACC15]" />
+            <span className="font-mono text-[9px] tracking-widest text-[#FACC15] uppercase font-bold">QUICKMATCH</span>
           </div>
-          <p className="font-mono text-[9px] text-zinc-500 leading-relaxed uppercase tracking-wide">
+          <p className="font-mono text-[9px] text-[#8D99AE] leading-relaxed uppercase tracking-wide">
             Automated wizard alignment matrix. Instantly pairs you with an active opponent.
           </p>
 
           {isMatchmaking ? (
-            <div className="flex flex-col items-center gap-3 py-4 bg-zinc-950/20 border border-white/[0.06] rounded-xl mt-1">
+            <div className="flex flex-col items-center gap-3 py-4 bg-zinc-950/40 border-2 border-[#4A5568] rounded-none mt-1 shadow-[2px_2px_0px_#000000]">
               <div className="relative">
-                <div className="w-10 h-10 border-2 border-t-zinc-400 border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin" />
+                <div className="w-8 h-8 border-4 border-[#4A5568] border-t-[#FACC15] animate-spin rounded-none" />
               </div>
-              <span className="font-mono text-[8px] tracking-widest text-zinc-500 uppercase font-bold animate-pulse">
+              <span className="font-mono text-[8px] tracking-widest text-[#8D99AE] uppercase font-bold animate-pulse">
                 SEARCHING FOR OPPONENT...
               </span>
               <button
                 onClick={handleCancelMatchmaking}
-                className="font-mono text-[8px] tracking-widest text-zinc-500 hover:text-rose-400 transition-colors uppercase font-bold underline underline-offset-2 mt-1"
+                className="font-mono text-[8px] tracking-widest text-[#8D99AE] hover:text-[#BFC7D5] transition-colors uppercase font-bold underline underline-offset-2 mt-1 cursor-pointer"
               >
                 cancel
               </button>
@@ -259,7 +265,7 @@ export function LobbyPanel({ userId: userIdProp, username: usernameProp }: Lobby
           ) : (
             <button
               onClick={handleQuickmatch}
-              className="flex items-center justify-center gap-2 py-3.5 bg-white hover:bg-zinc-200 text-zinc-950 font-mono font-bold text-[9px] sm:text-[10px] tracking-widest cursor-pointer active:scale-[0.98] transition-all uppercase rounded shadow w-full mt-1"
+              className="w-full mt-2 flex items-center justify-center gap-2 py-3.5 bg-[#FACC15] hover:bg-[#FDE047] text-zinc-950 font-mono font-bold text-[9px] sm:text-[10px] tracking-widest cursor-pointer transition-all uppercase rounded-none border-2 border-zinc-950 shadow-[4px_4px_0px_#000000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0px_#000000]"
               id="quickmatch-btn"
             >
               <Zap className="h-3.5 w-3.5" /> FIND OPPONENT
@@ -270,17 +276,18 @@ export function LobbyPanel({ userId: userIdProp, username: usernameProp }: Lobby
 
       {/* Error display */}
       {error && (
-        <div className="px-4 py-3 border border-rose-500/20 bg-rose-500/5 font-mono text-[8px] tracking-widest text-rose-400 uppercase rounded text-center">
+        <div className="px-4 py-3 border-2 border-rose-500 bg-rose-950/30 font-mono text-[8px] tracking-widest text-rose-400 uppercase rounded-none text-center shadow-[2px_2px_0px_#000000]">
           ⚠ {error}
         </div>
       )}
 
       {/* Sign-in reminder */}
       {!userId && (
-        <div className="px-4 py-3 border border-white/[0.08] bg-zinc-900/30 font-mono text-[8px] tracking-widest text-zinc-500 uppercase rounded text-center">
+        <div className="px-4 py-3 border-2 border-zinc-800 bg-zinc-950/50 font-mono text-[8px] tracking-widest text-zinc-500 uppercase rounded-none text-center">
           SIGN IN TO PLAY ONLINE
         </div>
       )}
     </div>
   )
 }
+
