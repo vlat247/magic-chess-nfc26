@@ -123,7 +123,7 @@ export function GameModeHub({ userId, username }: GameModeHubProps) {
 
         {/* ── ONLINE TAB ──────────────────────────────────────────────────── */}
         {activeTab === 'online' && (
-          <LobbyPanel />
+          <LobbyPanel userId={userId} username={username} />
         )}
       </div>
     </div>

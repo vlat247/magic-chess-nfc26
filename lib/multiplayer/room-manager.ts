@@ -188,3 +188,18 @@ export async function findMatchmakingOpponent(
 
   return data?.user_id ?? null
 }
+
+/** Fetches username by user ID */
+export async function getUsername(userId: string): Promise<string> {
+  const supabase = createClient()
+  const { data, error } = await supabase
+    .from('users')
+    .select('username')
+    .eq('id', userId)
+    .single()
+
+  if (error || !data) {
+    return `Mage#${userId.slice(0, 4)}`
+  }
+  return data.username
+}

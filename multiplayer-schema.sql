@@ -33,7 +33,13 @@ CREATE POLICY "Authenticated users can create rooms"
 
 CREATE POLICY "Room players can update their room"
   ON public.game_rooms FOR UPDATE
-  USING (auth.uid() = host_id OR auth.uid() = guest_id);
+  USING (
+    -- Host or existing guest can always update
+    auth.uid() = host_id
+    OR auth.uid() = guest_id
+    -- Any authenticated user can join a waiting room that has no guest yet
+    OR (status = 'waiting' AND guest_id IS NULL AND auth.uid() IS NOT NULL)
+  );
 
 -- Auto-update updated_at
 CREATE OR REPLACE FUNCTION public.update_game_room_timestamp()

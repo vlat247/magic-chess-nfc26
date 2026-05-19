@@ -1,29 +1,38 @@
 'use client'
 
 /**
- * LobbyPanel — multiplayer entry point rendered in /play when Online mode is selected.
+ * LobbyPanel — multiplayer entry point.
  * Handles: Create Room, Join by ID, and Quickmatch flows.
+ *
+ * Accepts optional userId/username props to avoid depending on async useAuth().
+ * When rendered inside the profile page, pass them from server data.
  */
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Users, Plus, Zap, Clock, Copy, ArrowRight, Loader2 } from 'lucide-react'
-import { useMultiplayerRoom } from '@/hooks/use-multiplayer-room'
+import { Users, Plus, Zap, ArrowRight, Loader2 } from 'lucide-react'
 import { useAuth } from '@/hooks/use-auth'
+import { createRoomAction } from '@/actions/room'
 import { startMatchmaking } from '@/lib/multiplayer/matchmaking'
 
 const TIME_CONTROLS = [
   { label: 'BULLET', subLabel: '1 MIN', seconds: 60, icon: '⚡' },
-  { label: 'BLITZ', subLabel: '5 MIN', seconds: 300, icon: '🔥' },
-  { label: 'RAPID', subLabel: '10 MIN', seconds: 600, icon: '⏱' },
+  { label: 'BLITZ',  subLabel: '5 MIN', seconds: 300, icon: '🔥' },
+  { label: 'RAPID',  subLabel: '10 MIN', seconds: 600, icon: '⏱' },
 ]
 
-export function LobbyPanel() {
-  const router = useRouter()
-  const { user, profile } = useAuth()
-  const username = profile?.username ?? `Mage#${user?.id?.slice(0, 4) ?? '????'}`
+interface LobbyPanelProps {
+  /** Pass from server component to avoid async useAuth() race */
+  userId?: string
+  username?: string
+}
 
-  const { createAndEnterRoom } = useMultiplayerRoom(user?.id ?? null, username)
+export function LobbyPanel({ userId: userIdProp, username: usernameProp }: LobbyPanelProps = {}) {
+  const router = useRouter()
+  // Fallback to client-side auth only when props aren't provided
+  const { user, profile } = useAuth()
+  const userId   = userIdProp   ?? user?.id
+  const username = usernameProp ?? profile?.username ?? `Mage#${user?.id?.slice(0, 4) ?? '????'}`
 
   const [selectedTimeControl, setSelectedTimeControl] = useState(300)
   const [joinRoomId, setJoinRoomId] = useState('')
@@ -33,55 +42,81 @@ export function LobbyPanel() {
   const [matchmakingCancel, setMatchmakingCancel] = useState<(() => Promise<void>) | null>(null)
   const [error, setError] = useState<string | null>(null)
 
+  // ── Create Room ─────────────────────────────────────────────────────────────
   const handleCreateRoom = async () => {
-    if (!user?.id) {
+    if (!userId) {
       setError('Sign in to create a room')
       return
     }
     setIsCreating(true)
     setError(null)
-    const roomId = await createAndEnterRoom(user.id, username, selectedTimeControl)
-    if (roomId) {
+
+    try {
+      const { roomId, error: roomError } = await createRoomAction(userId, selectedTimeControl)
+
+      if (roomError || !roomId) {
+        setError(roomError ?? 'Failed to create room. Is the database schema applied?')
+        setIsCreating(false)
+        return
+      }
+
+      // Persist last room in localStorage for reconnection detection
+      localStorage.setItem('chess_last_room', roomId)
+
+      // Navigate to room page — the hook initialises there
       router.push(`/play/room/${roomId}`)
-    } else {
-      setError('Failed to create room. Try again.')
+    } catch (err: any) {
+      console.error('[LobbyPanel] createRoom threw:', err)
+      setError(err?.message ?? 'Unexpected error. Check console.')
       setIsCreating(false)
     }
   }
 
+  // ── Join Room ───────────────────────────────────────────────────────────────
   const handleJoinRoom = async () => {
     const id = joinRoomId.trim().toUpperCase()
     if (!id || id.length < 4) {
       setError('Enter a valid room ID')
       return
     }
+    if (!userId) {
+      setError('Sign in to join a room')
+      return
+    }
     setIsJoining(true)
+    setError(null)
+    // Navigate to room page — joining is handled there
     router.push(`/play/room/${id}`)
   }
 
+  // ── Quickmatch ──────────────────────────────────────────────────────────────
   const handleQuickmatch = async () => {
-    if (!user?.id) {
+    if (!userId) {
       setError('Sign in to use quickmatch')
       return
     }
     setIsMatchmaking(true)
     setError(null)
 
-    const handle = await startMatchmaking(
-      user.id,
-      username,
-      selectedTimeControl,
-      (roomId, playerColor) => {
-        setIsMatchmaking(false)
-        router.push(`/play/room/${roomId}?color=${playerColor}`)
-      },
-      (msg) => {
-        setError(msg)
-        setIsMatchmaking(false)
-      }
-    )
-
-    setMatchmakingCancel(() => handle.cancel)
+    try {
+      const handle = await startMatchmaking(
+        userId,
+        username,
+        selectedTimeControl,
+        (roomId, playerColor) => {
+          setIsMatchmaking(false)
+          router.push(`/play/room/${roomId}`)
+        },
+        (msg) => {
+          setError(msg)
+          setIsMatchmaking(false)
+        }
+      )
+      setMatchmakingCancel(() => handle.cancel)
+    } catch (err: any) {
+      setError(err?.message ?? 'Matchmaking error')
+      setIsMatchmaking(false)
+    }
   }
 
   const handleCancelMatchmaking = async () => {
@@ -94,6 +129,7 @@ export function LobbyPanel() {
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-md mx-auto">
+
       {/* Header */}
       <div className="text-center">
         <div className="flex items-center justify-center gap-2 mb-2">
@@ -120,9 +156,7 @@ export function LobbyPanel() {
                   ? 'border-neon-gold text-neon-gold bg-neon-gold/5'
                   : 'border-[oklch(0.2_0.04_280)] text-muted-foreground hover:border-neon-gold/40 hover:text-neon-gold/60'
                 }`}
-              style={selectedTimeControl === tc.seconds ? {
-                boxShadow: '0 0 12px oklch(0.8 0.18 85 / 0.3)',
-              } : {}}
+              style={selectedTimeControl === tc.seconds ? { boxShadow: '0 0 12px oklch(0.8 0.18 85 / 0.3)' } : {}}
             >
               <span className="text-base">{tc.icon}</span>
               <span>{tc.label}</span>
@@ -148,11 +182,10 @@ export function LobbyPanel() {
           style={{ boxShadow: '0 0 10px oklch(0.7 0.2 195 / 0.2)' }}
           id="create-room-btn"
         >
-          {isCreating ? (
-            <><Loader2 className="h-4 w-4 animate-spin" /> CONJURING ROOM...</>
-          ) : (
-            <><Plus className="h-4 w-4" /> CREATE ROOM</>
-          )}
+          {isCreating
+            ? <><Loader2 className="h-4 w-4 animate-spin" /> CONJURING ROOM...</>
+            : <><Plus className="h-4 w-4" /> CREATE ROOM</>
+          }
         </button>
       </div>
 
@@ -222,12 +255,17 @@ export function LobbyPanel() {
         )}
       </div>
 
-      {/* Error */}
+      {/* Error display */}
       {error && (
-        <div
-          className="px-4 py-3 border border-destructive/50 bg-destructive/10 font-mono text-[9px] tracking-widest text-destructive text-center"
-        >
-          {error}
+        <div className="px-4 py-3 border border-destructive/50 bg-destructive/10 font-mono text-[9px] tracking-widest text-destructive text-center">
+          ⚠ {error}
+        </div>
+      )}
+
+      {/* Sign-in reminder */}
+      {!userId && (
+        <div className="px-4 py-3 border border-neon-purple/30 bg-neon-purple/5 font-mono text-[9px] tracking-widest text-neon-purple/70 text-center">
+          SIGN IN TO PLAY ONLINE
         </div>
       )}
     </div>

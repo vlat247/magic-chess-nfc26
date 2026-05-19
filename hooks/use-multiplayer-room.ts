@@ -18,13 +18,13 @@ import { useRouter } from 'next/navigation'
 import { useMultiplayerStore, PlayerColor } from '@/store/multiplayer-store'
 import { createRoomChannel, RoomChannel } from '@/lib/multiplayer/realtime-channel'
 import {
-  createRoom,
-  joinRoom,
   getRoom,
   updateRoomState,
   abandonRoom,
+  getUsername,
   GameRoom,
 } from '@/lib/multiplayer/room-manager'
+import { createRoomAction, joinRoomAction } from '@/actions/room'
 import {
   validateAndApplyMove,
   reconstructFromHistory,
@@ -293,7 +293,7 @@ export function useMultiplayerRoom(
       setError(null)
 
       try {
-        const { roomId: newRoomId, error } = await createRoom(hostUserId, timeControl)
+        const { roomId: newRoomId, error } = await createRoomAction(hostUserId, timeControl)
         if (error || !newRoomId) {
           setError(error ?? 'Failed to create room')
           return null
@@ -350,7 +350,7 @@ export function useMultiplayerRoom(
 
         if (!isReconnect) {
           // Fresh join as guest
-          const { error } = await joinRoom(rId, guestUserId)
+          const { error } = await joinRoomAction(rId, guestUserId)
           if (error) {
             setError(error)
             return false
@@ -381,6 +381,14 @@ export function useMultiplayerRoom(
           isStalemate: rebuilt.isStalemate,
           isDraw: rebuilt.isDraw,
         })
+
+        // Fetch and set opponent details if they are in the room
+        const oppId = color === 'white' ? freshRoom.guest_id : freshRoom.host_id
+        if (oppId) {
+          const oppUsername = await getUsername(oppId)
+          setOpponent(oppId, oppUsername)
+          setOpponentStatus('online')
+        }
 
         subscribeToRoom(rId, color, guestUserId, guestUsername, freshRoom)
 
@@ -499,7 +507,7 @@ export function useMultiplayerRoom(
     teardownChannel()
     localStorage.removeItem('chess_last_room')
     resetRoom()
-    router.push('/play')
+    router.push('/profile')
   }, [roomId, currentUserId, gamePhase, teardownChannel, resetRoom, router])
 
   // Cleanup on unmount
