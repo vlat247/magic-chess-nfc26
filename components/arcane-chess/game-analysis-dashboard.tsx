@@ -203,7 +203,7 @@ export function GameAnalysisDashboard({ history, startingFen, onClose }: GameAna
   if (status === "error" || !report) {
     return (
       <div className="w-full max-w-md p-8 bg-[oklch(0.08_0.02_280)] border-2 border-destructive bg-destructive/5 backdrop-blur-md rounded-md flex flex-col items-center text-center">
-        <AlertCircle className="text-destructive mb-4 animate-bounce" size={48} />
+        <AlertCircle className="text-destructive mb-4" size={48} />
         <h3 className="text-lg font-title text-destructive tracking-wider uppercase mb-2">
           ANALYSIS FAILURE
         </h3>
@@ -383,7 +383,7 @@ export function GameAnalysisDashboard({ history, startingFen, onClose }: GameAna
             </div>
           ) : (
             <div className="w-full bg-[oklch(0.085_0.02_280)] border border-[oklch(0.2_0.04_280)] p-6 text-center select-none flex flex-col items-center justify-center min-h-[140px]">
-              <HelpCircle className="text-muted-foreground/30 mb-2 animate-bounce" size={24} style={{ animationDuration: "3s" }} />
+              <HelpCircle className="text-muted-foreground/30 mb-2" size={24} style={{ animationDuration: "3s" }} />
               <span className="font-mono text-xs text-muted-foreground uppercase tracking-widest">
                 SELECT A MOVE ON TIMELINE TO DIAGNOSE
               </span>

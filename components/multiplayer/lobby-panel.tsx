@@ -14,6 +14,8 @@ import { Users, Plus, Zap, ArrowRight, Loader2 } from 'lucide-react'
 import { useAuth } from '@/hooks/use-auth'
 import { createRoomAction } from '@/actions/room'
 import { startMatchmaking } from '@/lib/multiplayer/matchmaking'
+import { FantasyPixelCard } from '@/components/ui/fantasy-pixel-card'
+
 
 const TIME_CONTROLS = [
   { label: 'BULLET', subLabel: '1 MIN', seconds: 60, icon: '⚡' },
@@ -128,143 +130,154 @@ export function LobbyPanel({ userId: userIdProp, username: usernameProp }: Lobby
   }
 
   return (
-    <div className="flex flex-col gap-6 w-full max-w-md mx-auto">
+    <div className="flex flex-col gap-6 w-full max-w-md mx-auto relative z-10">
 
       {/* Header */}
       <div className="text-center">
         <div className="flex items-center justify-center gap-2 mb-2">
-          <Users className="h-5 w-5 text-neon-purple" style={{ filter: 'drop-shadow(0 0 6px oklch(0.7 0.25 300))' }} />
-          <h2 className="font-mono text-sm tracking-widest text-neon-purple text-glow-purple">
+          <Users className="h-5 w-5 text-zinc-400" />
+          <h2 className="font-mono text-[11px] font-bold tracking-widest text-zinc-100 uppercase">
             ONLINE MULTIPLAYER
           </h2>
         </div>
-        <div className="h-px w-24 mx-auto bg-neon-purple opacity-40" />
+        <div className="h-px w-24 mx-auto bg-white/[0.08]" />
       </div>
 
       {/* Time Control Selector */}
-      <div className="flex flex-col gap-2">
-        <label className="font-mono text-[9px] tracking-widest text-muted-foreground uppercase">
-          Time Control
-        </label>
-        <div className="grid grid-cols-3 gap-2">
-          {TIME_CONTROLS.map((tc) => (
-            <button
-              key={tc.seconds}
-              onClick={() => setSelectedTimeControl(tc.seconds)}
-              className={`flex flex-col items-center gap-1 py-3 px-2 border-2 transition-all duration-200 font-mono text-xs tracking-wider
-                ${selectedTimeControl === tc.seconds
-                  ? 'border-neon-gold text-neon-gold bg-neon-gold/5'
-                  : 'border-[oklch(0.2_0.04_280)] text-muted-foreground hover:border-neon-gold/40 hover:text-neon-gold/60'
-                }`}
-              style={selectedTimeControl === tc.seconds ? { boxShadow: '0 0 12px oklch(0.8 0.18 85 / 0.3)' } : {}}
-            >
-              <span className="text-base">{tc.icon}</span>
-              <span>{tc.label}</span>
-              <span className="text-[9px] opacity-70">{tc.subLabel}</span>
-            </button>
-          ))}
+      <FantasyPixelCard theme="default" title="TIME PORTAL">
+        <div className="flex flex-col gap-3 p-1">
+          <label className="font-mono text-[9px] tracking-widest text-zinc-500 uppercase font-bold">
+            TIME CONTROL SETTING
+          </label>
+          <div className="grid grid-cols-3 gap-2.5">
+            {TIME_CONTROLS.map((tc) => (
+              <button
+                key={tc.seconds}
+                onClick={() => setSelectedTimeControl(tc.seconds)}
+                className={`flex flex-col items-center gap-1 py-3 px-2 border rounded-lg transition-all duration-300 font-mono text-[10px] tracking-wider uppercase group relative
+                  ${selectedTimeControl === tc.seconds
+                    ? 'border-amber-500/30 text-amber-400 bg-amber-500/5 font-bold'
+                    : 'border-white/[0.06] text-zinc-500 hover:border-white/20 hover:text-zinc-300 bg-zinc-950/20'
+                  }`}
+              >
+                {/* Corner markers for selected */}
+                {selectedTimeControl === tc.seconds && (
+                  <>
+                    <div className="absolute top-0 left-0 w-1 h-1 border-t border-l border-amber-500/40" />
+                    <div className="absolute bottom-0 right-0 w-1 h-1 border-b border-r border-amber-500/40" />
+                  </>
+                )}
+                <span className="text-base">{tc.icon}</span>
+                <span>{tc.label}</span>
+                <span className="text-[8px] opacity-60 leading-none mt-1">{tc.subLabel}</span>
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      </FantasyPixelCard>
 
       {/* Create Room */}
-      <div className="flex flex-col gap-3 p-4 border border-[oklch(0.2_0.04_280)] bg-[oklch(0.09_0.02_280)]">
-        <div className="flex items-center gap-2">
-          <Plus className="h-3.5 w-3.5 text-neon-cyan" />
-          <span className="font-mono text-[10px] tracking-widest text-neon-cyan">CREATE ROOM</span>
+      <FantasyPixelCard theme="cyan" title="CONJURE ROOM">
+        <div className="flex flex-col gap-3 p-1">
+          <div className="flex items-center gap-2">
+            <Plus className="h-3.5 w-3.5 text-zinc-400" />
+            <span className="font-mono text-[9px] tracking-widest text-zinc-300 uppercase font-bold">CREATE PRIVATE ROOM</span>
+          </div>
+          <p className="font-mono text-[9px] text-zinc-500 leading-relaxed uppercase tracking-wide">
+            Initiate a localized arena room and dispatch the attunement identifier link to your opponent.
+          </p>
+          <button
+            onClick={handleCreateRoom}
+            disabled={isCreating}
+            className="flex items-center justify-center gap-2 py-3.5 bg-white hover:bg-zinc-200 text-zinc-950 font-mono font-bold text-[9px] sm:text-[10px] tracking-widest cursor-pointer active:scale-[0.98] transition-all uppercase rounded shadow disabled:opacity-50 disabled:cursor-not-allowed w-full mt-1"
+            id="create-room-btn"
+          >
+            {isCreating
+              ? <><Loader2 className="h-3.5 w-3.5 animate-spin" /> CONJURING ROOM...</>
+              : <><Plus className="h-3.5 w-3.5" /> CREATE ROOM</>
+            }
+          </button>
         </div>
-        <p className="font-mono text-[9px] text-muted-foreground leading-relaxed">
-          Create a private game and share the invite link with your opponent.
-        </p>
-        <button
-          onClick={handleCreateRoom}
-          disabled={isCreating}
-          className="flex items-center justify-center gap-2 py-3 border-2 border-neon-cyan text-neon-cyan font-mono text-xs tracking-wider transition-all duration-200 hover:bg-neon-cyan/10 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
-          style={{ boxShadow: '0 0 10px oklch(0.7 0.2 195 / 0.2)' }}
-          id="create-room-btn"
-        >
-          {isCreating
-            ? <><Loader2 className="h-4 w-4 animate-spin" /> CONJURING ROOM...</>
-            : <><Plus className="h-4 w-4" /> CREATE ROOM</>
-          }
-        </button>
-      </div>
+      </FantasyPixelCard>
 
       {/* Join Room */}
-      <div className="flex flex-col gap-3 p-4 border border-[oklch(0.2_0.04_280)] bg-[oklch(0.09_0.02_280)]">
-        <div className="flex items-center gap-2">
-          <ArrowRight className="h-3.5 w-3.5 text-neon-purple" />
-          <span className="font-mono text-[10px] tracking-widest text-neon-purple">JOIN BY ROOM ID</span>
-        </div>
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={joinRoomId}
-            onChange={(e) => setJoinRoomId(e.target.value.toUpperCase())}
-            placeholder="ENTER ROOM ID..."
-            maxLength={10}
-            className="flex-1 bg-[oklch(0.12_0.03_280)] border-2 border-[oklch(0.2_0.04_280)] px-3 py-2 font-mono text-xs text-neon-gold tracking-widest placeholder:text-muted-foreground/50 focus:border-neon-purple focus:outline-none transition-colors"
-            id="join-room-input"
-            onKeyDown={(e) => e.key === 'Enter' && handleJoinRoom()}
-          />
-          <button
-            onClick={handleJoinRoom}
-            disabled={isJoining || !joinRoomId.trim()}
-            className="px-4 border-2 border-neon-purple text-neon-purple font-mono text-xs tracking-wider transition-all duration-200 hover:bg-neon-purple/10 disabled:opacity-40 disabled:cursor-not-allowed"
-            id="join-room-btn"
-          >
-            {isJoining ? <Loader2 className="h-4 w-4 animate-spin" /> : 'JOIN'}
-          </button>
-        </div>
-      </div>
-
-      {/* Quickmatch */}
-      <div className="flex flex-col gap-3 p-4 border border-[oklch(0.2_0.04_280)] bg-[oklch(0.09_0.02_280)]">
-        <div className="flex items-center gap-2">
-          <Zap className="h-3.5 w-3.5 text-neon-gold" />
-          <span className="font-mono text-[10px] tracking-widest text-neon-gold">QUICKMATCH</span>
-        </div>
-        <p className="font-mono text-[9px] text-muted-foreground leading-relaxed">
-          Auto-pair with a random opponent at the selected time control.
-        </p>
-
-        {isMatchmaking ? (
-          <div className="flex flex-col items-center gap-3 py-4">
-            <div className="relative">
-              <div className="w-10 h-10 border-4 border-t-neon-gold border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin" />
-              <div className="absolute inset-0 w-10 h-10 border-4 border-t-transparent border-r-neon-purple border-b-transparent border-l-transparent rounded-full animate-spin" style={{ animationDirection: 'reverse', animationDuration: '0.7s' }} />
-            </div>
-            <span className="font-mono text-[9px] tracking-widest text-neon-gold animate-pulse">
-              SEARCHING FOR OPPONENT...
-            </span>
+      <FantasyPixelCard theme="purple" title="VOID PORTAL">
+        <div className="flex flex-col gap-3 p-1">
+          <div className="flex items-center gap-2">
+            <ArrowRight className="h-3.5 w-3.5 text-zinc-400" />
+            <span className="font-mono text-[9px] tracking-widest text-zinc-300 uppercase font-bold">JOIN BY ROOM ID</span>
+          </div>
+          <div className="flex gap-2 mt-1">
+            <input
+              type="text"
+              value={joinRoomId}
+              onChange={(e) => setJoinRoomId(e.target.value.toUpperCase())}
+              placeholder="ENTER ROOM ID..."
+              maxLength={10}
+              className="flex-1 bg-zinc-900/50 border border-white/[0.08] px-3 py-2.5 font-mono text-[10px] text-white tracking-widest placeholder:text-zinc-600 focus:border-white/20 focus:outline-none transition-all rounded hover:border-white/10"
+              id="join-room-input"
+              onKeyDown={(e) => e.key === 'Enter' && handleJoinRoom()}
+            />
             <button
-              onClick={handleCancelMatchmaking}
-              className="font-mono text-[9px] tracking-widest text-muted-foreground hover:text-destructive transition-colors underline underline-offset-2"
+              onClick={handleJoinRoom}
+              disabled={isJoining || !joinRoomId.trim()}
+              className="px-5 bg-white hover:bg-zinc-200 text-zinc-950 font-mono text-[9px] font-bold tracking-widest uppercase cursor-pointer active:scale-[0.98] transition-all rounded disabled:opacity-40 disabled:cursor-not-allowed"
+              id="join-room-btn"
             >
-              cancel
+              {isJoining ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : 'JOIN'}
             </button>
           </div>
-        ) : (
-          <button
-            onClick={handleQuickmatch}
-            className="flex items-center justify-center gap-2 py-3 border-2 border-neon-gold text-neon-gold font-mono text-xs tracking-wider transition-all duration-200 hover:bg-neon-gold/10 hover:scale-[1.02] active:scale-[0.98]"
-            style={{ boxShadow: '0 0 10px oklch(0.8 0.18 85 / 0.2)' }}
-            id="quickmatch-btn"
-          >
-            <Zap className="h-4 w-4" /> FIND OPPONENT
-          </button>
-        )}
-      </div>
+        </div>
+      </FantasyPixelCard>
+
+      {/* Quickmatch */}
+      <FantasyPixelCard theme="gold" title="BATTLE ARENA">
+        <div className="flex flex-col gap-3 p-1">
+          <div className="flex items-center gap-2">
+            <Zap className="h-3.5 w-3.5 text-amber-500/80" />
+            <span className="font-mono text-[9px] tracking-widest text-zinc-300 uppercase font-bold">QUICKMATCH</span>
+          </div>
+          <p className="font-mono text-[9px] text-zinc-500 leading-relaxed uppercase tracking-wide">
+            Automated wizard alignment matrix. Instantly pairs you with an active opponent.
+          </p>
+
+          {isMatchmaking ? (
+            <div className="flex flex-col items-center gap-3 py-4 bg-zinc-950/20 border border-white/[0.06] rounded-xl mt-1">
+              <div className="relative">
+                <div className="w-10 h-10 border-2 border-t-zinc-400 border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin" />
+              </div>
+              <span className="font-mono text-[8px] tracking-widest text-zinc-500 uppercase font-bold animate-pulse">
+                SEARCHING FOR OPPONENT...
+              </span>
+              <button
+                onClick={handleCancelMatchmaking}
+                className="font-mono text-[8px] tracking-widest text-zinc-500 hover:text-rose-400 transition-colors uppercase font-bold underline underline-offset-2 mt-1"
+              >
+                cancel
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={handleQuickmatch}
+              className="flex items-center justify-center gap-2 py-3.5 bg-white hover:bg-zinc-200 text-zinc-950 font-mono font-bold text-[9px] sm:text-[10px] tracking-widest cursor-pointer active:scale-[0.98] transition-all uppercase rounded shadow w-full mt-1"
+              id="quickmatch-btn"
+            >
+              <Zap className="h-3.5 w-3.5" /> FIND OPPONENT
+            </button>
+          )}
+        </div>
+      </FantasyPixelCard>
 
       {/* Error display */}
       {error && (
-        <div className="px-4 py-3 border border-destructive/50 bg-destructive/10 font-mono text-[9px] tracking-widest text-destructive text-center">
+        <div className="px-4 py-3 border border-rose-500/20 bg-rose-500/5 font-mono text-[8px] tracking-widest text-rose-400 uppercase rounded text-center">
           ⚠ {error}
         </div>
       )}
 
       {/* Sign-in reminder */}
       {!userId && (
-        <div className="px-4 py-3 border border-neon-purple/30 bg-neon-purple/5 font-mono text-[9px] tracking-widest text-neon-purple/70 text-center">
+        <div className="px-4 py-3 border border-white/[0.08] bg-zinc-900/30 font-mono text-[8px] tracking-widest text-zinc-500 uppercase rounded text-center">
           SIGN IN TO PLAY ONLINE
         </div>
       )}

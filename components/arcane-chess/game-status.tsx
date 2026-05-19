@@ -25,12 +25,12 @@ export function GameStatus({ onAnalyze }: GameStatusProps) {
       {/* Game State Overlay / Status Cards */}
       {isCheckmate && (
         <div 
-          className="flex flex-col items-center justify-center p-6 border-2 border-destructive bg-destructive/10 text-center animate-bounce duration-1000"
+          className="flex flex-col items-center justify-center p-6 border-2 border-destructive bg-destructive/10 text-center"
           style={{
             boxShadow: "0 0 25px oklch(0.57 0.24 27 / 0.5), inset 0 0 10px oklch(0.57 0.24 27 / 0.2)",
           }}
         >
-          <Crown size={32} className="text-neon-pink mb-2 animate-pulse" />
+          <Crown size={32} className="text-neon-pink mb-2" />
           <h3 className="text-lg md:text-xl font-title text-destructive text-glow-purple font-bold tracking-widest">
             CHECKMATE!
           </h3>
@@ -49,7 +49,7 @@ export function GameStatus({ onAnalyze }: GameStatusProps) {
                 boxShadow: "0 0 10px oklch(0.7 0.2 195 / 0.3)",
               }}
             >
-              <Sparkles size={12} className="text-neon-cyan animate-pulse" />
+              <Sparkles size={12} className="text-neon-cyan" />
               AI COACH ANALYSIS
             </button>
           )}
@@ -58,7 +58,7 @@ export function GameStatus({ onAnalyze }: GameStatusProps) {
 
       {(isStalemate || isDraw) && (
         <div 
-          className="flex flex-col items-center justify-center p-6 border-2 border-neon-gold bg-neon-gold/10 text-center animate-pulse"
+          className="flex flex-col items-center justify-center p-6 border-2 border-neon-gold bg-neon-gold/10 text-center"
           style={{
             boxShadow: "0 0 25px oklch(0.8 0.18 85 / 0.3), inset 0 0 10px oklch(0.8 0.18 85 / 0.1)",
           }}
@@ -94,7 +94,7 @@ export function GameStatus({ onAnalyze }: GameStatusProps) {
             boxShadow: "0 0 15px oklch(0.7 0.22 330 / 0.4), inset 0 0 5px oklch(0.7 0.22 330 / 0.1)",
           }}
         >
-          <Shield size={20} className="text-neon-pink animate-bounce" />
+          <Shield size={20} className="text-neon-pink" />
           <div>
             <h4 className="text-xs font-mono font-bold tracking-wider text-neon-pink">
               KING UNDER SPELL!

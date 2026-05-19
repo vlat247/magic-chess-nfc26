@@ -16,6 +16,310 @@ const Chessboard = dynamic(
   { ssr: false }
 )
 
+const PixelShieldSvg = ({ className, size = "100%" }: { className?: string; size?: string | number }) => {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 16 16"
+      style={{ shapeRendering: "crispEdges" }}
+      className={className}
+    >
+      {/* Row 0 */}
+      <rect x={5} y={0} width={6} height={1} fill="#8c430d" />
+      
+      {/* Row 1 */}
+      <rect x={4} y={1} width={1} height={1} fill="#8c430d" />
+      <rect x={5} y={1} width={1} height={1} fill="#f3b536" />
+      <rect x={6} y={1} width={4} height={1} fill="#f7e59e" />
+      <rect x={10} y={1} width={1} height={1} fill="#f3b536" />
+      <rect x={11} y={1} width={1} height={1} fill="#8c430d" />
+      
+      {/* Row 2 */}
+      <rect x={4} y={2} width={1} height={1} fill="#8c430d" />
+      <rect x={5} y={2} width={1} height={1} fill="#f7e59e" />
+      <rect x={6} y={2} width={2} height={1} fill="#ffffff" />
+      <rect x={8} y={2} width={2} height={1} fill="#f7e59e" />
+      <rect x={10} y={2} width={1} height={1} fill="#f3b536" />
+      <rect x={11} y={2} width={1} height={1} fill="#8c430d" />
+      
+      {/* Row 3 */}
+      <rect x={4} y={3} width={1} height={1} fill="#8c430d" />
+      <rect x={5} y={3} width={2} height={1} fill="#00e37b" />
+      <rect x={7} y={3} width={2} height={1} fill="#f7e59e" />
+      <rect x={9} y={3} width={2} height={1} fill="#00e37b" />
+      <rect x={11} y={3} width={1} height={1} fill="#8c430d" />
+      
+      {/* Row 4 */}
+      <rect x={4} y={4} width={1} height={1} fill="#8c430d" />
+      <rect x={5} y={4} width={2} height={1} fill="#00e37b" />
+      <rect x={7} y={4} width={2} height={1} fill="#f7e59e" />
+      <rect x={9} y={4} width={2} height={1} fill="#00e37b" />
+      <rect x={11} y={4} width={1} height={1} fill="#8c430d" />
+      
+      {/* Row 5 */}
+      <rect x={4} y={5} width={1} height={1} fill="#8c430d" />
+      <rect x={5} y={5} width={6} height={1} fill="#f7e59e" />
+      <rect x={11} y={5} width={1} height={1} fill="#8c430d" />
+      
+      {/* Row 6 */}
+      <rect x={1} y={6} width={4} height={1} fill="#8c430d" />
+      <rect x={5} y={6} width={6} height={1} fill="#f7e59e" />
+      <rect x={11} y={6} width={4} height={1} fill="#8c430d" />
+      
+      {/* Row 7 */}
+      <rect x={0} y={7} width={1} height={1} fill="#8c430d" />
+      <rect x={1} y={7} width={1} height={1} fill="#f3b536" />
+      <rect x={2} y={7} width={2} height={1} fill="#f7e59e" />
+      <rect x={4} y={7} width={2} height={1} fill="#b56117" />
+      <rect x={6} y={7} width={4} height={1} fill="#f7e59e" />
+      <rect x={10} y={7} width={2} height={1} fill="#b56117" />
+      <rect x={12} y={7} width={2} height={1} fill="#f7e59e" />
+      <rect x={14} y={7} width={1} height={1} fill="#f3b536" />
+      <rect x={15} y={7} width={1} height={1} fill="#8c430d" />
+      
+      {/* Row 8 */}
+      <rect x={0} y={8} width={1} height={1} fill="#8c430d" />
+      <rect x={1} y={8} width={1} height={1} fill="#f7e59e" />
+      <rect x={2} y={8} width={1} height={1} fill="#f3b536" />
+      <rect x={3} y={8} width={1} height={1} fill="#f7e59e" />
+      <rect x={4} y={8} width={1} height={1} fill="#8c430d" />
+      <rect x={5} y={8} width={6} height={1} fill="#b56117" />
+      <rect x={11} y={8} width={1} height={1} fill="#8c430d" />
+      <rect x={12} y={8} width={1} height={1} fill="#f7e59e" />
+      <rect x={13} y={8} width={1} height={1} fill="#f3b536" />
+      <rect x={14} y={8} width={1} height={1} fill="#f7e59e" />
+      <rect x={15} y={8} width={1} height={1} fill="#8c430d" />
+      
+      {/* Row 9 */}
+      <rect x={1} y={9} width={4} height={1} fill="#8c430d" />
+      <rect x={5} y={9} width={6} height={1} fill="#b56117" />
+      <rect x={11} y={9} width={4} height={1} fill="#8c430d" />
+      
+      {/* Row 10 */}
+      <rect x={4} y={10} width={1} height={1} fill="#8c430d" />
+      <rect x={5} y={10} width={6} height={1} fill="#f7e59e" />
+      <rect x={11} y={10} width={1} height={1} fill="#8c430d" />
+      
+      {/* Row 11 */}
+      <rect x={4} y={11} width={1} height={1} fill="#8c430d" />
+      <rect x={5} y={11} width={6} height={1} fill="#b56117" />
+      <rect x={11} y={11} width={1} height={1} fill="#8c430d" />
+      
+      {/* Row 12 */}
+      <rect x={5} y={12} width={6} height={1} fill="#8c430d" />
+      
+      {/* Row 13 */}
+      <rect x={5} y={13} width={1} height={1} fill="#8c430d" />
+      <rect x={6} y={13} width={4} height={1} fill="#f7e59e" />
+      <rect x={10} y={13} width={1} height={1} fill="#8c430d" />
+      
+      {/* Row 14 */}
+      <rect x={5} y={14} width={1} height={1} fill="#8c430d" />
+      <rect x={6} y={14} width={4} height={1} fill="#b56117" />
+      <rect x={10} y={14} width={1} height={1} fill="#8c430d" />
+      
+      {/* Row 15 */}
+      <rect x={6} y={15} width={4} height={1} fill="#8c430d" />
+    </svg>
+  );
+};
+
+const PixelFreezeSvg = ({ className, size = "100%" }: { className?: string; size?: string | number }) => {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 32 32"
+      style={{ shapeRendering: "crispEdges" }}
+      className={className}
+    >
+      {/* Outlines & Dark Anchors (Left Side Muted Blue-Gray, Right Side Deep Twilight Purple) */}
+      <g fill="#2b3a5c">
+        {/* Ground fragments */}
+        <rect x={3} y={30} width={3} height={1} />
+        <rect x={4} y={29} width={1} height={1} />
+        <rect x={12} y={30} width={2} height={1} />
+        
+        {/* Left base outline */}
+        <rect x={5} y={31} width={5} height={1} />
+        <rect x={4} y={30} width={1} height={1} />
+        <rect x={3} y={26} width={1} height={4} />
+        <rect x={4} y={25} width={1} height={1} />
+        <rect x={5} y={24} width={2} height={1} />
+        <rect x={7} y={25} width={1} height={2} />
+        <rect x={8} y={27} width={2} height={1} />
+        
+        {/* Left Spikes */}
+        <rect x={0} y={20} width={1} height={3} />
+        <rect x={1} y={19} width={3} height={1} />
+        <rect x={4} y={20} width={1} height={2} />
+        <rect x={1} y={23} width={3} height={1} />
+        
+        <rect x={2} y={14} width={1} height={3} />
+        <rect x={3} y={13} width={2} height={1} />
+        <rect x={5} y={14} width={1} height={3} />
+        <rect x={4} y={17} width={1} height={2} />
+        
+        <rect x={6} y={8} width={1} height={3} />
+        <rect x={7} y={7} width={2} height={1} />
+        <rect x={9} y={8} width={1} height={4} />
+        <rect x={8} y={12} width={1} height={3} />
+        
+        <rect x={9} y={4} width={1} height={3} />
+        <rect x={10} y={3} width={1} height={1} />
+        <rect x={11} y={4} width={1} height={6} />
+        <rect x={10} y={10} width={1} height={5} />
+      </g>
+
+      <g fill="#3b2d54">
+        {/* Ground fragments */}
+        <rect x={27} y={30} width={3} height={1} />
+        <rect x={28} y={29} width={1} height={1} />
+        <rect x={18} y={30} width={2} height={1} />
+        
+        {/* Right base outline */}
+        <rect x={22} y={31} width={6} height={1} />
+        <rect x={28} y={30} width={1} height={1} />
+        <rect x={29} y={25} width={1} height={5} />
+        <rect x={28} y={24} width={1} height={1} />
+        <rect x={26} y={23} width={2} height={1} />
+        <rect x={25} y={24} width={1} height={3} />
+        <rect x={23} y={27} width={2} height={1} />
+        
+        {/* Right Spikes */}
+        <rect x={31} y={19} width={1} height={3} />
+        <rect x={28} y={18} width={3} height={1} />
+        <rect x={27} y={19} width={1} height={2} />
+        <rect x={28} y={22} width={3} height={1} />
+        
+        <rect x={29} y={12} width={1} height={3} />
+        <rect x={27} y={11} width={2} height={1} />
+        <rect x={26} y={12} width={1} height={3} />
+        <rect x={25} y={15} width={1} height={3} />
+        
+        <rect x={25} y={7} width={1} height={3} />
+        <rect x={23} y={6} width={2} height={1} />
+        <rect x={22} y={7} width={1} height={4} />
+        
+        <rect x={20} y={2} width={1} height={3} />
+        <rect x={21} y={1} width={1} height={1} />
+        <rect x={22} y={2} width={1} height={5} />
+        <rect x={21} y={7} width={1} height={6} />
+        
+        <rect x={14} y={3} width={1} height={4} />
+        <rect x={15} y={2} width={1} height={1} />
+        <rect x={16} y={3} width={1} height={5} />
+        <rect x={15} y={8} width={1} height={5} />
+      </g>
+      
+      {/* Midtones & Body Shading (Left Side Medium Blue: #4ca5d4, Right Side Lavender: #9d8ad4) */}
+      <g fill="#4ca5d4">
+        <rect x={4} y={26} width={2} height={4} />
+        <rect x={6} y={25} width={1} height={2} />
+        <rect x={7} y={27} width={1} height={2} />
+        
+        <rect x={1} y={20} width={3} height={3} />
+        <rect x={3} y={14} width={2} height={3} />
+        <rect x={7} y={8} width={2} height={4} />
+        <rect x={8} y={12} width={1} height={3} />
+        
+        <rect x={10} y={4} width={1} height={6} />
+        <rect x={9} y={10} width={1} height={5} />
+        <rect x={8} y={15} width={2} height={3} />
+        
+        <rect x={4} y={30} width={1} height={1} />
+      </g>
+      
+      <g fill="#9d8ad4">
+        <rect x={26} y={24} width={2} height={6} />
+        <rect x={25} y={27} width={1} height={3} />
+        <rect x={24} y={28} width={1} height={2} />
+        
+        <rect x={28} y={19} width={3} height={3} />
+        <rect x={27} y={12} width={2} height={3} />
+        <rect x={23} y={7} width={2} height={4} />
+        <rect x={22} y={11} width={2} height={4} />
+        
+        <rect x={21} y={2} width={1} height={5} />
+        <rect x={20} y={7} width={1} height={6} />
+        <rect x={22} y={15} width={2} height={3} />
+        
+        <rect x={15} y={3} width={1} height={5} />
+        <rect x={14} y={8} width={1} height={5} />
+        
+        <rect x={28} y={30} width={1} height={1} />
+      </g>
+
+      {/* Vibrant Highlights & Core Colors (Left Side Ice Blue: #64b5db, Right Side Pink/Magenta: #d29ce0) */}
+      <g fill="#64b5db">
+        <rect x={5} y={25} width={1} height={4} />
+        <rect x={6} y={27} width={1} height={3} />
+        
+        <rect x={2} y={20} width={1} height={2} />
+        <rect x={4} y={14} width={1} height={2} />
+        <rect x={8} y={8} width={1} height={4} />
+        
+        <rect x={10} y={5} width={1} height={4} />
+        <rect x={9} y={9} width={1} height={5} />
+        
+        <rect x={12} y={30} width={1} height={1} />
+      </g>
+      
+      <g fill="#d29ce0">
+        <rect x={25} y={25} width={1} height={2} />
+        <rect x={24} y={26} width={1} height={2} />
+        <rect x={23} y={28} width={1} height={2} />
+        
+        <rect x={29} y={19} width={1} height={2} />
+        <rect x={28} y={12} width={1} height={2} />
+        <rect x={24} y={8} width={1} height={3} />
+        
+        <rect x={21} y={3} width={1} height={4} />
+        <rect x={22} y={7} width={1} height={6} />
+        
+        <rect x={15} y={4} width={1} height={4} />
+        <rect x={15} y={8} width={1} height={4} />
+        
+        <rect x={18} y={30} width={1} height={1} />
+      </g>
+
+      {/* Light Core Glows (Left Side Ice Cyan: #b8f1fc, Right Side Soft Pink Highlight: #ecd4fc) */}
+      <g fill="#b8f1fc">
+        <rect x={5} y={26} width={1} height={2} />
+        <rect x={8} y={9} width={1} height={2} />
+        <rect x={10} y={6} width={1} height={2} />
+        <rect x={9} y={10} width={1} height={2} />
+      </g>
+      
+      <g fill="#ecd4fc">
+        <rect x={26} y={25} width={1} height={2} />
+        <rect x={24} y={9} width={1} height={2} />
+        <rect x={21} y={4} width={1} height={2} />
+        <rect x={22} y={8} width={1} height={2} />
+        <rect x={15} y={5} width={1} height={3} />
+      </g>
+
+      {/* Pure White Sheen Highlights (#ffffff) */}
+      <g fill="#ffffff">
+        <rect x={2} y={19} width={1} height={1} />
+        <rect x={3} y={13} width={1} height={1} />
+        <rect x={7} y={7} width={1} height={1} />
+        <rect x={10} y={3} width={1} height={1} />
+        
+        <rect x={15} y={2} width={1} height={1} />
+        <rect x={21} y={1} width={1} height={1} />
+        <rect x={23} y={6} width={1} height={1} />
+        <rect x={27} y={11} width={1} height={1} />
+        <rect x={28} y={18} width={1} height={1} />
+        
+        <rect x={5} y={27} width={1} height={1} />
+        <rect x={26} y={26} width={1} height={1} />
+      </g>
+    </svg>
+  );
+};
+
 interface GameBoardProps {
   activeSpell?: string | null
   onClearActiveSpell?: () => void
@@ -453,29 +757,34 @@ export function GameBoard({ activeSpell, onClearActiveSpell }: GameBoardProps) {
                     key={`freeze-${freeze.square}`}
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="absolute border border-cyan-400/80 bg-cyan-400/10 flex items-center justify-center"
+                    className="absolute flex items-center justify-center z-20 pointer-events-none"
                     style={{
                       left: offset.left,
                       top: offset.top,
                       width: offset.size,
                       height: offset.size,
-                      boxShadow: "inset 0 0 10px rgba(34,211,238,0.4)"
                     }}
                   >
-                    {/* Floating frost snowflakes */}
-                    <span className="absolute bottom-0.5 right-1 font-mono text-[7px] text-cyan-300 font-bold uppercase tracking-wider opacity-90 scale-90">
+                    {/* Glowing blue/cyan aura behind frozen piece */}
+                    <motion.div
+                      animate={{ opacity: [0.15, 0.35, 0.15], scale: [0.95, 1.05, 0.95] }}
+                      transition={{ repeat: Infinity, duration: 2.2, ease: "easeInOut" }}
+                      className="absolute w-[75%] h-[75%] bg-cyan-500/10 rounded-full filter blur-[3px]"
+                    />
+
+                    {/* Floating Pixel Freeze Svg - Wrapping the chess piece */}
+                    <motion.div
+                      animate={{ y: [0, -1.5, 0] }}
+                      transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+                      className="absolute inset-0 flex items-center justify-center filter drop-shadow-[0_0_8px_rgba(155,229,245,0.6)]"
+                    >
+                      <PixelFreezeSvg size="100%" />
+                    </motion.div>
+
+                    {/* Floating frost snowflakes / Turns count */}
+                    <span className="absolute bottom-0.5 right-1 font-mono text-[7px] text-cyan-300 font-bold uppercase tracking-wider opacity-90 scale-90 z-30">
                       ❄️ {freeze.turns}
                     </span>
-                    <motion.div
-                      animate={{ opacity: [0.1, 0.4, 0.1] }}
-                      transition={{ repeat: Infinity, duration: 2.5 }}
-                      className="absolute inset-0 bg-gradient-to-tr from-cyan-400/5 to-cyan-300/15"
-                    />
-                    {/* Small icy corners */}
-                    <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-cyan-300" />
-                    <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-cyan-300" />
-                    <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-cyan-300" />
-                    <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-cyan-300" />
                   </motion.div>
                 )
               })}
@@ -488,33 +797,29 @@ export function GameBoard({ activeSpell, onClearActiveSpell }: GameBoardProps) {
                     key={`shield-${sq}`}
                     initial={{ opacity: 0, scale: 0.7 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="absolute flex items-center justify-center"
+                    className="absolute flex items-center justify-center z-20 pointer-events-none"
                     style={{
-                      left: offset.left - offset.size * 0.05,
-                      top: offset.top - offset.size * 0.05,
-                      width: offset.size * 1.1,
-                      height: offset.size * 1.1,
+                      left: offset.left,
+                      top: offset.top,
+                      width: offset.size,
+                      height: offset.size,
                     }}
                   >
+                    {/* Glowing yellow aura behind shield */}
                     <motion.div
-                      animate={{
-                        boxShadow: [
-                          "0 0 8px rgba(234,179,8,0.3), inset 0 0 6px rgba(234,179,8,0.2)",
-                          "0 0 15px rgba(234,179,8,0.5), inset 0 0 12px rgba(234,179,8,0.3)",
-                          "0 0 8px rgba(234,179,8,0.3), inset 0 0 6px rgba(234,179,8,0.2)"
-                        ]
-                      }}
-                      transition={{ repeat: Infinity, duration: 2 }}
-                      className="w-[90%] h-[90%] border-2 border-yellow-400/80 rounded-full"
+                      animate={{ opacity: [0.15, 0.4, 0.15], scale: [0.9, 1.08, 0.9] }}
+                      transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+                      className="absolute w-[60%] h-[60%] bg-yellow-500/10 rounded-full filter blur-[2px]"
                     />
+
+                    {/* Floating Pixel Shield Svg - Perfectly Centered */}
                     <motion.div
-                      animate={{ rotate: -360 }}
-                      transition={{ repeat: Infinity, duration: 6, ease: "linear" }}
-                      className="absolute w-[80%] h-[80%] border border-dashed border-yellow-300/40 rounded-full"
-                    />
-                    <span className="absolute top-0.5 right-1 font-mono text-[7px] text-yellow-400 font-bold scale-90">
-                      🛡️
-                    </span>
+                      animate={{ y: [0, -3, 0] }}
+                      transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut" }}
+                      className="w-[30%] h-[30%] flex items-center justify-center filter drop-shadow-[0_0_5px_rgba(234,179,8,0.7)]"
+                    >
+                      <PixelShieldSvg size="100%" />
+                    </motion.div>
                   </motion.div>
                 )
               })}
@@ -651,7 +956,7 @@ export function GameBoard({ activeSpell, onClearActiveSpell }: GameBoardProps) {
                         className="absolute w-2 h-6 bg-gradient-to-b from-cyan-200 to-cyan-500 border border-cyan-300"
                       />
 
-                      {/* Icy Geometric Lattice Impact Glow */}
+                      {/* Icy Geometric Lattice Impact Glow & Pixel Freeze Dome */}
                       <motion.div
                         initial={{ scale: 2, opacity: 0 }}
                         animate={{
@@ -668,8 +973,10 @@ export function GameBoard({ activeSpell, onClearActiveSpell }: GameBoardProps) {
                           height: offset.size,
                         }}
                       >
-                        {/* Pixelated Inner Box */}
-                        <div className="w-[70%] h-[70%] border-2 border-dashed border-cyan-100/50" />
+                        {/* Rapidly growing crystal dome on impact */}
+                        <div className="absolute inset-0 flex items-center justify-center filter drop-shadow-[0_0_12px_rgba(34,211,238,0.7)] p-[3%]">
+                          <PixelFreezeSvg size="100%" />
+                        </div>
                       </motion.div>
 
                       {/* Geometric Lattice Corner Crystals (4 pixel crystals forming a square) */}
@@ -739,8 +1046,8 @@ export function GameBoard({ activeSpell, onClearActiveSpell }: GameBoardProps) {
                           scaleY: [0, 1, 0],
                           opacity: [0.8, 1, 0]
                         }}
-                        transition={{ duration: 0.35, ease: "easeInOut" }}
-                        className="absolute w-full bg-gradient-to-b from-yellow-300/30 to-yellow-500/10 border-l border-r border-yellow-400/35"
+                        transition={{ duration: 0.4, ease: "easeInOut" }}
+                        className="absolute w-full bg-gradient-to-b from-yellow-300/35 to-yellow-500/10 border-l border-r border-yellow-400/30"
                         style={{
                           left: offset.left,
                           top: offset.top - 80,
@@ -750,61 +1057,100 @@ export function GameBoard({ activeSpell, onClearActiveSpell }: GameBoardProps) {
                         }}
                       />
 
-                      {/* Glowing Aegis Golden Concentric Squares */}
-                      {[0, 1, 2].map((idx) => (
-                        <motion.div
-                          key={`sh-ring-${idx}`}
-                          initial={{ scale: 0.1, opacity: 0 }}
-                          animate={{
-                            scale: [0.2, 1.1, 1.25],
-                            opacity: [0, 1, 0.8, 0],
-                          }}
-                          exit={{ opacity: 0 }}
-                          transition={{ duration: 0.45, delay: idx * 0.08, ease: "easeOut" }}
-                          className="absolute border border-yellow-300 bg-yellow-400/5 shadow-[0_0_20px_oklch(0.8_0.18_85/0.3)]"
-                          style={{
-                            left: offset.left - offset.size * 0.125,
-                            top: offset.top - offset.size * 0.125,
-                            width: offset.size * 1.25,
-                            height: offset.size * 1.25,
-                          }}
-                        />
-                      ))}
+                      {/* Falling golden pixel dust inside light column */}
+                      {[...Array(8)].map((_, i) => {
+                        const delay = i * 0.04
+                        const xOffset = ((i + 1) / 9) * offset.size
+                        return (
+                          <motion.div
+                            key={`sh-dust-${i}`}
+                            initial={{ y: offset.top - 80, x: offset.left + xOffset, opacity: 0, scale: 1.5 }}
+                            animate={{ y: offset.top + offset.size, opacity: [0, 1, 1, 0], scale: 0.4 }}
+                            transition={{ duration: 0.45, delay, ease: "easeIn" }}
+                            className="absolute w-1.5 h-1.5 bg-yellow-400 border border-amber-600"
+                          />
+                        )
+                      })}
 
-                      {/* Golden Holy Cross Pixel Sparks Orbiting the target cell */}
+                      {/* Descending & Scaling Large Golden Pixel Shield */}
+                      <motion.div
+                        initial={{
+                          x: offset.left + offset.size * 0.35,
+                          y: offset.top - 120,
+                          scale: 2.5,
+                          opacity: 0,
+                        }}
+                        animate={{
+                          y: offset.top + offset.size * 0.35,
+                          scale: [2.5, 2.5, 1.4, 0.9, 1],
+                          opacity: [0, 1, 1, 1, 0.8],
+                        }}
+                        transition={{ duration: 0.55, ease: "easeOut" }}
+                        className="absolute flex items-center justify-center filter drop-shadow-[0_0_12px_#eab308]"
+                        style={{ width: offset.size * 0.30, height: offset.size * 0.30 }}
+                      >
+                        <PixelShieldSvg size="100%" />
+                      </motion.div>
+
+                      {/* Inward spiraling & contracting cross glyphs */}
                       {[...Array(6)].map((_, i) => {
                         const startAngle = (i / 6) * Math.PI * 2
-                        const radius = offset.size * 0.42
                         return (
                           <motion.div
                             key={`sh-orbit-${i}`}
                             initial={{
-                              x: offset.left + offset.size / 2 - 3 + Math.cos(startAngle) * radius,
-                              y: offset.top + offset.size / 2 - 3 + Math.sin(startAngle) * radius,
+                              x: offset.left + offset.size / 2 - 3,
+                              y: offset.top + offset.size / 2 - 3,
                               opacity: 0,
-                              scale: 1
                             }}
                             animate={{
                               x: [
-                                offset.left + offset.size / 2 - 3 + Math.cos(startAngle) * radius,
-                                offset.left + offset.size / 2 - 3 + Math.cos(startAngle + Math.PI) * radius,
-                                offset.left + offset.size / 2 - 3 + Math.cos(startAngle + Math.PI * 2) * radius,
+                                offset.left + offset.size / 2 - 3 + Math.cos(startAngle) * (offset.size * 0.8),
+                                offset.left + offset.size / 2 - 3 + Math.cos(startAngle + Math.PI * 1.2) * (offset.size * 0.45),
+                                offset.left + offset.size / 2 - 3,
                               ],
                               y: [
-                                offset.top + offset.size / 2 - 3 + Math.sin(startAngle) * radius,
-                                offset.top + offset.size / 2 - 3 + Math.sin(startAngle + Math.PI) * radius,
-                                offset.top + offset.size / 2 - 3 + Math.sin(startAngle + Math.PI * 2) * radius,
+                                offset.top + offset.size / 2 - 3 + Math.sin(startAngle) * (offset.size * 0.8),
+                                offset.top + offset.size / 2 - 3 + Math.sin(startAngle + Math.PI * 1.2) * (offset.size * 0.45),
+                                offset.top + offset.size / 2 - 3,
                               ],
-                              opacity: [0, 1, 0.9, 0],
-                              scale: [1, 1.4, 0.4]
+                              opacity: [0, 1, 1, 0],
+                              scale: [1.2, 1.5, 0.2]
                             }}
-                            transition={{ duration: 0.65, ease: "linear" }}
-                            className="absolute w-2 h-2 rounded-none bg-yellow-300 border border-yellow-500 flex items-center justify-center"
+                            transition={{ duration: 0.55, ease: "easeInOut" }}
+                            className="absolute w-2.5 h-2.5 bg-yellow-300 border border-yellow-500 flex items-center justify-center"
                           >
-                            {/* Inner cross mark */}
                             <div className="w-[30%] h-full bg-white absolute" />
                             <div className="h-[30%] w-full bg-white absolute" />
                           </motion.div>
+                        )
+                      })}
+
+                      {/* Golden Retro Impact Sparkle Shard Burst */}
+                      {[...Array(12)].map((_, i) => {
+                        const angle = (i / 12) * Math.PI * 2
+                        const radius = offset.size * 1.2
+                        const delay = 0.4
+                        const size = i % 2 === 0 ? "w-2 h-2" : "w-1 h-1.5"
+                        const pColor = i % 3 === 0 ? "bg-yellow-200" : i % 3 === 1 ? "bg-yellow-400" : "bg-amber-600"
+                        return (
+                          <motion.div
+                            key={`sh-spark-${i}`}
+                            initial={{
+                              x: offset.left + offset.size / 2 - 4,
+                              y: offset.top + offset.size / 2 - 4,
+                              opacity: 0,
+                              scale: 1.8,
+                            }}
+                            animate={{
+                              x: offset.left + offset.size / 2 - 4 + Math.cos(angle) * radius,
+                              y: offset.top + offset.size / 2 - 4 + Math.sin(angle) * radius,
+                              opacity: [0, 1, 0],
+                              scale: [1.6, 1, 0.2],
+                            }}
+                            transition={{ duration: 0.4, delay, ease: "easeOut" }}
+                            className={`absolute border border-black/20 ${size} ${pColor}`}
+                          />
                         )
                       })}
                     </div>
