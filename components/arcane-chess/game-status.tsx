@@ -3,12 +3,16 @@
 import { Shield, Sparkles, Swords, Crown } from "lucide-react"
 import { useGameStore } from "../../store/game-store"
 
+interface GameStatusProps {
+  onAnalyze?: () => void
+}
+
 /**
  * Performance-optimized GameStatus component.
  * Uses individual field selectors to subscribe exclusively to the visual turn and win/draw status triggers,
  * ensuring no redrawing occurs during general board operations (like square click hover overlays).
  */
-export function GameStatus() {
+export function GameStatus({ onAnalyze }: GameStatusProps) {
   const turn = useGameStore((state) => state.turn)
   const isCheck = useGameStore((state) => state.isCheck)
   const isCheckmate = useGameStore((state) => state.isCheckmate)
@@ -30,13 +34,25 @@ export function GameStatus() {
           <h3 className="text-lg md:text-xl font-title text-destructive text-glow-purple font-bold tracking-widest">
             CHECKMATE!
           </h3>
-          <p className="text-xs md:text-sm font-mono mt-2 text-foreground/90">
+          <p className="text-xs md:text-sm font-mono mt-2 text-foreground/90 mb-2">
             {winner === "w" ? (
               <span className="text-neon-gold font-bold">LIGHT MAGICIAN (WHITE) TRIUMPHS!</span>
             ) : (
               <span className="text-neon-cyan font-bold">DARK MAGICIAN (BLACK) TRIUMPHS!</span>
             )}
           </p>
+          {onAnalyze && (
+            <button
+              onClick={onAnalyze}
+              className="mt-3 px-4 py-2 flex items-center justify-center gap-2 border-2 border-neon-cyan text-neon-cyan hover:bg-neon-cyan/15 text-[10px] font-mono tracking-widest transition-all duration-200 hover:scale-[1.03] active:scale-[0.98] glow-cyan hover:text-white cursor-pointer select-none bg-black/50"
+              style={{
+                boxShadow: "0 0 10px oklch(0.7 0.2 195 / 0.3)",
+              }}
+            >
+              <Sparkles size={12} className="text-neon-cyan animate-pulse" />
+              AI COACH ANALYSIS
+            </button>
+          )}
         </div>
       )}
 
@@ -51,11 +67,23 @@ export function GameStatus() {
           <h3 className="text-lg md:text-xl font-title text-neon-gold text-glow-gold font-bold tracking-widest">
             SPELL DRAW
           </h3>
-          <p className="text-xs md:text-sm font-mono mt-2 text-muted-foreground">
+          <p className="text-xs md:text-sm font-mono mt-2 text-muted-foreground mb-2">
             {isStalemate 
               ? "STALEMATE! THE ENEMY IS LOCKED IN ARCANUM."
               : "THE BATTLEFIELD DISSOLVES IN EQUAL BOUNDS."}
           </p>
+          {onAnalyze && (
+            <button
+              onClick={onAnalyze}
+              className="mt-3 px-4 py-2 flex items-center justify-center gap-2 border-2 border-neon-cyan text-neon-cyan hover:bg-neon-cyan/15 text-[10px] font-mono tracking-widest transition-all duration-200 hover:scale-[1.03] active:scale-[0.98] glow-cyan hover:text-white cursor-pointer select-none bg-black/50"
+              style={{
+                boxShadow: "0 0 10px oklch(0.7 0.2 195 / 0.3)",
+              }}
+            >
+              <Sparkles size={12} className="text-neon-cyan animate-pulse" />
+              AI COACH ANALYSIS
+            </button>
+          )}
         </div>
       )}
 

@@ -10,16 +10,21 @@ import { GameStatus } from "@/components/arcane-chess/game-status"
 import { MagicParticles } from "@/components/arcane-chess/magic-particles"
 import { Header } from "@/components/arcane-chess/header"
 import { SpellPanel } from "@/components/arcane-chess/spell-panel"
-import { getAllGameModes } from "@/engine/modes/registry"
+import { getAllGameModes, getGameMode } from "@/engine/modes/registry"
+import { GameAnalysisDashboard } from "@/components/arcane-chess/game-analysis-dashboard"
 
 export default function PlayChessPage() {
   const isHydrated = useGameStore((state) => state.isHydrated)
   const setAiLevel = useGameStore((state) => state.setAiLevel)
   const gameModeId = useGameStore((state) => state.gameModeId)
   const setGameMode = useGameStore((state) => state.setGameMode)
+  const history = useGameStore((state) => state.history)
 
   // Local spell selection coordinate state
   const [activeSpell, setActiveSpell] = useState<string | null>(null)
+  
+  // Transition state to show post-game analysis dashboard
+  const [isAnalyzing, setIsAnalyzing] = useState(false)
 
   // Pick up AI level set from the lobby hub
   useEffect(() => {
@@ -32,6 +37,13 @@ export default function PlayChessPage() {
       sessionStorage.removeItem("chess_ai_level")
     }
   }, [isHydrated, setAiLevel])
+
+  // Reset analysis view if the board has been reset/restarted
+  useEffect(() => {
+    if (history.length === 0) {
+      setIsAnalyzing(false)
+    }
+  }, [history])
 
   if (!isHydrated) {
     return (
@@ -92,6 +104,7 @@ export default function PlayChessPage() {
                 onClick={() => {
                   setGameMode(mode.id as any)
                   setActiveSpell(null) // Cancel any active targeting on switch
+                  setIsAnalyzing(false) // Exit analysis if mode changes
                 }}
                 className={`px-3 py-1.5 font-mono text-[9px] tracking-widest transition-all uppercase rounded-sm border ${
                   gameModeId === mode.id
@@ -107,31 +120,39 @@ export default function PlayChessPage() {
         </header>
 
         {/* Game layout */}
-        <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-start justify-center">
+        {isAnalyzing ? (
+          <GameAnalysisDashboard 
+            history={history}
+            startingFen={getGameMode(gameModeId).setupBoard()}
+            onClose={() => setIsAnalyzing(false)}
+          />
+        ) : (
+          <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-start justify-center animate-fade-in">
 
-          {/* Board */}
-          <div className="lg:col-span-7 flex justify-center w-full">
-            <GameBoard 
-              activeSpell={activeSpell} 
-              onClearActiveSpell={() => setActiveSpell(null)} 
-            />
-          </div>
-
-          {/* Sidebar Panel */}
-          <div className="lg:col-span-5 flex flex-col gap-6 w-full max-w-[480px] mx-auto lg:max-w-none">
-            {/* Dynamic Spell Grimoire UI */}
-            {gameModeId === "spell" && (
-              <SpellPanel 
+            {/* Board */}
+            <div className="lg:col-span-7 flex justify-center w-full">
+              <GameBoard 
                 activeSpell={activeSpell} 
-                onSelectSpell={setActiveSpell} 
+                onClearActiveSpell={() => setActiveSpell(null)} 
               />
-            )}
-            <GameStatus />
-            <MoveHistory />
-            <GameControls />
-          </div>
+            </div>
 
-        </div>
+            {/* Sidebar Panel */}
+            <div className="lg:col-span-5 flex flex-col gap-6 w-full max-w-[480px] mx-auto lg:max-w-none">
+              {/* Dynamic Spell Grimoire UI */}
+              {gameModeId === "spell" && (
+                <SpellPanel 
+                  activeSpell={activeSpell} 
+                  onSelectSpell={setActiveSpell} 
+                />
+              )}
+              <GameStatus onAnalyze={() => setIsAnalyzing(true)} />
+              <MoveHistory />
+              <GameControls />
+            </div>
+
+          </div>
+        )}
       </div>
     </main>
   )

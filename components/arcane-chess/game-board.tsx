@@ -344,11 +344,11 @@ export function GameBoard({ activeSpell, onClearActiveSpell }: GameBoardProps) {
                 onPieceDrop: onPieceDrop,
                 onSquareClick: onSquareClick,
                 lightSquareStyle: {
-                  backgroundColor: "oklch(0.25 0.08 300)",
-                  boxShadow: "inset 0 0 8px oklch(0.7 0.25 300 / 0.12)",
+                  backgroundColor: "oklch(0.86 0.06 280)",
+                  boxShadow: "inset 0 0 10px oklch(0.7 0.15 280 / 0.15)",
                 },
                 darkSquareStyle: {
-                  backgroundColor: "oklch(0.15 0.04 280)",
+                  backgroundColor: "oklch(0.46 0.13 280)",
                 },
                 squareStyles: boardSquareStyles,
                 animationDurationInMs: 250,
