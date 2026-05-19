@@ -14,13 +14,13 @@ export default async function LeaderboardPage() {
   // 1. Fetch current authenticated user
   const { data: { user } } = await supabase.auth.getUser()
 
-  // 2. Fetch all registered users who aren't guests, sorted by ELO
+  // 2. Fetch all registered users, sorted by ELO
   const { data: users } = await supabase
     .from('users')
     .select('*')
-    .eq('is_guest', false)
     .order('rating', { ascending: false })
     .order('wins', { ascending: false })
+
 
   // 3. Fetch active subscriptions to mark Pro members
   const { data: subscriptions } = await supabase

@@ -44,7 +44,7 @@ export function LeaderboardTabs({ initialUsers, currentUser }: LeaderboardTabsPr
   // Filter users based on search query, selected tab, and city filter
   const filteredUsers = useMemo(() => {
     return initialUsers
-      .filter(u => !u.is_guest) // Filter out guest accounts
+      .filter(u => !u.is_guest || (u.username && !u.username.startsWith('Guest_')) || u.games_played > 0)
       .filter(u => {
         // Search query filter
         const matchSearch = (u.username ?? 'Mage').toLowerCase().includes(searchQuery.toLowerCase()) ||
