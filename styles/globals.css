@@ -123,3 +123,12 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Hologram Pieces vector overlay */
+.hologram-pieces img, 
+.hologram-pieces [draggable],
+.hologram-pieces [data-piece] {
+  filter: hue-rotate(100deg) saturate(2.5) brightness(1.2) drop-shadow(0 0 6px oklch(0.7 0.2 195));
+  transition: filter 0.2s ease;
+}
+

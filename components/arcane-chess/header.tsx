@@ -53,25 +53,51 @@ export function Header() {
           </Link>
 
           {/* Navigation — absolutely centered */}
-          <nav className="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
+          <nav className="hidden md:flex items-center gap-6 absolute left-1/2 -translate-x-1/2">
             <Link
               href="/profile"
-              className="font-sans text-[10px] tracking-widest transition-colors duration-200 cursor-pointer"
+              className="font-sans text-[10px] tracking-widest transition-colors duration-200 cursor-pointer uppercase"
               style={{ color: 'oklch(0.6 0.05 280)' }}
               onMouseEnter={e => (e.currentTarget.style.color = 'oklch(0.85 0.05 280)')}
               onMouseLeave={e => (e.currentTarget.style.color = 'oklch(0.6 0.05 280)')}
             >
-              LOBBY
+              Lobby
             </Link>
             <Link
               href="/play"
-              className="font-sans text-[10px] tracking-widest transition-colors duration-200 flex items-center gap-1.5"
+              className="font-sans text-[10px] tracking-widest transition-colors duration-200 flex items-center gap-1 uppercase"
               style={{ color: 'oklch(0.6 0.05 280)' }}
               onMouseEnter={e => (e.currentTarget.style.color = 'oklch(0.85 0.18 300)')}
               onMouseLeave={e => (e.currentTarget.style.color = 'oklch(0.6 0.05 280)')}
             >
               <Swords className="h-3 w-3" style={{ color: 'oklch(0.65 0.2 300)' }} />
-              PLAY
+              Play
+            </Link>
+            <Link
+              href="/leaderboard"
+              className="font-sans text-[10px] tracking-widest transition-colors duration-200 flex items-center gap-1 uppercase"
+              style={{ color: 'oklch(0.6 0.05 280)' }}
+              onMouseEnter={e => (e.currentTarget.style.color = 'oklch(0.7 0.2 195)')}
+              onMouseLeave={e => (e.currentTarget.style.color = 'oklch(0.6 0.05 280)')}
+            >
+              <Trophy className="h-3 w-3" style={{ color: 'oklch(0.7 0.2 195)' }} />
+              Rankings
+            </Link>
+            <Link
+              href="/premium"
+              className="font-sans text-[10px] tracking-widest transition-all duration-200 flex items-center gap-1.5 uppercase font-bold text-glow-gold"
+              style={{ color: 'oklch(0.8 0.18 85)' }}
+              onMouseEnter={e => {
+                e.currentTarget.style.color = 'oklch(0.9 0.22 85)'
+                e.currentTarget.style.textShadow = '0 0 8px oklch(0.8 0.18 85)'
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.color = 'oklch(0.8 0.18 85)'
+                e.currentTarget.style.textShadow = 'none'
+              }}
+            >
+              <span className="text-[9px] select-none animate-pulse">👑</span>
+              Shop
             </Link>
           </nav>
 
@@ -106,10 +132,15 @@ export function Header() {
                       </Avatar>
                       <div className="hidden sm:flex flex-col items-start leading-none text-left">
                         <span className="font-sans text-[10px]" style={{ color: 'oklch(0.85 0.05 280)' }}>{username}</span>
-                        <span className="font-sans text-[9px] flex items-center gap-0.5 mt-0.5" style={{ color: 'oklch(0.75 0.18 85)' }}>
-                          <Trophy className="h-2.5 w-2.5" />
-                          {rating}
-                        </span>
+                        <div className="flex items-center gap-1.5 mt-0.5">
+                          <span className="font-sans text-[9px] flex items-center gap-0.5 text-neon-gold">
+                            <Trophy className="h-2.5 w-2.5" />
+                            {rating}
+                          </span>
+                          <span className="font-mono text-[7px] bg-zinc-950 border border-muted-foreground/30 px-1 py-0.5 rounded-full text-foreground/80 leading-none">
+                            LVL {profile?.level ?? 1}
+                          </span>
+                        </div>
                       </div>
                       <ChevronDown className="h-3 w-3" style={{ color: 'oklch(0.5 0.05 280)' }} />
                     </button>
@@ -153,6 +184,30 @@ export function Header() {
                             >
                               <Swords className="h-3.5 w-3.5" style={{ color: 'oklch(0.65 0.2 300)' }} />
                               Play
+                            </button>
+                          </Link>
+
+                          <Link href="/leaderboard" onClick={() => setDropdownOpen(false)}>
+                            <button
+                              className="w-full flex items-center gap-2 px-3 py-2 font-sans text-[10px] text-left select-none cursor-pointer transition-colors"
+                              style={{ color: 'oklch(0.7 0.05 280)' }}
+                              onMouseEnter={e => (e.currentTarget.style.color = 'oklch(0.7 0.2 195)')}
+                              onMouseLeave={e => (e.currentTarget.style.color = 'oklch(0.7 0.05 280)')}
+                            >
+                              <Trophy className="h-3.5 w-3.5" style={{ color: 'oklch(0.7 0.2 195)' }} />
+                              Rankings
+                            </button>
+                          </Link>
+
+                          <Link href="/premium" onClick={() => setDropdownOpen(false)}>
+                            <button
+                              className="w-full flex items-center gap-2 px-3 py-2 font-sans text-[10px] text-left select-none cursor-pointer transition-colors"
+                              style={{ color: 'oklch(0.8 0.18 85)' }}
+                              onMouseEnter={e => (e.currentTarget.style.color = 'oklch(0.9 0.22 85)')}
+                              onMouseLeave={e => (e.currentTarget.style.color = 'oklch(0.8 0.18 85)')}
+                            >
+                              <span className="text-xs">👑</span>
+                              Premium Vault
                             </button>
                           </Link>
 

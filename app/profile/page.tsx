@@ -4,15 +4,17 @@ import { redirect } from 'next/navigation'
 import { StatsCards } from '@/components/profile/stats-cards'
 import { RecentMatches } from '@/components/profile/recent-matches'
 import { AvatarUpload } from '@/components/profile/avatar-upload'
-import { GameModeHub } from '@/components/multiplayer/game-mode-hub'
 import { Header } from '@/components/arcane-chess/header'
 import { MagicParticles } from '@/components/arcane-chess/magic-particles'
+import { ProfileTabs } from '@/components/profile/profile-tabs'
 import { logout } from '@/actions/auth'
 import {
   ShieldCheck,
   LogOut,
   Trophy,
   Swords,
+  Star,
+  MapPin
 } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
@@ -28,12 +30,20 @@ export default async function ProfilePage() {
     redirect('/')
   }
 
+  // Fetch complete profile info
   const { data: profile } = await supabase
     .from('users')
     .select('*')
     .eq('id', user.id)
     .single()
 
+  // Fetch achievements
+  const { data: achievements } = await supabase
+    .from('achievements')
+    .select('*')
+    .eq('user_id', user.id)
+
+  // Fetch recent matches
   const { data: matches } = await supabase
     .from('matches')
     .select('*')
@@ -41,6 +51,7 @@ export default async function ProfilePage() {
     .order('created_at', { ascending: false })
     .limit(10)
 
+  // Fetch active subscriptions
   const { data: subscription } = await supabase
     .from('subscriptions')
     .select('*')
@@ -52,6 +63,8 @@ export default async function ProfilePage() {
   const wins = profile?.wins ?? 0
   const losses = profile?.losses ?? 0
   const draws = profile?.draws ?? 0
+  const city = profile?.city
+  const level = profile?.level ?? 1
   const isPro = subscription?.status === 'active' || subscription?.plan === 'pro'
   const username = profile?.username ?? 'Mage'
 
@@ -60,25 +73,25 @@ export default async function ProfilePage() {
       <Header />
       <MagicParticles />
 
-      {/* Pixel grid overlay */}
+      {/* Grid overlay */}
       <div
-        className="absolute inset-0 opacity-10 animate-grid pointer-events-none"
+        className="absolute inset-0 opacity-10 pointer-events-none"
         style={{
           backgroundImage: `linear-gradient(rgba(168, 85, 247, 0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(168, 85, 247, 0.15) 1px, transparent 1px)`,
           backgroundSize: '20px 20px',
         }}
       />
-      <div className="absolute inset-0 pointer-events-none opacity-25 animate-scanlines mix-blend-overlay z-0" />
+      <div className="absolute inset-0 pointer-events-none opacity-20 animate-scanlines mix-blend-overlay z-0" />
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_50%,rgba(10,5,25,0.8)_100%)] z-0" />
 
-      <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col gap-10">
+      <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col gap-8">
 
-        {/* ── Player Identity Bar ───────────────────────────────────────────── */}
+        {/* ── Player Identity Banner ───────────────────────────────────────── */}
         <div
-          className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-5 border border-[oklch(0.22_0.06_300)] bg-[oklch(0.09_0.025_280)]"
-          style={{ boxShadow: '0 0 30px oklch(0.7 0.25 300 / 0.08)' }}
+          className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-6 border border-[oklch(0.22_0.06_300)] bg-[oklch(0.09_0.025_280)]"
+          style={{ boxShadow: '0 0 35px oklch(0.7 0.25 300 / 0.08)' }}
         >
-          {/* Avatar + name */}
+          {/* Avatar + summoner details */}
           <div className="flex items-center gap-4">
             <AvatarUpload
               uid={user.id}
@@ -88,14 +101,21 @@ export default async function ProfilePage() {
                 'use server'
               }}
             />
+            
             <div className="flex flex-col gap-1">
-              <span
-                className="font-mono text-sm tracking-widest"
-                style={{ color: 'oklch(0.9 0.05 280)' }}
-              >
-                {username}
-              </span>
               <div className="flex items-center gap-2">
+                <span
+                  className="font-sans text-sm font-bold tracking-widest text-foreground"
+                >
+                  {username}
+                </span>
+
+                <span className="font-mono text-[8px] bg-zinc-950 border border-muted-foreground/30 px-2 py-0.5 rounded-full text-foreground/80 leading-none">
+                  LVL {level}
+                </span>
+              </div>
+              
+              <div className="flex items-center gap-2 flex-wrap">
                 {isPro ? (
                   <span
                     className="flex items-center gap-1 font-mono text-[8px] tracking-widest px-2 py-0.5 border"
@@ -119,6 +139,14 @@ export default async function ProfilePage() {
                     MAGE INITIATE
                   </span>
                 )}
+
+                {city && (
+                  <span className="font-mono text-[8px] tracking-widest text-neon-cyan flex items-center gap-0.5 uppercase">
+                    <MapPin className="h-2.5 w-2.5 shrink-0" />
+                    {city}
+                  </span>
+                )}
+
                 <span className="font-mono text-[8px] tracking-widest text-muted-foreground">
                   JOINED {new Date(user.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }).toUpperCase()}
                 </span>
@@ -126,7 +154,7 @@ export default async function ProfilePage() {
             </div>
           </div>
 
-          {/* Rating + logout */}
+          {/* Rating, streak and logout */}
           <div className="flex items-center gap-6">
             <div className="flex flex-col items-end gap-0.5">
               <div className="flex items-center gap-1.5">
@@ -144,7 +172,7 @@ export default async function ProfilePage() {
             <form action={logout}>
               <button
                 type="submit"
-                className="flex items-center gap-1.5 font-mono text-[9px] tracking-widest text-muted-foreground hover:text-destructive transition-colors"
+                className="flex items-center gap-1.5 font-mono text-[9px] tracking-widest text-muted-foreground hover:text-destructive transition-colors cursor-pointer select-none"
               >
                 <LogOut className="h-3.5 w-3.5" />
                 SIGN OUT
@@ -153,53 +181,47 @@ export default async function ProfilePage() {
           </div>
         </div>
 
-        {/* ── Game Mode Hub (main play area) ────────────────────────────────── */}
-        <section className="flex flex-col gap-4">
-          <div className="flex items-center gap-3">
-            <Swords className="h-4 w-4 text-neon-purple" style={{ filter: 'drop-shadow(0 0 6px oklch(0.7 0.25 300))' }} />
-            <h2 className="font-mono text-xs tracking-widest text-neon-purple" style={{ textShadow: '0 0 10px oklch(0.7 0.25 300 / 0.5)' }}>
-              CHOOSE YOUR BATTLE
-            </h2>
-            <div className="flex-1 h-px bg-neon-purple opacity-20" />
-          </div>
-          {/* Client component handles all interactive mode switching */}
-          <GameModeHub userId={user.id} username={username} />
-        </section>
+        {/* ── Player Navigation Dashboard Tabs ───────────────────────────── */}
+        <ProfileTabs
+          userId={user.id}
+          profile={profile}
+          matches={matches || []}
+          achievements={achievements || []}
+          isPro={isPro}
+        />
 
-        {/* ── Stats ─────────────────────────────────────────────────────────── */}
-        <section className="flex flex-col gap-4">
-          <div className="flex items-center gap-3">
-            <Trophy className="h-4 w-4 text-neon-gold" style={{ filter: 'drop-shadow(0 0 6px oklch(0.8 0.18 85))' }} />
-            <h2 className="font-mono text-xs tracking-widest text-neon-gold" style={{ textShadow: '0 0 10px oklch(0.8 0.18 85 / 0.5)' }}>
-              BATTLE STATISTICS
-            </h2>
-            <div className="flex-1 h-px bg-neon-gold opacity-20" />
-          </div>
-          <StatsCards
-            rating={rating}
-            gamesPlayed={gamesPlayed}
-            wins={wins}
-            losses={losses}
-            draws={draws}
-          />
-        </section>
-
-        {/* ── Match History ─────────────────────────────────────────────────── */}
-        <section className="flex flex-col gap-4">
-          <div className="flex items-center gap-3">
-            <div
-              className="h-4 w-4 flex items-center justify-center"
-              style={{ color: 'oklch(0.7 0.2 195)' }}
-            >
-              ⚔
+        {/* ── Stats & Duel History ────────────────────────────────────────── */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-4">
+          {/* Stats Cards */}
+          <div className="lg:col-span-5 flex flex-col gap-4">
+            <div className="flex items-center gap-3">
+              <Trophy className="h-4 w-4 text-neon-gold" style={{ filter: 'drop-shadow(0 0 6px oklch(0.8 0.18 85))' }} />
+              <h2 className="font-mono text-xs tracking-widest text-neon-gold uppercase">
+                Combat Data
+              </h2>
+              <div className="flex-1 h-px bg-neon-gold opacity-20" />
             </div>
-            <h2 className="font-mono text-xs tracking-widest text-neon-cyan" style={{ textShadow: '0 0 10px oklch(0.7 0.2 195 / 0.5)' }}>
-              DUEL HISTORY
-            </h2>
-            <div className="flex-1 h-px bg-neon-cyan opacity-20" />
+            <StatsCards
+              rating={rating}
+              gamesPlayed={gamesPlayed}
+              wins={wins}
+              losses={losses}
+              draws={draws}
+            />
           </div>
-          <RecentMatches matches={matches || []} currentUserId={user.id} currentUserColor="white" />
-        </section>
+
+          {/* Matches List */}
+          <div className="lg:col-span-7 flex flex-col gap-4">
+            <div className="flex items-center gap-3">
+              <div className="h-4 w-4 flex items-center justify-center font-bold text-neon-cyan">⚔</div>
+              <h2 className="font-mono text-xs tracking-widest text-neon-cyan uppercase">
+                Chronicles of Battle
+              </h2>
+              <div className="flex-1 h-px bg-neon-cyan opacity-20" />
+            </div>
+            <RecentMatches matches={matches || []} currentUserId={user.id} currentUserColor="white" />
+          </div>
+        </div>
 
       </div>
     </main>
