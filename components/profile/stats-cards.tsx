@@ -1,8 +1,7 @@
 'use client'
 
-import React from 'react'
+import React, { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Card, CardContent } from '@/components/ui/card'
 import { Trophy, Swords, Percent, Flame } from 'lucide-react'
 
 interface StatsCardsProps {
@@ -13,49 +12,98 @@ interface StatsCardsProps {
   draws: number
 }
 
+// mini spark positions per card (relative %)
+const CARD_SPARKS = [
+  { left: '10%',  top: '80%', dur: '1.6s', delay: '0s'   },
+  { left: '85%',  top: '75%', dur: '2.0s', delay: '0.5s' },
+  { left: '50%',  top: '90%', dur: '1.8s', delay: '0.9s' },
+  { left: '30%',  top: '85%', dur: '2.2s', delay: '0.3s' },
+]
+
+function SparkLayer({ color, active }: { color: string; active: boolean }) {
+  if (!active) return null
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      {CARD_SPARKS.map((s, i) => (
+        <div
+          key={i}
+          className="absolute animate-spark rounded-full"
+          style={{
+            left: s.left,
+            top: s.top,
+            width: 3,
+            height: 3,
+            background: color,
+            boxShadow: `0 0 6px ${color}`,
+            '--dur': s.dur,
+            animationDelay: s.delay,
+          } as React.CSSProperties}
+        />
+      ))}
+    </div>
+  )
+}
+
 export function StatsCards({ rating, gamesPlayed, wins, losses, draws }: StatsCardsProps) {
   const winrate = gamesPlayed > 0 ? Math.round((wins / gamesPlayed) * 100) : 0
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null)
 
   const stats = [
     {
-      title: 'Sorcerer Rating',
+      title: 'Sorcerer ELO',
       value: rating,
-      description: 'Your current chess ELO ranking',
+      description: `Arcane ranking score`,
       icon: Trophy,
-      color: 'text-neon-gold',
-      borderGlow: 'hover:shadow-[0_0_20px_oklch(0.8_0.18_85/0.25)] hover:border-neon-gold/50',
-      bgGradient: 'from-amber-950/15 via-zinc-950/40 to-amber-950/5',
-      iconBg: 'bg-neon-gold/10 border-neon-gold/20 text-neon-gold',
+      neonClass: 'text-neon-gold',
+      neonColor: 'oklch(0.8 0.18 85)',
+      borderHover: 'hover:border-neon-gold',
+      bgGradient: 'bg-zinc-950',
+      pixelShadow: '4px 4px 0 oklch(0.8 0.18 85 / 0.5)',
+      iconBg: 'bg-neon-gold/10 border-neon-gold/30',
+      cornerColor: 'border-neon-gold/80',
+      rune: '♜',
     },
     {
       title: 'Battles Fought',
       value: gamesPlayed,
-      description: `${wins} W · ${losses} L · ${draws} D`,
+      description: `${wins}W · ${losses}L · ${draws}D`,
       icon: Swords,
-      color: 'text-neon-purple',
-      borderGlow: 'hover:shadow-[0_0_20px_oklch(0.7_0.25_300/0.25)] hover:border-neon-purple/50',
-      bgGradient: 'from-purple-950/15 via-zinc-950/40 to-purple-950/5',
-      iconBg: 'bg-neon-purple/10 border-neon-purple/20 text-neon-purple',
+      neonClass: 'text-neon-purple',
+      neonColor: 'oklch(0.7 0.25 300)',
+      borderHover: 'hover:border-neon-purple',
+      bgGradient: 'bg-zinc-950',
+      pixelShadow: '4px 4px 0 oklch(0.7 0.25 300 / 0.5)',
+      iconBg: 'bg-neon-purple/10 border-neon-purple/30',
+      cornerColor: 'border-neon-purple/80',
+      rune: '⚔',
     },
     {
       title: 'Win Rate',
       value: `${winrate}%`,
-      description: 'Percentage of victorious spells',
+      description: 'Victorious spell ratio',
       icon: Percent,
-      color: 'text-neon-cyan',
-      borderGlow: 'hover:shadow-[0_0_20px_oklch(0.7_0.2_195/0.25)] hover:border-neon-cyan/50',
-      bgGradient: 'from-cyan-950/15 via-zinc-950/40 to-cyan-950/5',
-      iconBg: 'bg-neon-cyan/10 border-neon-cyan/20 text-neon-cyan',
+      neonClass: 'text-neon-cyan',
+      neonColor: 'oklch(0.7 0.2 195)',
+      borderHover: 'hover:border-neon-cyan',
+      bgGradient: 'bg-zinc-950',
+      pixelShadow: '4px 4px 0 oklch(0.7 0.2 195 / 0.5)',
+      iconBg: 'bg-neon-cyan/10 border-neon-cyan/30',
+      cornerColor: 'border-neon-cyan/80',
+      rune: '◈',
     },
     {
-      title: 'Win Streak',
-      value: wins > 0 ? wins : 0,
-      description: 'Active streak of magic wins',
+      title: 'Total Wins',
+      value: wins,
+      description: 'Games conquered',
       icon: Flame,
-      color: 'text-neon-pink',
-      borderGlow: 'hover:shadow-[0_0_20px_oklch(0.7_0.22_330/0.25)] hover:border-neon-pink/50',
-      bgGradient: 'from-fuchsia-950/15 via-zinc-950/40 to-fuchsia-950/5',
-      iconBg: 'bg-neon-pink/10 border-neon-pink/20 text-neon-pink',
+      neonClass: 'text-neon-pink',
+      neonColor: 'oklch(0.7 0.22 330)',
+      borderHover: 'hover:border-neon-pink',
+      bgGradient: 'bg-zinc-950',
+      pixelShadow: '4px 4px 0 oklch(0.7 0.22 330 / 0.5)',
+      iconBg: 'bg-neon-pink/10 border-neon-pink/30',
+      cornerColor: 'border-neon-pink/80',
+      rune: '✦',
     },
   ]
 
@@ -63,54 +111,81 @@ export function StatsCards({ rating, gamesPlayed, wins, losses, draws }: StatsCa
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
       {stats.map((stat, index) => {
         const Icon = stat.icon
+        const isHov = hoveredIdx === index
         return (
           <motion.div
             key={index}
-            initial={{ opacity: 0, y: 15 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: index * 0.1 }}
-            whileHover={{ scale: 1.02, y: -2 }}
-            className="group relative"
+            transition={{ duration: 0.4, delay: index * 0.09 }}
+            whileHover={{ y: -4, scale: 1.02 }}
+            className="group relative cursor-default animate-card-rise"
+            style={{ animationDelay: `${index * 90}ms` }}
+            onHoverStart={() => setHoveredIdx(index)}
+            onHoverEnd={() => setHoveredIdx(null)}
           >
-            {/* Ambient Background Glow on Hover */}
-            <div className="absolute inset-0 -z-10 bg-gradient-to-r opacity-0 group-hover:opacity-10 transition-opacity duration-300 blur-xl from-purple-500/10 via-cyan-500/10 to-yellow-500/10" />
+            {/* Rising sparks on hover */}
+            <SparkLayer color={stat.neonColor} active={isHov} />
 
-            <Card
-              className={`relative overflow-hidden border border-border/60 bg-gradient-to-br ${stat.bgGradient} backdrop-blur-md transition-all duration-300 ${stat.borderGlow}`}
+            {/* Card body */}
+            <div
+              className={`relative overflow-hidden border border-border/50 ${stat.borderHover} ${stat.bgGradient} transition-all duration-400`}
+              style={{ boxShadow: isHov ? stat.pixelShadow : '2px 2px 0 rgba(0,0,0,0.8)' }}
             >
-              {/* Corner Accents */}
-              <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-muted-foreground/20 group-hover:border-foreground/40 transition-colors duration-300" />
-              <div className="absolute top-0 right-0 w-1.5 h-1.5 border-t border-r border-muted-foreground/20 group-hover:border-foreground/40 transition-colors duration-300" />
-              <div className="absolute bottom-0 left-0 w-1.5 h-1.5 border-b border-l border-muted-foreground/20 group-hover:border-foreground/40 transition-colors duration-300" />
-              <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-muted-foreground/20 group-hover:border-foreground/40 transition-colors duration-300" />
+              {/* Animated top shimmer */}
+              <div
+                className="absolute top-0 left-0 right-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-400 animate-shimmer"
+                style={{ background: `linear-gradient(90deg, transparent, ${stat.neonColor}, transparent)` }}
+              />
 
-              <CardContent className="p-5 flex flex-col justify-between h-full min-h-[120px]">
+              {/* Pixel corner brackets */}
+              <div className={`absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 ${stat.cornerColor} transition-all duration-300 group-hover:w-5 group-hover:h-5`} />
+              <div className={`absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 ${stat.cornerColor} transition-all duration-300 group-hover:w-5 group-hover:h-5`} />
+              <div className={`absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 ${stat.cornerColor} transition-all duration-300 group-hover:w-5 group-hover:h-5`} />
+              <div className={`absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 ${stat.cornerColor} transition-all duration-300 group-hover:w-5 group-hover:h-5`} />
+
+              {/* Floating rune (top right bg) */}
+              <div
+                className="absolute top-3 right-12 font-bold text-[20px] opacity-0 group-hover:opacity-[0.07] transition-opacity duration-500 select-none pointer-events-none"
+                style={{ color: stat.neonColor }}
+              >
+                {stat.rune}
+              </div>
+
+              <div className="p-5 flex flex-col justify-between min-h-[128px]">
                 <div className="flex items-start justify-between">
                   <div className="flex flex-col gap-0.5">
-                    <p className="text-[9px] font-mono font-bold uppercase tracking-widest text-muted-foreground group-hover:text-foreground/80 transition-colors duration-300">
+                    <p className="text-[8px] font-mono font-bold uppercase tracking-widest text-muted-foreground/70 group-hover:text-muted-foreground/90 transition-colors">
                       {stat.title}
                     </p>
-                    <div className={`text-2xl font-bold font-mono tracking-tight ${stat.color} mt-1.5`}>
+                    <div
+                      className={`text-2xl font-bold font-mono tracking-tight ${stat.neonClass} mt-1.5 transition-all duration-300`}
+                    >
                       {stat.value}
                     </div>
                   </div>
-                  <motion.div 
-                    whileHover={{ rotate: 15 }}
-                    className={`rounded-sm p-2 border ${stat.iconBg} transition-all duration-300 shadow-sm`}
+                  <motion.div
+                    whileHover={{ rotate: 20, scale: 1.15 }}
+                    className={`p-2 border ${stat.iconBg} ${stat.neonClass} transition-all duration-300`}
                   >
                     <Icon className="h-4 w-4" />
                   </motion.div>
                 </div>
+
                 <div className="mt-3 border-t border-border/20 pt-2 flex items-center justify-between">
-                  <p className="text-[8px] font-mono text-muted-foreground/80 uppercase tracking-wider">
+                  <p className="text-[8px] font-mono text-muted-foreground/65 uppercase tracking-wider">
                     {stat.description}
                   </p>
-                  <span className="text-[7px] font-mono text-glow opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-foreground/40 tracking-widest">
-                    SECURE SEC
+                  {/* Tiny spark icon on hover */}
+                  <span
+                    className="text-[9px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-twinkle"
+                    style={{ color: stat.neonColor, '--dur': '1.8s' } as React.CSSProperties}
+                  >
+                    ✦
                   </span>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </motion.div>
         )
       })}

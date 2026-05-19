@@ -23,24 +23,24 @@ interface ProfileTabsProps {
 
 // Predefined Board Themes
 const boardThemes = [
-  { id: 'classic', name: 'Classic Sanctum', desc: 'Default purple and dark fantasy squares.', premium: false, colorClass: 'border-purple-500/20 text-neon-purple', glow: 'shadow-[0_0_15px_oklch(0.7_0.25_300/0.1)]' },
-  { id: 'neon-abyss', name: 'Neon Abyss', desc: 'Cyberpunk neon-purple glowing square matrix.', premium: true, colorClass: 'border-fuchsia-500/40 text-neon-pink', glow: 'shadow-[0_0_20px_oklch(0.7_0.22_330/0.25)] hover:border-neon-pink/70' },
-  { id: 'molten-core', name: 'Molten Core', desc: 'Fiery gold and glowing magma squares.', premium: true, colorClass: 'border-amber-500/40 text-neon-gold', glow: 'shadow-[0_0_20px_oklch(0.8_0.18_85/0.25)] hover:border-neon-gold/70' },
-  { id: 'cosmic-void', name: 'Cosmic Void', desc: 'Nebula cosmic starfield and blue void tiles.', premium: true, colorClass: 'border-cyan-500/40 text-neon-cyan', glow: 'shadow-[0_0_20px_oklch(0.7_0.2_195/0.25)] hover:border-neon-cyan/70' },
+  { id: 'classic', name: 'Classic Sanctum', desc: 'Default purple and dark fantasy squares.', premium: false, colorClass: 'border-purple-500/20 text-neon-purple', glow: 'shadow-[4px_4px_0_rgba(0,0,0,0.6)] group-hover:shadow-[6px_6px_0_rgba(0,0,0,0.8)]' },
+  { id: 'neon-abyss', name: 'Neon Abyss', desc: 'Cyberpunk neon-purple glowing square matrix.', premium: true, colorClass: 'border-fuchsia-500/40 text-neon-pink', glow: 'shadow-[4px_4px_0_rgba(0,0,0,0.6)] group-hover:shadow-[6px_6px_0_rgba(0,0,0,0.8)]' },
+  { id: 'molten-core', name: 'Molten Core', desc: 'Fiery gold and glowing magma squares.', premium: true, colorClass: 'border-amber-500/40 text-neon-gold', glow: 'shadow-[4px_4px_0_rgba(0,0,0,0.6)] group-hover:shadow-[6px_6px_0_rgba(0,0,0,0.8)]' },
+  { id: 'cosmic-void', name: 'Cosmic Void', desc: 'Nebula cosmic starfield and blue void tiles.', premium: true, colorClass: 'border-cyan-500/40 text-neon-cyan', glow: 'shadow-[4px_4px_0_rgba(0,0,0,0.6)] group-hover:shadow-[6px_6px_0_rgba(0,0,0,0.8)]' },
 ]
 
 // Predefined Piece Styles
 const pieceStyles = [
-  { id: 'classic', name: 'Classic Chess', desc: 'Standard visual chess designs.', premium: false, colorClass: 'border-zinc-500/20 text-muted-foreground', glow: 'shadow-sm' },
-  { id: 'arcane-runes', name: 'Arcane Runes', desc: 'Glowing circular runic glyph engravings.', premium: true, colorClass: 'border-yellow-500/40 text-neon-gold', glow: 'shadow-[0_0_20px_oklch(0.8_0.18_85/0.25)] hover:border-neon-gold/70' },
-  { id: 'hologram', name: 'Hologram Vector', desc: 'Glowing wireframe vector grid styles.', premium: true, colorClass: 'border-cyan-500/40 text-neon-cyan', glow: 'shadow-[0_0_20px_oklch(0.7_0.2_195/0.25)] hover:border-neon-cyan/70' },
+  { id: 'classic', name: 'Classic Chess', desc: 'Standard visual chess designs.', premium: false, colorClass: 'border-zinc-500/20 text-muted-foreground', glow: 'shadow-[4px_4px_0_rgba(0,0,0,0.6)] group-hover:shadow-[6px_6px_0_rgba(0,0,0,0.8)]' },
+  { id: 'arcane-runes', name: 'Arcane Runes', desc: 'Glowing circular runic glyph engravings.', premium: true, colorClass: 'border-yellow-500/40 text-neon-gold', glow: 'shadow-[4px_4px_0_rgba(0,0,0,0.6)] group-hover:shadow-[6px_6px_0_rgba(0,0,0,0.8)]' },
+  { id: 'hologram', name: 'Hologram Vector', desc: 'Glowing wireframe vector grid styles.', premium: true, colorClass: 'border-cyan-500/40 text-neon-cyan', glow: 'shadow-[4px_4px_0_rgba(0,0,0,0.6)] group-hover:shadow-[6px_6px_0_rgba(0,0,0,0.8)]' },
 ]
 
 // Predefined Spell Effects
 const spellEffects = [
-  { id: 'classic', name: 'Sparks & Fire', desc: 'Standard fireball and flame burst effects.', premium: false, colorClass: 'border-orange-500/20 text-orange-400', glow: 'shadow-[0_0_15px_rgba(249,115,22,0.1)]' },
-  { id: 'glacial-spike', name: 'Glacial Shatter', desc: 'Freezing ice crystals explosion.', premium: true, colorClass: 'border-cyan-500/40 text-neon-cyan', glow: 'shadow-[0_0_20px_oklch(0.7_0.2_195/0.25)] hover:border-neon-cyan/70' },
-  { id: 'void-implosion', name: 'Void Vortex', desc: 'Swirling dark hole implosions.', premium: true, colorClass: 'border-purple-500/40 text-neon-purple', glow: 'shadow-[0_0_20px_oklch(0.7_0.25_300/0.25)] hover:border-neon-purple/70' },
+  { id: 'classic', name: 'Sparks & Fire', desc: 'Standard fireball and flame burst effects.', premium: false, colorClass: 'border-orange-500/20 text-orange-400', glow: 'shadow-[4px_4px_0_rgba(0,0,0,0.6)] group-hover:shadow-[6px_6px_0_rgba(0,0,0,0.8)]' },
+  { id: 'glacial-spike', name: 'Glacial Shatter', desc: 'Freezing ice crystals explosion.', premium: true, colorClass: 'border-cyan-500/40 text-neon-cyan', glow: 'shadow-[4px_4px_0_rgba(0,0,0,0.6)] group-hover:shadow-[6px_6px_0_rgba(0,0,0,0.8)]' },
+  { id: 'void-implosion', name: 'Void Vortex', desc: 'Swirling dark hole implosions.', premium: true, colorClass: 'border-purple-500/40 text-neon-purple', glow: 'shadow-[4px_4px_0_rgba(0,0,0,0.6)] group-hover:shadow-[6px_6px_0_rgba(0,0,0,0.8)]' },
 ]
 
 // Standard achievements template to compare against unlocked ones
@@ -199,10 +199,10 @@ export function ProfileTabs({ userId, profile, matches, achievements, isPro }: P
                       return (
                         <motion.div 
                           key={board.id}
-                          whileHover={{ y: -3, scale: 1.01 }}
+                          whileHover={{ y: -3 }}
                           className={cn(
-                            "p-5 border bg-[oklch(0.125_0.015_280)] flex flex-col justify-between min-h-[180px] relative transition-all duration-300 group rounded-none",
-                            isEquipped ? 'border-neon-gold/80 glow-gold bg-[oklch(0.135_0.02_280)]' : 'border-slate-800/80 hover:border-slate-700',
+                            "p-5 border bg-black flex flex-col justify-between min-h-[180px] relative transition-all duration-300 group rounded-none",
+                            isEquipped ? 'border-neon-gold/80 bg-zinc-900' : 'border-slate-800/80 hover:border-slate-700',
                             board.glow
                           )}
                         >
@@ -214,11 +214,11 @@ export function ProfileTabs({ userId, profile, matches, achievements, isPro }: P
                             <div className="flex justify-between items-start min-h-[18px]">
                               <span />
                               {isLocked ? (
-                                <span className="text-neon-gold text-[7px] border border-neon-gold/30 bg-neon-gold/5 px-2 py-0.5 flex items-center gap-1 font-mono uppercase font-bold tracking-widest animate-pulse-glow">
+                                <span className="text-neon-gold text-[7px] border border-neon-gold/50 bg-neon-gold/10 px-2 py-0.5 flex items-center gap-1 font-mono uppercase font-bold tracking-widest">
                                   <Lock className="h-2 w-2" /> PRO
                                 </span>
                               ) : isEquipped ? (
-                                <span className="text-neon-gold text-[7px] border border-neon-gold/40 bg-neon-gold/5 px-2 py-0.5 flex items-center gap-1 font-mono uppercase font-bold tracking-widest">
+                                <span className="text-neon-gold text-[7px] border border-neon-gold/50 bg-neon-gold/10 px-2 py-0.5 flex items-center gap-1 font-mono uppercase font-bold tracking-widest">
                                   EQUIPPED
                                 </span>
                               ) : null}
@@ -273,10 +273,10 @@ export function ProfileTabs({ userId, profile, matches, achievements, isPro }: P
                       return (
                         <motion.div 
                           key={piece.id}
-                          whileHover={{ y: -3, scale: 1.01 }}
+                          whileHover={{ y: -3 }}
                           className={cn(
-                            "p-5 border bg-[oklch(0.125_0.015_280)] flex flex-col justify-between min-h-[180px] relative transition-all duration-300 group rounded-none",
-                            isEquipped ? 'border-neon-cyan/80 glow-cyan bg-[oklch(0.135_0.02_280)]' : 'border-slate-800/80 hover:border-slate-700',
+                            "p-5 border bg-black flex flex-col justify-between min-h-[180px] relative transition-all duration-300 group rounded-none",
+                            isEquipped ? 'border-neon-cyan/80 bg-zinc-900' : 'border-slate-800/80 hover:border-slate-700',
                             piece.glow
                           )}
                         >
@@ -288,11 +288,11 @@ export function ProfileTabs({ userId, profile, matches, achievements, isPro }: P
                             <div className="flex justify-between items-start min-h-[18px]">
                               <span />
                               {isLocked ? (
-                                <span className="text-neon-gold text-[7px] border border-neon-gold/30 bg-neon-gold/5 px-2 py-0.5 flex items-center gap-1 font-mono uppercase font-bold tracking-widest animate-pulse-glow">
+                                <span className="text-neon-gold text-[7px] border border-neon-gold/50 bg-neon-gold/10 px-2 py-0.5 flex items-center gap-1 font-mono uppercase font-bold tracking-widest">
                                   <Lock className="h-2 w-2" /> PRO
                                 </span>
                               ) : isEquipped ? (
-                                <span className="text-neon-cyan text-[7px] border border-neon-cyan/40 bg-neon-cyan/5 px-2 py-0.5 flex items-center gap-1 font-mono uppercase font-bold tracking-widest">
+                                <span className="text-neon-cyan text-[7px] border border-neon-cyan/50 bg-neon-cyan/10 px-2 py-0.5 flex items-center gap-1 font-mono uppercase font-bold tracking-widest">
                                   EQUIPPED
                                 </span>
                               ) : null}
@@ -347,10 +347,10 @@ export function ProfileTabs({ userId, profile, matches, achievements, isPro }: P
                       return (
                         <motion.div 
                           key={spell.id}
-                          whileHover={{ y: -3, scale: 1.01 }}
+                          whileHover={{ y: -3 }}
                           className={cn(
-                            "p-5 border bg-[oklch(0.125_0.015_280)] flex flex-col justify-between min-h-[180px] relative transition-all duration-300 group rounded-none",
-                            isEquipped ? 'border-neon-purple/80 glow-purple bg-[oklch(0.135_0.02_280)]' : 'border-slate-800/80 hover:border-slate-700',
+                            "p-5 border bg-black flex flex-col justify-between min-h-[180px] relative transition-all duration-300 group rounded-none",
+                            isEquipped ? 'border-neon-purple/80 bg-zinc-900' : 'border-slate-800/80 hover:border-slate-700',
                             spell.glow
                           )}
                         >
@@ -362,11 +362,11 @@ export function ProfileTabs({ userId, profile, matches, achievements, isPro }: P
                             <div className="flex justify-between items-start min-h-[18px]">
                               <span />
                               {isLocked ? (
-                                <span className="text-neon-gold text-[7px] border border-neon-gold/30 bg-neon-gold/5 px-2 py-0.5 flex items-center gap-1 font-mono uppercase font-bold tracking-widest animate-pulse-glow">
+                                <span className="text-neon-gold text-[7px] border border-neon-gold/50 bg-neon-gold/10 px-2 py-0.5 flex items-center gap-1 font-mono uppercase font-bold tracking-widest">
                                   <Lock className="h-2 w-2" /> PRO
                                 </span>
                               ) : isEquipped ? (
-                                <span className="text-neon-purple text-[7px] border border-neon-purple/40 bg-neon-purple/5 px-2 py-0.5 flex items-center gap-1 font-mono uppercase font-bold tracking-widest">
+                                <span className="text-neon-purple text-[7px] border border-neon-purple/50 bg-neon-purple/10 px-2 py-0.5 flex items-center gap-1 font-mono uppercase font-bold tracking-widest">
                                   EQUIPPED
                                 </span>
                               ) : null}
@@ -420,10 +420,10 @@ export function ProfileTabs({ userId, profile, matches, achievements, isPro }: P
                   <span className="font-mono text-[8px] text-muted-foreground tracking-widest uppercase absolute top-4">SUMMONER LEVEL STATUS</span>
                   
                   {/* Level Badge Circle */}
-                  <div className="relative w-28 h-28 flex items-center justify-center border-2 border-dashed border-neon-cyan/30 rounded-full glow-cyan mt-6">
-                    <div className="absolute w-[88%] h-[88%] border border-neon-cyan/10 rounded-full animate-spin" style={{ animationDuration: '8s' }} />
+                  <div className="relative w-28 h-28 flex items-center justify-center border-2 border-dashed border-neon-cyan/50 rounded-full mt-6 bg-black shadow-[4px_4px_0_rgba(0,0,0,0.8)]">
+                    <div className="absolute w-[88%] h-[88%] border border-neon-cyan/30 rounded-full border-dotted" />
                     <div className="flex flex-col items-center justify-center">
-                      <span className="font-title text-5xl text-neon-cyan text-glow-cyan leading-none font-bold mt-1" style={{ fontFamily: 'var(--font-jacquard)' }}>
+                      <span className="font-title text-5xl text-neon-cyan leading-none font-bold mt-1" style={{ fontFamily: 'var(--font-jacquard)' }}>
                         {profile?.level ?? 1}
                       </span>
                       <span className="font-mono text-[6px] tracking-widest text-muted-foreground/60 uppercase font-bold mt-1">
@@ -466,8 +466,8 @@ export function ProfileTabs({ userId, profile, matches, achievements, isPro }: P
                           className={cn(
                             "p-4 border font-mono text-[9px] tracking-wider relative flex gap-4 items-center transition-all duration-300",
                             unlocked 
-                              ? 'border-neon-gold/50 bg-gradient-to-r from-neon-gold/5 to-card/20 shadow-[0_0_15px_oklch(0.8_0.18_85/0.06)]' 
-                              : 'border-border/60 bg-black/10 opacity-50'
+                              ? 'border-neon-gold/80 bg-zinc-900 shadow-[4px_4px_0_rgba(0,0,0,0.6)]' 
+                              : 'border-border/60 bg-black/50 opacity-50 shadow-[2px_2px_0_rgba(0,0,0,0.5)]'
                           )}
                         >
                           {/* Corner bracket */}
@@ -481,7 +481,7 @@ export function ProfileTabs({ userId, profile, matches, achievements, isPro }: P
                           {/* Trophy icon border */}
                           <div className={cn(
                             "w-10 h-10 shrink-0 flex items-center justify-center border transition-all duration-300",
-                            unlocked ? 'border-neon-gold/40 bg-neon-gold/10 text-neon-gold glow-gold' : 'border-border text-muted-foreground/60'
+                            unlocked ? 'border-neon-gold/80 bg-neon-gold/20 text-neon-gold' : 'border-border text-muted-foreground/60 bg-black'
                           )}>
                             <Icon className="h-5 w-5" />
                           </div>
