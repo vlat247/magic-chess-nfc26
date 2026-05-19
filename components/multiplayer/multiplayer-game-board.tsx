@@ -204,7 +204,7 @@ export function MultiplayerGameBoard({ onMove, isMyTurn }: MultiplayerGameBoardP
               onSquareClick,
               lightSquareStyle: boardStyles.light,
               darkSquareStyle: boardStyles.dark,
-              customPieces: customPiecesMap,
+              pieces: customPiecesMap,
               squareStyles: boardSquareStyles,
               animationDurationInMs: 200,
               allowDragging: canMove,

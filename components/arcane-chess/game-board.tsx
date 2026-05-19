@@ -435,7 +435,7 @@ export function GameBoard({ activeSpell, onClearActiveSpell }: GameBoardProps) {
                 onSquareClick: onSquareClick,
                 lightSquareStyle: boardStyles.light,
                 darkSquareStyle: boardStyles.dark,
-                customPieces: customPiecesMap,
+                pieces: customPiecesMap,
                 squareStyles: boardSquareStyles,
                 animationDurationInMs: 250,
                 allowDragging: !activeSpell,
@@ -525,48 +525,104 @@ export function GameBoard({ activeSpell, onClearActiveSpell }: GameBoardProps) {
               {lastCast && (() => {
                 const offset = getSquareOffset(lastCast.square)
                 
-                // 1. FIREBALL EXPLOSION
+                // 1. FIREBALL SPELL (SOLAR BURST & PIXEL SMOKE)
                 if (lastCast.spellId === "fireball") {
                   return (
                     <div className="absolute inset-0 pointer-events-none z-40 overflow-hidden" key={lastCast.id}>
-                      {/* Exploding core */}
+                      {/* Flying Pixel Fireball Projectile */}
                       <motion.div
-                        initial={{ scale: 0, opacity: 1 }}
+                        initial={{
+                          x: offset.left - 150,
+                          y: offset.top - 150,
+                          scale: 2,
+                          rotate: 45,
+                          opacity: 1
+                        }}
                         animate={{
-                          scale: [1, 2.2, 2.5],
-                          opacity: [1, 0.8, 0],
+                          x: offset.left,
+                          y: offset.top,
+                          scale: 1,
+                          opacity: [1, 1, 0]
+                        }}
+                        transition={{ duration: 0.25, ease: "easeIn" }}
+                        className="absolute w-8 h-8 flex items-center justify-center"
+                        style={{ width: offset.size, height: offset.size }}
+                      >
+                        {/* 3x3 pixel fireball core */}
+                        <div className="w-4 h-4 bg-orange-600 border border-red-800 grid grid-cols-2">
+                          <div className="bg-yellow-400" />
+                          <div className="bg-orange-500" />
+                          <div className="bg-orange-600" />
+                          <div className="bg-red-500" />
+                        </div>
+                      </motion.div>
+
+                      {/* Exploding Core - Expand in perfect square pixels */}
+                      <motion.div
+                        initial={{ scale: 0, opacity: 0 }}
+                        animate={{
+                          scale: [0.6, 1.4, 1.6],
+                          opacity: [0, 1, 0.8, 0],
                         }}
                         exit={{ opacity: 0 }}
-                        transition={{ duration: 0.55, ease: "easeOut" }}
-                        className="absolute rounded-full bg-gradient-to-r from-orange-500 via-red-500 to-yellow-400 mix-blend-screen filter blur-[0.5px]"
+                        transition={{ duration: 0.45, delay: 0.2, ease: "easeOut" }}
+                        className="absolute bg-gradient-to-br from-yellow-300 via-orange-500 to-red-600 border-4 border-orange-500 shadow-[0_0_20px_oklch(0.8_0.18_85/0.5)]"
                         style={{
-                          left: offset.left - offset.size * 0.75,
-                          top: offset.top - offset.size * 0.75,
-                          width: offset.size * 2.5,
-                          height: offset.size * 2.5,
+                          left: offset.left,
+                          top: offset.top,
+                          width: offset.size,
+                          height: offset.size,
                         }}
                       />
-                      {/* Exploding pixel particles */}
+
+                      {/* Exploding Pixel Sparkles (12 particles shooting out) */}
                       {[...Array(12)].map((_, i) => {
                         const angle = (i / 12) * Math.PI * 2
-                        const radius = offset.size * 1.2
+                        const radius = offset.size * 1.3
+                        const delay = 0.23 + (Math.random() * 0.05)
+                        const pColor = i % 3 === 0 ? "bg-yellow-400" : i % 3 === 1 ? "bg-orange-500" : "bg-red-600"
                         return (
                           <motion.div
-                            key={i}
+                            key={`fb-spark-${i}`}
                             initial={{
-                              x: offset.left + offset.size / 2 - 4,
-                              y: offset.top + offset.size / 2 - 4,
-                              opacity: 1,
-                              scale: 1.5,
+                              x: offset.left + offset.size / 2 - 3,
+                              y: offset.top + offset.size / 2 - 3,
+                              opacity: 0,
+                              scale: 1.8,
                             }}
                             animate={{
-                              x: offset.left + offset.size / 2 - 4 + Math.cos(angle) * radius,
-                              y: offset.top + offset.size / 2 - 4 + Math.sin(angle) * radius,
-                              opacity: 0,
-                              scale: 0.1,
+                              x: offset.left + offset.size / 2 - 3 + Math.cos(angle) * radius,
+                              y: offset.top + offset.size / 2 - 3 + Math.sin(angle) * radius,
+                              opacity: [0, 1, 0],
+                              scale: 0.3,
                             }}
-                            transition={{ duration: 0.5, ease: "easeOut" }}
-                            className="absolute w-2 h-2 bg-yellow-400 shadow-[0_0_8px_#facc15]"
+                            transition={{ duration: 0.4, delay, ease: "easeOut" }}
+                            className={`absolute w-1.5 h-1.5 rounded-none border border-black/20 ${pColor}`}
+                          />
+                        )
+                      })}
+
+                      {/* Rising Pixel Smoke (6 gray square blocks) */}
+                      {[...Array(6)].map((_, i) => {
+                        const delay = 0.25 + (i * 0.05)
+                        const drift = (Math.random() - 0.5) * offset.size * 0.6
+                        return (
+                          <motion.div
+                            key={`fb-smoke-${i}`}
+                            initial={{
+                              x: offset.left + offset.size / 2 - 4 + (Math.random() - 0.5) * 8,
+                              y: offset.top + offset.size / 2 - 2,
+                              opacity: 0,
+                              scale: 1,
+                            }}
+                            animate={{
+                              y: offset.top - 20 - (Math.random() * 15),
+                              x: offset.left + offset.size / 2 - 4 + drift,
+                              opacity: [0, 0.85, 0],
+                              scale: [1, 1.4, 0.2],
+                            }}
+                            transition={{ duration: 0.55, delay, ease: "easeOut" }}
+                            className="absolute w-2 h-2 rounded-none bg-zinc-700 border border-zinc-900/40"
                           />
                         )
                       })}
@@ -574,20 +630,37 @@ export function GameBoard({ activeSpell, onClearActiveSpell }: GameBoardProps) {
                   )
                 }
 
-                // 2. FREEZE CRYSTAL POP
+                // 2. FREEZE SPELL (GLACIAL SHATTER & PIXEL ICE CRYSTALS)
                 if (lastCast.spellId === "freeze") {
                   return (
                     <div className="absolute inset-0 pointer-events-none z-40 overflow-hidden" key={lastCast.id}>
-                      {/* Icy implosion ring */}
+                      {/* Glacial Falling Icicle Projectile */}
                       <motion.div
-                        initial={{ scale: 2.8, opacity: 0 }}
+                        initial={{
+                          x: offset.left + offset.size / 2 - 4,
+                          y: offset.top - 120,
+                          scaleY: 2,
+                          opacity: 1
+                        }}
                         animate={{
-                          scale: [2.5, 1, 1.1],
-                          opacity: [0.3, 1, 1],
+                          y: offset.top + offset.size / 2 - 10,
+                          scaleY: 1,
+                          opacity: [1, 1, 0]
+                        }}
+                        transition={{ duration: 0.2, ease: "easeIn" }}
+                        className="absolute w-2 h-6 bg-gradient-to-b from-cyan-200 to-cyan-500 border border-cyan-300"
+                      />
+
+                      {/* Icy Geometric Lattice Impact Glow */}
+                      <motion.div
+                        initial={{ scale: 2, opacity: 0 }}
+                        animate={{
+                          scale: [1.8, 1, 1.05],
+                          opacity: [0, 1, 0.9, 0],
                         }}
                         exit={{ opacity: 0 }}
-                        transition={{ duration: 0.4, ease: "backOut" }}
-                        className="absolute border-4 border-cyan-300 bg-cyan-400/30 flex items-center justify-center shadow-[0_0_20px_rgba(34,211,238,0.6)]"
+                        transition={{ duration: 0.45, delay: 0.15, ease: "backOut" }}
+                        className="absolute border-4 border-double border-cyan-200 bg-cyan-400/20 flex items-center justify-center shadow-[0_0_25px_oklch(0.7_0.2_195/0.45)]"
                         style={{
                           left: offset.left,
                           top: offset.top,
@@ -595,84 +668,143 @@ export function GameBoard({ activeSpell, onClearActiveSpell }: GameBoardProps) {
                           height: offset.size,
                         }}
                       >
-                        <motion.div
-                          animate={{ rotate: 180 }}
-                          transition={{ duration: 0.4 }}
-                          className="w-[80%] h-[80%] border-2 border-dashed border-cyan-100"
-                        />
+                        {/* Pixelated Inner Box */}
+                        <div className="w-[70%] h-[70%] border-2 border-dashed border-cyan-100/50" />
                       </motion.div>
-                      {/* Floating ice pixel sparks */}
-                      {[...Array(8)].map((_, i) => (
+
+                      {/* Geometric Lattice Corner Crystals (4 pixel crystals forming a square) */}
+                      {[
+                        { x: -6, y: -6 }, { x: 6, y: -6 },
+                        { x: -6, y: 6 }, { x: 6, y: 6 }
+                      ].map((pos, i) => (
                         <motion.div
-                          key={i}
-                          initial={{
-                            x: offset.left + offset.size / 2 - 3,
-                            y: offset.top + offset.size / 2 - 3,
-                            opacity: 1,
-                            scale: 1,
-                          }}
+                          key={`ice-lat-${i}`}
+                          initial={{ opacity: 0, scale: 0 }}
                           animate={{
-                            x: offset.left + offset.size / 2 - 3 + (Math.random() - 0.5) * offset.size * 1.5,
-                            y: offset.top + offset.size / 2 - 3 + (Math.random() - 0.5) * offset.size * 1.5,
-                            opacity: 0,
-                            scale: 0.2,
+                            opacity: [0, 1, 0.8, 0],
+                            scale: [0, 1.5, 1],
                           }}
-                          transition={{ duration: 0.6, ease: "easeOut" }}
-                          className="absolute w-1.5 h-1.5 bg-cyan-200"
+                          transition={{ duration: 0.45, delay: 0.18, ease: "easeOut" }}
+                          className="absolute w-2.5 h-2.5 bg-cyan-100 border border-cyan-400"
+                          style={{
+                            left: offset.left + offset.size / 2 + pos.x - 5,
+                            top: offset.top + offset.size / 2 + pos.y - 5,
+                          }}
                         />
                       ))}
+
+                      {/* Glacial Shattering Sparkles (12 cyan pixel shards) */}
+                      {[...Array(12)].map((_, i) => {
+                        const angle = (i / 12) * Math.PI * 2
+                        const radius = offset.size * 1.2
+                        const delay = 0.18 + (Math.random() * 0.04)
+                        return (
+                          <motion.div
+                            key={`ice-spark-${i}`}
+                            initial={{
+                              x: offset.left + offset.size / 2 - 3,
+                              y: offset.top + offset.size / 2 - 3,
+                              opacity: 0,
+                              scale: 1.4,
+                              rotate: 0
+                            }}
+                            animate={{
+                              x: offset.left + offset.size / 2 - 3 + Math.cos(angle) * radius,
+                              y: offset.top + offset.size / 2 - 3 + Math.sin(angle) * radius,
+                              opacity: [0, 1, 0],
+                              scale: 0.2,
+                              rotate: [0, 180]
+                            }}
+                            transition={{ duration: 0.5, delay, ease: "easeOut" }}
+                            className="absolute w-1.5 h-1.5 rounded-none bg-cyan-200 border border-cyan-400/50 shadow-sm"
+                          />
+                        )
+                      })}
                     </div>
                   )
                 }
 
-                // 3. SHIELD SUMMON
+                // 3. SHIELD SPELL (AEGIS SUMMONS & ORBITING GLYPHS)
                 if (lastCast.spellId === "shield") {
                   return (
                     <div className="absolute inset-0 pointer-events-none z-40 overflow-hidden" key={lastCast.id}>
+                      {/* Descending Golden Aegis Light Pillar */}
                       <motion.div
-                        initial={{ scale: 0.2, opacity: 0 }}
+                        initial={{
+                          x: offset.left,
+                          scaleY: 0,
+                          opacity: 1
+                        }}
                         animate={{
-                          scale: [1, 1.3, 1.1],
-                          opacity: [0.3, 1, 1],
+                          scaleY: [0, 1, 0],
+                          opacity: [0.8, 1, 0]
                         }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.45, ease: "easeOut" }}
-                        className="absolute border-2 border-yellow-300 bg-yellow-400/20 rounded-full flex items-center justify-center"
+                        transition={{ duration: 0.35, ease: "easeInOut" }}
+                        className="absolute w-full bg-gradient-to-b from-yellow-300/30 to-yellow-500/10 border-l border-r border-yellow-400/35"
                         style={{
-                          left: offset.left - offset.size * 0.05,
-                          top: offset.top - offset.size * 0.05,
-                          width: offset.size * 1.1,
-                          height: offset.size * 1.1,
-                          boxShadow: "0 0 25px rgba(253,224,71,0.5), inset 0 0 10px rgba(253,224,71,0.3)"
+                          left: offset.left,
+                          top: offset.top - 80,
+                          width: offset.size,
+                          height: offset.size + 80,
+                          originY: 0
                         }}
-                      >
+                      />
+
+                      {/* Glowing Aegis Golden Concentric Squares */}
+                      {[0, 1, 2].map((idx) => (
                         <motion.div
-                          animate={{ rotate: 360 }}
-                          transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                          className="w-[85%] h-[85%] border border-dashed border-yellow-200 rounded-full"
+                          key={`sh-ring-${idx}`}
+                          initial={{ scale: 0.1, opacity: 0 }}
+                          animate={{
+                            scale: [0.2, 1.1, 1.25],
+                            opacity: [0, 1, 0.8, 0],
+                          }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.45, delay: idx * 0.08, ease: "easeOut" }}
+                          className="absolute border border-yellow-300 bg-yellow-400/5 shadow-[0_0_20px_oklch(0.8_0.18_85/0.3)]"
+                          style={{
+                            left: offset.left - offset.size * 0.125,
+                            top: offset.top - offset.size * 0.125,
+                            width: offset.size * 1.25,
+                            height: offset.size * 1.25,
+                          }}
                         />
-                      </motion.div>
-                      {/* Golden holy cross sparks */}
+                      ))}
+
+                      {/* Golden Holy Cross Pixel Sparks Orbiting the target cell */}
                       {[...Array(6)].map((_, i) => {
-                        const angle = (i / 6) * Math.PI * 2
+                        const startAngle = (i / 6) * Math.PI * 2
+                        const radius = offset.size * 0.42
                         return (
                           <motion.div
-                            key={i}
+                            key={`sh-orbit-${i}`}
                             initial={{
-                              x: offset.left + offset.size / 2 - 3,
-                              y: offset.top + offset.size / 2 - 3,
-                              opacity: 1,
-                              scale: 1.5
+                              x: offset.left + offset.size / 2 - 3 + Math.cos(startAngle) * radius,
+                              y: offset.top + offset.size / 2 - 3 + Math.sin(startAngle) * radius,
+                              opacity: 0,
+                              scale: 1
                             }}
                             animate={{
-                              x: offset.left + offset.size / 2 - 3 + Math.cos(angle) * (offset.size * 0.7),
-                              y: offset.top + offset.size / 2 - 3 + Math.sin(angle) * (offset.size * 0.7),
-                              opacity: 0,
-                              scale: 0.2
+                              x: [
+                                offset.left + offset.size / 2 - 3 + Math.cos(startAngle) * radius,
+                                offset.left + offset.size / 2 - 3 + Math.cos(startAngle + Math.PI) * radius,
+                                offset.left + offset.size / 2 - 3 + Math.cos(startAngle + Math.PI * 2) * radius,
+                              ],
+                              y: [
+                                offset.top + offset.size / 2 - 3 + Math.sin(startAngle) * radius,
+                                offset.top + offset.size / 2 - 3 + Math.sin(startAngle + Math.PI) * radius,
+                                offset.top + offset.size / 2 - 3 + Math.sin(startAngle + Math.PI * 2) * radius,
+                              ],
+                              opacity: [0, 1, 0.9, 0],
+                              scale: [1, 1.4, 0.4]
                             }}
-                            transition={{ duration: 0.5, ease: "easeOut" }}
-                            className="absolute w-1.5 h-1.5 bg-yellow-300 rotate-45"
-                          />
+                            transition={{ duration: 0.65, ease: "linear" }}
+                            className="absolute w-2 h-2 rounded-none bg-yellow-300 border border-yellow-500 flex items-center justify-center"
+                          >
+                            {/* Inner cross mark */}
+                            <div className="w-[30%] h-full bg-white absolute" />
+                            <div className="h-[30%] w-full bg-white absolute" />
+                          </motion.div>
                         )
                       })}
                     </div>

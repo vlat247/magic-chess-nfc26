@@ -20,11 +20,46 @@ interface GameModeHubProps {
   username: string
 }
 
-const AI_LEVELS: { level: AiLevel; label: string; desc: string; color: string }[] = [
-  { level: 'none', label: 'LOCAL PVP', desc: 'Pass & play vs a friend', color: 'text-neon-cyan border-neon-cyan/40 hover:bg-neon-cyan/5' },
-  { level: 'easy', label: 'NOVICE AI', desc: 'Gentle sparring partner', color: 'text-emerald-400 border-emerald-400/40 hover:bg-emerald-400/5' },
-  { level: 'medium', label: 'ADEPT AI', desc: 'A fair challenge', color: 'text-neon-gold border-neon-gold/40 hover:bg-neon-gold/5' },
-  { level: 'hard', label: 'MASTER AI', desc: 'Merciless engine', color: 'text-rose-400 border-rose-400/40 hover:bg-rose-400/5' },
+const AI_LEVELS: { 
+  level: AiLevel; 
+  label: string; 
+  desc: string; 
+  accentColor: string; 
+  activeBorder: string; 
+  activeBg: string; 
+}[] = [
+  { 
+    level: 'none', 
+    label: 'LOCAL PVP', 
+    desc: 'Pass & play vs a friend', 
+    accentColor: 'text-cyan-400', 
+    activeBorder: 'border-cyan-400', 
+    activeBg: 'bg-cyan-950/20'
+  },
+  { 
+    level: 'easy', 
+    label: 'NOVICE AI', 
+    desc: 'Gentle sparring partner', 
+    accentColor: 'text-emerald-400', 
+    activeBorder: 'border-emerald-400', 
+    activeBg: 'bg-emerald-950/20'
+  },
+  { 
+    level: 'medium', 
+    label: 'ADEPT AI', 
+    desc: 'A fair challenge', 
+    accentColor: 'text-amber-400', 
+    activeBorder: 'border-amber-400', 
+    activeBg: 'bg-amber-950/15'
+  },
+  { 
+    level: 'hard', 
+    label: 'MASTER AI', 
+    desc: 'Merciless engine', 
+    accentColor: 'text-rose-400', 
+    activeBorder: 'border-rose-400', 
+    activeBg: 'bg-rose-950/15'
+  },
 ]
 
 export function GameModeHub({ userId, username }: GameModeHubProps) {
@@ -39,12 +74,9 @@ export function GameModeHub({ userId, username }: GameModeHubProps) {
   }
 
   return (
-    <div
-      className="border border-[oklch(0.2_0.04_280)] bg-[oklch(0.085_0.02_280)] overflow-hidden"
-      style={{ boxShadow: '0 0 40px oklch(0.7 0.25 300 / 0.06)' }}
-    >
+    <div className="border border-slate-700/90 bg-[oklch(0.145_0.015_280)] overflow-hidden">
       {/* ── Tab bar ─────────────────────────────────────────────────────────── */}
-      <div className="flex border-b border-[oklch(0.18_0.04_280)]">
+      <div className="flex border-b border-slate-700/90 bg-black/15">
         {([
           { key: 'local' as Tab, label: 'LOCAL & AI', icon: <Cpu className="h-3 w-3" /> },
           { key: 'online' as Tab, label: 'ONLINE', icon: <Users className="h-3 w-3" /> },
@@ -55,8 +87,8 @@ export function GameModeHub({ userId, username }: GameModeHubProps) {
             id={`hub-tab-${tab.key}`}
             className={`flex-1 flex items-center justify-center gap-2 py-4 font-mono text-[10px] tracking-widest transition-all duration-200 border-b-2
               ${activeTab === tab.key
-                ? 'border-neon-purple text-neon-purple bg-neon-purple/5'
-                : 'border-transparent text-muted-foreground hover:text-foreground hover:bg-white/3'
+                ? 'border-slate-300 text-slate-100 bg-slate-800/25 font-bold'
+                : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-white/3'
               }`}
           >
             {tab.icon}
@@ -69,54 +101,64 @@ export function GameModeHub({ userId, username }: GameModeHubProps) {
         {/* ── LOCAL / AI TAB ──────────────────────────────────────────────── */}
         {activeTab === 'local' && (
           <div className="flex flex-col gap-6">
-            <p className="font-mono text-[9px] tracking-widest text-muted-foreground">
+            <p className="font-mono text-[9px] tracking-widest text-slate-400">
               SELECT OPPONENT TYPE, THEN ENTER THE BATTLEFIELD.
             </p>
 
             {/* AI level grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {AI_LEVELS.map(({ level, label, desc, color }) => (
-                <button
-                  key={level}
-                  onClick={() => setSelectedAi(level)}
-                  id={`ai-level-${level}`}
-                  className={`relative flex flex-col gap-1.5 p-4 border-2 text-left transition-all duration-200 ${color}
-                    ${selectedAi === level ? 'opacity-100' : 'opacity-50 hover:opacity-80'}
-                  `}
-                  style={selectedAi === level ? {
-                    boxShadow: level === 'none'
-                      ? '0 0 15px oklch(0.7 0.2 195 / 0.2)'
-                      : level === 'easy'
-                        ? '0 0 15px oklch(0.7 0.2 140 / 0.2)'
-                        : level === 'medium'
-                          ? '0 0 15px oklch(0.8 0.18 85 / 0.2)'
-                          : '0 0 15px oklch(0.65 0.22 20 / 0.25)',
-                  } : {}}
-                >
-                  <div className="flex items-center gap-2">
-                    {level === 'none'
-                      ? <UserIcon className="h-3.5 w-3.5" />
-                      : <Bot className="h-3.5 w-3.5" />
-                    }
-                    <span className="font-mono text-xs tracking-widest font-bold">{label}</span>
-                    {selectedAi === level && (
-                      <span className="ml-auto font-mono text-[8px] tracking-widest opacity-80">SELECTED ✓</span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              {AI_LEVELS.map(({ level, label, desc, accentColor, activeBorder, activeBg }) => {
+                const isSelected = selectedAi === level
+                return (
+                  <button
+                    key={level}
+                    onClick={() => setSelectedAi(level)}
+                    id={`ai-level-${level}`}
+                    className={`relative flex flex-col gap-2 p-5 border text-left transition-all duration-300 hover:scale-[1.005] active:scale-[0.995] select-none cursor-pointer rounded-none
+                      ${isSelected 
+                        ? `${activeBorder} ${activeBg} shadow-sm` 
+                        : `border-slate-700/30 bg-slate-900/30 hover:border-slate-650 hover:bg-slate-900/50`
+                      }
+                    `}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <div className={`p-1 bg-black/35 rounded-none border border-slate-700/40 ${isSelected ? accentColor : 'text-slate-400'}`}>
+                        {level === 'none'
+                          ? <UserIcon className="h-4 w-4 shrink-0" />
+                          : <Bot className="h-4 w-4 shrink-0" />
+                        }
+                      </div>
+                      <span className={`font-mono text-xs tracking-widest font-bold transition-colors ${isSelected ? 'text-slate-100' : 'text-slate-400'}`}>
+                        {label}
+                      </span>
+                      {isSelected && (
+                        <span className={`ml-auto font-mono text-[8px] tracking-widest font-bold ${accentColor} bg-black/45 border border-current px-2.5 py-0.5`}>
+                          SELECTED ✓
+                        </span>
+                      )}
+                    </div>
+                    
+                    <span className={`font-mono text-[8px] tracking-widest transition-colors ${isSelected ? 'text-slate-300' : 'text-slate-500'}`}>
+                      {desc}
+                    </span>
+
+                    {/* Corner Accent for selected card */}
+                    {isSelected && (
+                      <div className="absolute top-0 right-0 w-1.5 h-1.5 border-t border-r border-current" />
                     )}
-                  </div>
-                  <span className="font-mono text-[8px] tracking-widest opacity-70">{desc}</span>
-                </button>
-              ))}
+                  </button>
+                )
+              })}
             </div>
 
             {/* Enter battle button */}
             <button
               onClick={handlePlayLocal}
               id="enter-battle-btn"
-              className="flex items-center justify-center gap-3 py-4 border-2 border-neon-purple text-neon-purple font-mono text-xs tracking-widest transition-all duration-200 hover:bg-neon-purple/10 hover:scale-[1.01] active:scale-[0.99]"
-              style={{ boxShadow: '0 0 20px oklch(0.7 0.25 300 / 0.2)' }}
+              className="flex items-center justify-center gap-3 py-4 border border-purple-500/50 bg-purple-950/20 text-purple-400 hover:text-white font-mono text-xs font-bold tracking-widest transition-all duration-200 hover:bg-purple-900/30 hover:border-purple-400 hover:scale-[1.005] active:scale-[0.995] select-none cursor-pointer rounded-none relative group"
             >
-              <Swords className="h-4 w-4" />
-              ENTER BATTLEFIELD
+              <Swords className="h-4 w-4 shrink-0" />
+              <span>ENTER BATTLEFIELD</span>
             </button>
           </div>
         )}

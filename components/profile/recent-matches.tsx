@@ -1,11 +1,11 @@
 'use client'
 
 import React, { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Table as UiTable, TableBody as UiTableBody, TableCell as UiTableCell, TableHead as UiTableHead, TableHeader as UiTableHeader, TableRow as UiTableRow } from '@/components/ui/table'
-
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Copy, Check, Eye } from 'lucide-react'
+import { Copy, Check, ShieldAlert, ShieldCheck } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 
 interface Match {
@@ -21,10 +21,10 @@ interface Match {
 interface RecentMatchesProps {
   matches: Match[]
   currentUserId: string
-  currentUserColor: 'white' | 'black' // Or determine from match data
+  currentUserColor: 'white' | 'black'
 }
 
-export function RecentMatches({ matches, currentUserId }: RecentMatchesProps) {
+export function RecentMatches({ matches }: RecentMatchesProps) {
   const [copiedId, setCopiedId] = useState<string | null>(null)
 
   const copyToClipboard = (text: string, id: string) => {
@@ -34,85 +34,126 @@ export function RecentMatches({ matches, currentUserId }: RecentMatchesProps) {
   }
 
   const getMatchResult = (match: Match) => {
-    // For simplicity, let's assume the user is White in these matches.
-    // In a real database, we would have white_player_id and black_player_id.
-    // Here we'll check match.winner: if winner is white, it's a Win, if black, it's a Loss, etc.
-    if (match.winner === 'draw') return { label: 'Draw', color: 'bg-slate-500/20 text-slate-400 border-slate-500/30' }
+    if (match.winner === 'draw') {
+      return { 
+        label: 'DRAW STASIS', 
+        color: 'text-muted-foreground border-muted-foreground/30 bg-muted/5',
+        glow: '' 
+      }
+    }
     
     // Assume user is White for simplicity
     const userWon = match.winner === 'white'
     
     if (userWon) {
-      return { label: 'Victory', color: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' }
+      return { 
+        label: 'VICTORY', 
+        color: 'text-neon-cyan border-neon-cyan/40 bg-neon-cyan/8 font-bold',
+        glow: 'shadow-[0_0_12px_oklch(0.7_0.2_195/0.25)] border-neon-cyan/50' 
+      }
     } else {
-      return { label: 'Defeat', color: 'bg-rose-500/20 text-rose-400 border-rose-500/30' }
+      return { 
+        label: 'DEFEAT', 
+        color: 'text-neon-pink border-neon-pink/40 bg-neon-pink/8 font-bold',
+        glow: 'shadow-[0_0_12px_oklch(0.7_0.22_330/0.25)] border-neon-pink/50' 
+      }
     }
   }
 
   if (matches.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center p-8 rounded-xl border border-slate-800 bg-slate-950/40 text-center">
-        <p className="text-slate-400 mb-2">No duels fought yet.</p>
-        <p className="text-xs text-slate-500">Step onto the board to cast your first checkmate!</p>
-      </div>
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.98 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="flex flex-col items-center justify-center p-8 rounded-none border border-border bg-card/20 text-center relative"
+      >
+        <div className="absolute top-0 left-0 w-1.5 h-1.5 border-t border-l border-muted-foreground/30" />
+        <div className="absolute top-0 right-0 w-1.5 h-1.5 border-t border-r border-muted-foreground/30" />
+        <div className="absolute bottom-0 left-0 w-1.5 h-1.5 border-b border-l border-muted-foreground/30" />
+        <div className="absolute bottom-0 right-0 w-1.5 h-1.5 border-b border-r border-muted-foreground/30" />
+        
+        <ShieldAlert className="h-6 w-6 text-muted-foreground/60 mb-2 animate-pulse" />
+        <p className="font-mono text-[10px] tracking-wider text-muted-foreground uppercase">No duels fought in this cycle</p>
+        <p className="font-mono text-[8px] text-muted-foreground/50 uppercase mt-1">Step onto the board to cast your first checkmate</p>
+      </motion.div>
     )
   }
 
   return (
-    <div className="rounded-xl border border-slate-800 bg-slate-950/40 overflow-hidden backdrop-blur-md">
-      <UiTable>
-        <UiTableHeader className="bg-slate-900/40">
-          <UiTableRow className="border-slate-800 hover:bg-transparent">
-            <UiTableHead className="text-slate-400">Mode</UiTableHead>
-            <UiTableHead className="text-slate-400">Opponent</UiTableHead>
-            <UiTableHead className="text-slate-400">Result</UiTableHead>
-            <UiTableHead className="text-slate-400">Fought</UiTableHead>
-            <UiTableHead className="text-slate-400 text-right">Actions</UiTableHead>
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="border border-border/80 bg-gradient-to-b from-card/30 to-background/60 backdrop-blur-md overflow-hidden relative"
+      style={{ boxShadow: '0 4px 20px rgba(0,0,0,0.2)' }}
+    >
+      {/* Corner indicators */}
+      <div className="absolute top-0 left-0 w-1 h-1 bg-border" />
+      <div className="absolute top-0 right-0 w-1 h-1 bg-border" />
+      <div className="absolute bottom-0 left-0 w-1 h-1 bg-border" />
+      <div className="absolute bottom-0 right-0 w-1 h-1 bg-border" />
+
+      <UiTable className="font-mono text-[9px] tracking-widest">
+        <UiTableHeader className="bg-black/30 border-b border-border/50">
+          <UiTableRow className="border-border/40 hover:bg-transparent uppercase">
+            <UiTableHead className="text-muted-foreground/80 h-10 px-4">Mode</UiTableHead>
+            <UiTableHead className="text-muted-foreground/80 h-10 px-4">Opponent</UiTableHead>
+            <UiTableHead className="text-muted-foreground/80 h-10 px-4">Result</UiTableHead>
+            <UiTableHead className="text-muted-foreground/80 h-10 px-4">Fought</UiTableHead>
+            <UiTableHead className="text-muted-foreground/80 h-10 px-4 text-right">Actions</UiTableHead>
           </UiTableRow>
         </UiTableHeader>
         <UiTableBody>
-          {matches.map((match) => {
-            const result = getMatchResult(match)
-            return (
-              <UiTableRow key={match.id} className="border-slate-800/60 hover:bg-slate-900/20">
-                <UiTableCell className="font-semibold text-slate-200">
-                  <Badge variant="outline" className="border-purple-500/20 bg-purple-950/10 text-purple-400">
-                    {match.mode === 'ai' ? 'Vs AI Engine' : 'Spell PVP'}
-                  </Badge>
-                </UiTableCell>
-                <UiTableCell className="text-slate-300">
-                  {match.opponent_name || (match.mode === 'ai' ? 'Stockfish Engine' : 'Unknown Mage')}
-                </UiTableCell>
-                <UiTableCell>
-                  <Badge variant="outline" className={result.color}>
-                    {result.label}
-                  </Badge>
-                </UiTableCell>
-                <UiTableCell className="text-xs text-slate-400">
-                  {formatDistanceToNow(new Date(match.created_at), { addSuffix: true })}
-                </UiTableCell>
-                <UiTableCell className="text-right">
-                  <div className="flex items-center justify-end gap-2">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => copyToClipboard(match.pgn, match.id)}
-                      className="h-8 w-8 text-slate-400 hover:text-white hover:bg-slate-800"
-                      title="Copy PGN notation"
-                    >
-                      {copiedId === match.id ? (
-                        <Check className="h-4 w-4 text-emerald-400" />
-                      ) : (
-                        <Copy className="h-4 w-4" />
-                      )}
-                    </Button>
-                  </div>
-                </UiTableCell>
-              </UiTableRow>
-            )
-          })}
+          <AnimatePresence>
+            {matches.map((match, idx) => {
+              const result = getMatchResult(match)
+              return (
+                <motion.tr
+                  key={match.id}
+                  custom={idx}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: idx * 0.05 }}
+                  className="border-b border-border/30 hover:bg-white/[0.02] transition-colors duration-200 group"
+                >
+                  <UiTableCell className="px-4 py-3">
+                    <Badge variant="outline" className="border-neon-purple/20 bg-neon-purple/5 text-neon-purple rounded-none font-bold text-[8px] px-1.5 py-0.5 tracking-wider">
+                      {match.mode === 'ai' ? 'VS COGNITIVE ENGINE' : 'ARCANE PVP'}
+                    </Badge>
+                  </UiTableCell>
+                  <UiTableCell className="text-foreground/90 font-bold px-4 py-3">
+                    {match.opponent_name || (match.mode === 'ai' ? 'Stockfish AI' : 'Unknown Mage')}
+                  </UiTableCell>
+                  <UiTableCell className="px-4 py-3">
+                    <Badge variant="outline" className={`rounded-none text-[8px] px-2 py-0.5 tracking-widest transition-all duration-300 ${result.color} ${result.glow}`}>
+                      {result.label}
+                    </Badge>
+                  </UiTableCell>
+                  <UiTableCell className="text-muted-foreground/60 text-[8px] px-4 py-3 uppercase">
+                    {formatDistanceToNow(new Date(match.created_at), { addSuffix: true })}
+                  </UiTableCell>
+                  <UiTableCell className="text-right px-4 py-3">
+                    <div className="flex items-center justify-end gap-1 opacity-60 group-hover:opacity-100 transition-opacity duration-200">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => copyToClipboard(match.pgn, match.id)}
+                        className="h-7 w-7 text-muted-foreground hover:text-foreground hover:bg-white/5 rounded-none border border-transparent hover:border-border/40 transition-all duration-200"
+                        title="Extract PGN runes"
+                      >
+                        {copiedId === match.id ? (
+                          <Check className="h-3 w-3 text-neon-cyan animate-pulse" />
+                        ) : (
+                          <Copy className="h-3 w-3" />
+                        )}
+                      </Button>
+                    </div>
+                  </UiTableCell>
+                </motion.tr>
+              )
+            })}
+          </AnimatePresence>
         </UiTableBody>
       </UiTable>
-    </div>
+    </motion.div>
   )
 }

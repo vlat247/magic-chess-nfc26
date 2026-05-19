@@ -86,55 +86,32 @@ export function AvatarUpload({ uid, url, username, onUploadComplete }: AvatarUpl
   }
 
   return (
-    <div className="flex flex-col items-center gap-4 sm:flex-row sm:gap-6">
-      <div className="relative group">
-        <Avatar className="h-24 w-24 border-2 border-purple-500/30 bg-slate-900 shadow-[0_0_20px_rgba(168,85,247,0.2)]">
-          <AvatarImage src={avatarUrl || ''} alt={username || 'Mage'} className="object-cover" />
-          <AvatarFallback className="bg-purple-950 text-purple-300 font-bold text-xl uppercase">
-            {username ? username.substring(0, 2) : 'MG'}
-          </AvatarFallback>
-        </Avatar>
+    <div className="relative group select-none">
+      <Avatar className="h-24 w-24 border-2 border-purple-500/30 bg-slate-900 shadow-[0_0_20px_rgba(168,85,247,0.2)]">
+        <AvatarImage src={avatarUrl || ''} alt={username || 'Mage'} className="object-cover animate-fade-in" />
+        <AvatarFallback className="bg-purple-950 text-purple-300 font-bold text-xl uppercase font-title">
+          {username ? username.substring(0, 2) : 'MG'}
+        </AvatarFallback>
+      </Avatar>
 
-        <label
-          htmlFor="avatar-upload"
-          className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer border border-purple-500/40"
-        >
-          {isUploading ? (
-            <Loader2 className="h-6 w-6 animate-spin text-purple-400" />
-          ) : (
-            <Camera className="h-6 w-6 text-purple-300" />
-          )}
-        </label>
-        <input
-          type="file"
-          id="avatar-upload"
-          accept="image/*"
-          onChange={uploadAvatar}
-          disabled={isUploading || isPending}
-          className="hidden"
-        />
-      </div>
-
-      <div className="flex flex-col items-center sm:items-start gap-2">
-        <h3 className="font-bold text-lg text-slate-100">{username || 'Mysterious Mage'}</h3>
-        <p className="text-xs text-slate-400">Upload custom sigil or conjure a random arcane avatar.</p>
-        <div className="flex items-center gap-2 mt-1">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={generateMagicAvatar}
-            disabled={isUploading || isPending}
-            className="border-purple-500/20 bg-purple-950/20 text-purple-300 hover:bg-purple-900/30 text-xs gap-1.5"
-          >
-            {isPending ? (
-              <Loader2 className="h-3 w-3 animate-spin" />
-            ) : (
-              <Sparkles className="h-3 w-3" />
-            )}
-            Conjure Avatar
-          </Button>
-        </div>
-      </div>
+      <label
+        htmlFor="avatar-upload"
+        className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer border border-purple-500/40"
+      >
+        {isUploading ? (
+          <Loader2 className="h-6 w-6 animate-spin text-purple-400" />
+        ) : (
+          <Camera className="h-6 w-6 text-purple-300" />
+        )}
+      </label>
+      <input
+        type="file"
+        id="avatar-upload"
+        accept="image/*"
+        onChange={uploadAvatar}
+        disabled={isUploading || isPending}
+        className="hidden"
+      />
     </div>
   )
 }
