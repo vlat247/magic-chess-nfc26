@@ -1,17 +1,8 @@
 'use client'
 
 import React, { useState } from 'react'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/dialog' // Wait, the UI directory had table.tsx! Let's check table.tsx or dialog.tsx?
-// Oh wait, package.json lists @radix-ui/react-dialog and others. But `list_dir` of `components/ui` listed `table.tsx`! Let's import from '@/components/ui/table' instead of dialog.
-
 import { Table as UiTable, TableBody as UiTableBody, TableCell as UiTableCell, TableHead as UiTableHead, TableHeader as UiTableHeader, TableRow as UiTableRow } from '@/components/ui/table'
+
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Copy, Check, Eye } from 'lucide-react'

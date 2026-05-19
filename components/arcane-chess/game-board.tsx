@@ -163,10 +163,9 @@ export function GameBoard() {
     [selectedSquare, optionSquares, isCheckmate, isStalemate, isDraw, makeMove, highlightPossibleMoves]
   )
 
-  // Drag and drop handler (memoized callback)
   const onPieceDrop = useCallback(
-    ({ sourceSquare, targetSquare }: { sourceSquare: string; targetSquare: string }): boolean => {
-      if (isCheckmate || isStalemate || isDraw) return false
+    ({ sourceSquare, targetSquare }: { sourceSquare: string; targetSquare: string | null }): boolean => {
+      if (isCheckmate || isStalemate || isDraw || !targetSquare) return false
       
       const success = makeMove(sourceSquare, targetSquare)
       

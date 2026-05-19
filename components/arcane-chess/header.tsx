@@ -54,15 +54,15 @@ export function Header() {
 
           {/* Navigation — absolutely centered */}
           <nav className="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
-            <button
-              onClick={() => setAuthModalOpen(true)}
-              className="font-sans text-[10px] tracking-widest transition-colors duration-200 cursor-pointer bg-transparent border-none p-0"
+            <Link
+              href="/profile"
+              className="font-sans text-[10px] tracking-widest transition-colors duration-200 cursor-pointer"
               style={{ color: 'oklch(0.6 0.05 280)' }}
               onMouseEnter={e => (e.currentTarget.style.color = 'oklch(0.85 0.05 280)')}
               onMouseLeave={e => (e.currentTarget.style.color = 'oklch(0.6 0.05 280)')}
             >
               LOBBY
-            </button>
+            </Link>
             <Link
               href="/play"
               className="font-sans text-[10px] tracking-widest transition-colors duration-200 flex items-center gap-1.5"

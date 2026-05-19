@@ -4,10 +4,16 @@ import { redirect } from 'next/navigation'
 import { StatsCards } from '@/components/profile/stats-cards'
 import { RecentMatches } from '@/components/profile/recent-matches'
 import { AvatarUpload } from '@/components/profile/avatar-upload'
-import { Button } from '@/components/ui/button'
+import { GameModeHub } from '@/components/multiplayer/game-mode-hub'
+import { Header } from '@/components/arcane-chess/header'
+import { MagicParticles } from '@/components/arcane-chess/magic-particles'
 import { logout } from '@/actions/auth'
-import { ShieldCheck, LogOut, ArrowLeft, Swords } from 'lucide-react'
-import Link from 'next/link'
+import {
+  ShieldCheck,
+  LogOut,
+  Trophy,
+  Swords,
+} from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
@@ -22,14 +28,12 @@ export default async function ProfilePage() {
     redirect('/')
   }
 
-  // Fetch complete profile details
   const { data: profile } = await supabase
     .from('users')
     .select('*')
     .eq('id', user.id)
     .single()
 
-  // Fetch recent matches
   const { data: matches } = await supabase
     .from('matches')
     .select('*')
@@ -37,7 +41,6 @@ export default async function ProfilePage() {
     .order('created_at', { ascending: false })
     .limit(10)
 
-  // Fetch subscription details
   const { data: subscription } = await supabase
     .from('subscriptions')
     .select('*')
@@ -50,83 +53,128 @@ export default async function ProfilePage() {
   const losses = profile?.losses ?? 0
   const draws = profile?.draws ?? 0
   const isPro = subscription?.status === 'active' || subscription?.plan === 'pro'
-
-  // Server action to trigger refresh on change
-  const refreshUser = async () => {
-    'use server'
-    // This is just a dummy to force Server Component re-evaluation or router refresh
-  }
+  const username = profile?.username ?? 'Mage'
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 relative">
-      {/* Mystical backgrounds */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-900/10 via-slate-950 to-slate-950 pointer-events-none" />
-      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-purple-500/30 to-transparent pointer-events-none" />
+    <main className="relative min-h-screen bg-gradient-to-b from-[oklch(0.08_0.02_280)] via-[oklch(0.12_0.04_280)] to-[oklch(0.15_0.06_300)] overflow-x-hidden pt-24 pb-16 px-4">
+      <Header />
+      <MagicParticles />
 
-      <div className="max-w-6xl mx-auto px-4 py-8 relative z-10">
-        {/* Navigation Bar */}
-        <div className="flex items-center justify-between mb-8 pb-6 border-b border-slate-900">
-          <Link
-            href="/"
-            className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors group text-sm"
-          >
-            <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-            <span>Return to Lobby</span>
-          </Link>
+      {/* Pixel grid overlay */}
+      <div
+        className="absolute inset-0 opacity-10 animate-grid pointer-events-none"
+        style={{
+          backgroundImage: `linear-gradient(rgba(168, 85, 247, 0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(168, 85, 247, 0.15) 1px, transparent 1px)`,
+          backgroundSize: '20px 20px',
+        }}
+      />
+      <div className="absolute inset-0 pointer-events-none opacity-25 animate-scanlines mix-blend-overlay z-0" />
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_50%,rgba(10,5,25,0.8)_100%)] z-0" />
+
+      <div className="relative z-10 w-full max-w-6xl mx-auto flex flex-col gap-10">
+
+        {/* ── Player Identity Bar ───────────────────────────────────────────── */}
+        <div
+          className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-5 border border-[oklch(0.22_0.06_300)] bg-[oklch(0.09_0.025_280)]"
+          style={{ boxShadow: '0 0 30px oklch(0.7 0.25 300 / 0.08)' }}
+        >
+          {/* Avatar + name */}
           <div className="flex items-center gap-4">
-            <Link href="/play">
-              <Button className="bg-gradient-to-r from-purple-600 to-fuchsia-600 hover:from-purple-500 hover:to-fuchsia-500 text-white font-semibold text-sm border-none shadow-[0_0_15px_rgba(168,85,247,0.4)] flex items-center gap-2">
-                <Swords className="h-4 w-4" />
-                Duel Now
-              </Button>
-            </Link>
-            <form action={logout}>
-              <Button
-                type="submit"
-                variant="ghost"
-                className="text-slate-400 hover:text-white hover:bg-slate-900/50 flex items-center gap-2"
+            <AvatarUpload
+              uid={user.id}
+              url={profile?.avatar_url || null}
+              username={profile?.username || null}
+              onUploadComplete={async () => {
+                'use server'
+              }}
+            />
+            <div className="flex flex-col gap-1">
+              <span
+                className="font-mono text-sm tracking-widest"
+                style={{ color: 'oklch(0.9 0.05 280)' }}
               >
-                <LogOut className="h-4 w-4" />
-                Sign Out
-              </Button>
+                {username}
+              </span>
+              <div className="flex items-center gap-2">
+                {isPro ? (
+                  <span
+                    className="flex items-center gap-1 font-mono text-[8px] tracking-widest px-2 py-0.5 border"
+                    style={{
+                      color: 'oklch(0.8 0.18 85)',
+                      borderColor: 'oklch(0.8 0.18 85 / 0.4)',
+                      background: 'oklch(0.8 0.18 85 / 0.08)',
+                    }}
+                  >
+                    <ShieldCheck className="h-2.5 w-2.5" />
+                    ARCHMAGE PRO
+                  </span>
+                ) : (
+                  <span
+                    className="font-mono text-[8px] tracking-widest px-2 py-0.5 border"
+                    style={{
+                      color: 'oklch(0.6 0.05 280)',
+                      borderColor: 'oklch(0.25 0.04 280)',
+                    }}
+                  >
+                    MAGE INITIATE
+                  </span>
+                )}
+                <span className="font-mono text-[8px] tracking-widest text-muted-foreground">
+                  JOINED {new Date(user.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }).toUpperCase()}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Rating + logout */}
+          <div className="flex items-center gap-6">
+            <div className="flex flex-col items-end gap-0.5">
+              <div className="flex items-center gap-1.5">
+                <Trophy className="h-3 w-3 text-neon-gold" />
+                <span
+                  className="font-mono text-2xl font-bold tabular-nums text-neon-gold"
+                  style={{ textShadow: '0 0 12px oklch(0.8 0.18 85 / 0.6)' }}
+                >
+                  {rating}
+                </span>
+              </div>
+              <span className="font-mono text-[8px] tracking-widest text-muted-foreground">ELO RATING</span>
+            </div>
+
+            <form action={logout}>
+              <button
+                type="submit"
+                className="flex items-center gap-1.5 font-mono text-[9px] tracking-widest text-muted-foreground hover:text-destructive transition-colors"
+              >
+                <LogOut className="h-3.5 w-3.5" />
+                SIGN OUT
+              </button>
             </form>
           </div>
         </div>
 
-        {/* Profile Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8 p-6 rounded-xl border border-slate-900 bg-slate-900/20 backdrop-blur-md">
-          <AvatarUpload
-            uid={user.id}
-            url={profile?.avatar_url || null}
-            username={profile?.username || null}
-            onUploadComplete={async (newUrl) => {
-              'use server'
-              // Client triggers page refresh when upload finishes
-            }}
-          />
-
-          <div className="flex flex-col items-start md:items-end gap-2 shrink-0">
-            <div className="flex items-center gap-2">
-              <span className="text-xs uppercase tracking-wider text-slate-400 font-semibold">
-                Account Status
-              </span>
-              {isPro ? (
-                <span className="flex items-center gap-1 text-xs bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-full font-bold shadow-[0_0_10px_rgba(245,158,11,0.2)]">
-                  <ShieldCheck className="h-3 w-3" />
-                  Archmage Pro
-                </span>
-              ) : (
-                <span className="text-xs bg-slate-800 text-slate-400 border border-slate-700/50 px-2 py-0.5 rounded-full">
-                  Mage Initiate
-                </span>
-              )}
-            </div>
-            <p className="text-xs text-slate-500">Joined the Sanctum: {new Date(user.created_at).toLocaleDateString()}</p>
+        {/* ── Game Mode Hub (main play area) ────────────────────────────────── */}
+        <section className="flex flex-col gap-4">
+          <div className="flex items-center gap-3">
+            <Swords className="h-4 w-4 text-neon-purple" style={{ filter: 'drop-shadow(0 0 6px oklch(0.7 0.25 300))' }} />
+            <h2 className="font-mono text-xs tracking-widest text-neon-purple" style={{ textShadow: '0 0 10px oklch(0.7 0.25 300 / 0.5)' }}>
+              CHOOSE YOUR BATTLE
+            </h2>
+            <div className="flex-1 h-px bg-neon-purple opacity-20" />
           </div>
-        </div>
+          {/* Client component handles all interactive mode switching */}
+          <GameModeHub userId={user.id} username={username} />
+        </section>
 
-        {/* Stats Grid */}
-        <div className="mb-8">
+        {/* ── Stats ─────────────────────────────────────────────────────────── */}
+        <section className="flex flex-col gap-4">
+          <div className="flex items-center gap-3">
+            <Trophy className="h-4 w-4 text-neon-gold" style={{ filter: 'drop-shadow(0 0 6px oklch(0.8 0.18 85))' }} />
+            <h2 className="font-mono text-xs tracking-widest text-neon-gold" style={{ textShadow: '0 0 10px oklch(0.8 0.18 85 / 0.5)' }}>
+              BATTLE STATISTICS
+            </h2>
+            <div className="flex-1 h-px bg-neon-gold opacity-20" />
+          </div>
           <StatsCards
             rating={rating}
             gamesPlayed={gamesPlayed}
@@ -134,16 +182,26 @@ export default async function ProfilePage() {
             losses={losses}
             draws={draws}
           />
-        </div>
+        </section>
 
-        {/* Recent Matches Section */}
-        <div>
-          <h2 className="text-xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-            Arcane Duel History
-          </h2>
+        {/* ── Match History ─────────────────────────────────────────────────── */}
+        <section className="flex flex-col gap-4">
+          <div className="flex items-center gap-3">
+            <div
+              className="h-4 w-4 flex items-center justify-center"
+              style={{ color: 'oklch(0.7 0.2 195)' }}
+            >
+              ⚔
+            </div>
+            <h2 className="font-mono text-xs tracking-widest text-neon-cyan" style={{ textShadow: '0 0 10px oklch(0.7 0.2 195 / 0.5)' }}>
+              DUEL HISTORY
+            </h2>
+            <div className="flex-1 h-px bg-neon-cyan opacity-20" />
+          </div>
           <RecentMatches matches={matches || []} currentUserId={user.id} currentUserColor="white" />
-        </div>
+        </section>
+
       </div>
-    </div>
+    </main>
   )
 }
