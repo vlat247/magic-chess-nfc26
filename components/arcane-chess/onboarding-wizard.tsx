@@ -198,6 +198,7 @@ export function OnboardingWizard() {
   // Track if user has completed onboarding before
   useEffect(() => {
     if (localLoading) return
+    if (!currentUser) return
 
     const isCompleted = 
       localStorage.getItem('arcane_chess_onboarding_completed_guest') === 'true' ||
@@ -317,6 +318,9 @@ export function OnboardingWizard() {
 
   // Don't render anything if the eager local auth state is still loading
   if (localLoading) return null
+
+  // Don't render the wizard at all if the user is not logged in / registered
+  if (!currentUser) return null
 
   // Determine current wizard styling colors based on theme
   const getThemeColors = (theme: 'purple' | 'cyan' | 'gold') => {
