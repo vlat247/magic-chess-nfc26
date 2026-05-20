@@ -181,8 +181,7 @@ export function OnboardingWizard() {
   }, [])
 
   const currentUser = authUser || localUser
-  const isLoadingState = authLoading && localLoading
-  
+
   // Onboarding visible states
   const [isOpen, setIsOpen] = useState(false)
   const [stepIndex, setStepIndex] = useState(0)
@@ -198,9 +197,12 @@ export function OnboardingWizard() {
 
   // Track if user has completed onboarding before
   useEffect(() => {
-    if (isLoadingState || !currentUser) return
+    if (localLoading) return
 
-    const isCompleted = localStorage.getItem(`arcane_chess_onboarding_completed_${currentUser.id}`) === 'true'
+    const isCompleted = 
+      localStorage.getItem('arcane_chess_onboarding_completed_guest') === 'true' ||
+      (currentUser && localStorage.getItem(`arcane_chess_onboarding_completed_${currentUser.id}`) === 'true')
+
     if (!isCompleted) {
       // Delay slightly for dramatic introduction (0.2 seconds)
       const timer = setTimeout(() => {
@@ -209,7 +211,7 @@ export function OnboardingWizard() {
       }, 200)
       return () => clearTimeout(timer)
     }
-  }, [currentUser, isLoadingState])
+  }, [currentUser, localLoading])
 
   // Typing Effect Logic
   useEffect(() => {
@@ -256,6 +258,7 @@ export function OnboardingWizard() {
     if (currentUser) {
       localStorage.setItem(`arcane_chess_onboarding_completed_${currentUser.id}`, 'true')
     }
+    localStorage.setItem('arcane_chess_onboarding_completed_guest', 'true')
     setIsOpen(false)
   }
 
@@ -312,8 +315,8 @@ export function OnboardingWizard() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [isOpen, isTyping, stepIndex])
 
-  // Don't render anything if auth state is loading or user is not logged in
-  if (isLoadingState || !currentUser) return null
+  // Don't render anything if the eager local auth state is still loading
+  if (localLoading) return null
 
   // Determine current wizard styling colors based on theme
   const getThemeColors = (theme: 'purple' | 'cyan' | 'gold') => {
