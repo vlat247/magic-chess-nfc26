@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useAuth } from '@/hooks/use-auth'
 import { AuthModal } from '@/components/auth/auth-modal'
 import { logout } from '@/actions/auth'
+import { createClient } from '@/lib/supabase/client'
 import { Trophy, Swords, User, LogOut, ChevronDown, LayoutGrid, Store } from 'lucide-react'
 
 
@@ -12,6 +13,13 @@ export function Header() {
   const { user, profile, isLoading } = useAuth()
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const [authModalOpen, setAuthModalOpen] = useState(false)
+
+  const handleLogout = async () => {
+    setDropdownOpen(false)
+    const supabase = createClient()
+    await supabase.auth.signOut()
+    await logout()
+  }
 
   const rating = profile?.rating ?? 1200
   const username = profile?.username ?? 'Mage'
@@ -146,16 +154,13 @@ export function Header() {
 
                           <div className="border-t border-[#4A5568]" style={{ margin: '4px 0' }} />
 
-                          <form action={logout}>
-                            <button
-                              type="submit"
-                              onClick={() => setDropdownOpen(false)}
-                              className="w-full flex items-center gap-2 px-3 py-2 font-sans text-[10px] text-left select-none cursor-pointer text-[#8D99AE] hover:text-[#EF4444] transition-colors duration-200 group"
-                            >
-                              <LogOut className="h-3.5 w-3.5 text-[#8D99AE] group-hover:text-[#EF4444] transition-colors duration-200" />
-                              Sign out
-                            </button>
-                          </form>
+                          <button
+                            onClick={handleLogout}
+                            className="w-full flex items-center gap-2 px-3 py-2 font-sans text-[10px] text-left select-none cursor-pointer text-[#8D99AE] hover:text-[#EF4444] transition-colors duration-200 group"
+                          >
+                            <LogOut className="h-3.5 w-3.5 text-[#8D99AE] group-hover:text-[#EF4444] transition-colors duration-200" />
+                            Sign out
+                          </button>
                         </div>
                       </>
                     )}

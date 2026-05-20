@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Flag, Share2, Home } from 'lucide-react'
+import { Flag, Share2, Home, Sparkles } from 'lucide-react'
 
 import { Header } from '@/components/arcane-chess/header'
 import { MagicParticles } from '@/components/arcane-chess/magic-particles'
@@ -13,6 +13,7 @@ import { RoomWaitingScreen } from '@/components/multiplayer/room-waiting-screen'
 import { DisconnectOverlay, ResignConfirm } from '@/components/multiplayer/disconnect-overlay'
 import { InviteModal } from '@/components/multiplayer/invite-modal'
 import { AuthModal } from '@/components/auth/auth-modal'
+import { GameAnalysisDashboard } from '@/components/arcane-chess/game-analysis-dashboard'
 
 import { useMultiplayerRoom } from '@/hooks/use-multiplayer-room'
 import { useMultiplayerStore } from '@/store/multiplayer-store'
@@ -91,6 +92,7 @@ export default function MultiplayerRoomPage() {
   const username = profile?.username ?? `Mage#${user?.id?.slice(0, 4) ?? '????'}`
 
   const [authModalOpen, setAuthModalOpen] = useState(false)
+  const [isAnalyzing, setIsAnalyzing] = useState(false)
 
   // Multiplayer store state
   const gamePhase    = useMultiplayerStore((s) => s.gamePhase)
@@ -164,6 +166,13 @@ export default function MultiplayerRoomPage() {
 
     init()
   }, [authLoading, user?.id, roomId]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Reset analysis view if the game is no longer finished
+  useEffect(() => {
+    if (gamePhase !== 'finished') {
+      setIsAnalyzing(false)
+    }
+  }, [gamePhase])
 
   const handleClaimVictory = useCallback(() => {
     useMultiplayerStore.setState({ gamePhase: 'finished', winner: playerColor ?? 'white' })
@@ -244,73 +253,91 @@ export default function MultiplayerRoomPage() {
 
         {/* Active / finished game */}
         {(gamePhase === 'active' || gamePhase === 'finished') && (
-          <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-start justify-center">
+          isAnalyzing ? (
+            <GameAnalysisDashboard 
+              history={pgnHistory}
+              onClose={() => setIsAnalyzing(false)}
+            />
+          ) : (
+            <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 items-start justify-center">
 
-            {/* Board */}
-            <div className="lg:col-span-7 flex justify-center w-full relative">
-              <MultiplayerGameBoard onMove={makeMultiplayerMove} isMyTurn={isMyTurn} />
+              {/* Board */}
+              <div className="lg:col-span-7 flex justify-center w-full relative">
+                <MultiplayerGameBoard onMove={makeMultiplayerMove} isMyTurn={isMyTurn} />
 
-              {opponentStatus === 'offline' && gamePhase === 'active' && disconnectCountdown !== null && (
-                <DisconnectOverlay countdown={disconnectCountdown} onClaimVictory={handleClaimVictory} />
-              )}
-
-              {showResign && (
-                <ResignConfirm
-                  onConfirm={() => { resignGame(); setShowResign(false) }}
-                  onCancel={() => setShowResign(false)}
-                />
-              )}
-            </div>
-
-            {/* Sidebar */}
-            <div className="lg:col-span-5 flex flex-col gap-5 w-full max-w-[480px] mx-auto lg:max-w-none">
-              <OpponentPanel />
-
-              {gamePhase === 'finished' && (
-                <div
-                  className="px-4 py-5 border-2 border-neon-gold/60 bg-neon-gold/5 text-center flex flex-col gap-2"
-                  style={{ boxShadow: '0 0 30px oklch(0.8 0.18 85 / 0.3)' }}
-                >
-                  <p className="font-mono text-xs tracking-widest text-neon-gold text-glow-gold">
-                    {isCheckmate ? 'CHECKMATE!' : isStalemate ? 'STALEMATE' : isDraw ? 'DRAW' : 'GAME OVER'}
-                  </p>
-                  <p className="font-mono text-[9px] tracking-widest text-muted-foreground">
-                    {winner === playerColor ? '⚔ VICTORY — YOU WIN!' : winner === 'draw' ? '🤝 THE BATTLE ENDS IN PEACE' : '💀 DEFEAT — BETTER LUCK NEXT TIME'}
-                  </p>
-                </div>
-              )}
-
-              <MultiplayerMoveHistory />
-
-              <div className="flex flex-col gap-2">
-                {gamePhase === 'active' && (
-                  <>
-                    <button
-                      onClick={() => setShowInvite(true)}
-                      className="flex items-center justify-center gap-2 py-3 border-2 border-[oklch(0.25_0.06_280)] text-muted-foreground font-mono text-xs tracking-wider hover:border-neon-purple/50 hover:text-neon-purple transition-all"
-                      id="share-room-btn"
-                    >
-                      <Share2 className="h-4 w-4" /> INVITE LINK
-                    </button>
-                    <button
-                      onClick={() => setShowResign(true)}
-                      className="flex items-center justify-center gap-2 py-3 border-2 border-destructive/50 text-destructive/70 font-mono text-xs tracking-wider hover:bg-destructive/10 hover:border-destructive transition-all"
-                      id="resign-btn"
-                    >
-                      <Flag className="h-4 w-4" /> RESIGN
-                    </button>
-                  </>
+                {opponentStatus === 'offline' && gamePhase === 'active' && disconnectCountdown !== null && (
+                  <DisconnectOverlay countdown={disconnectCountdown} onClaimVictory={handleClaimVictory} />
                 )}
-                <button
-                  onClick={leaveRoom}
-                  className="flex items-center justify-center gap-2 py-3 border-2 border-neon-purple/50 text-neon-purple font-mono text-xs tracking-wider hover:bg-neon-purple/10 transition-all"
-                  id="leave-room-btn"
-                >
-                  <Home className="h-4 w-4" /> LEAVE BATTLEFIELD
-                </button>
+
+                {showResign && (
+                  <ResignConfirm
+                    onConfirm={() => { resignGame(); setShowResign(false) }}
+                    onCancel={() => setShowResign(false)}
+                  />
+                )}
+              </div>
+
+              {/* Sidebar */}
+              <div className="lg:col-span-5 flex flex-col gap-5 w-full max-w-[480px] mx-auto lg:max-w-none">
+                <OpponentPanel />
+
+                {gamePhase === 'finished' && (
+                  <div
+                    className="px-4 py-5 border-2 border-neon-gold/60 bg-neon-gold/5 text-center flex flex-col gap-2"
+                    style={{ boxShadow: '0 0 30px oklch(0.8 0.18 85 / 0.3)' }}
+                  >
+                    <p className="font-mono text-xs tracking-widest text-neon-gold text-glow-gold">
+                      {isCheckmate ? 'CHECKMATE!' : isStalemate ? 'STALEMATE' : isDraw ? 'DRAW' : 'GAME OVER'}
+                    </p>
+                    <p className="font-mono text-[9px] tracking-widest text-muted-foreground mb-2">
+                      {winner === playerColor ? '⚔ VICTORY — YOU WIN!' : winner === 'draw' ? '🤝 THE BATTLE ENDS IN PEACE' : '💀 DEFEAT — BETTER LUCK NEXT TIME'}
+                    </p>
+                    <button
+                      onClick={() => setIsAnalyzing(true)}
+                      className="mt-3 px-4 py-2 mx-auto flex items-center justify-center gap-2 border-2 border-neon-cyan text-neon-cyan hover:bg-neon-cyan/15 text-[10px] font-mono tracking-widest transition-all duration-200 hover:scale-[1.03] active:scale-[0.98] glow-cyan hover:text-white cursor-pointer select-none bg-black/50"
+                      style={{
+                        boxShadow: "0 0 10px oklch(0.7 0.2 195 / 0.3)",
+                        width: 'fit-content'
+                      }}
+                    >
+                      <Sparkles size={12} className="text-neon-cyan animate-pulse" />
+                      AI COACH ANALYSIS
+                    </button>
+                  </div>
+                )}
+
+                <MultiplayerMoveHistory />
+
+                <div className="flex flex-col gap-2">
+                  {gamePhase === 'active' && (
+                    <>
+                      <button
+                        onClick={() => setShowInvite(true)}
+                        className="flex items-center justify-center gap-2 py-3 border-2 border-[oklch(0.25_0.06_280)] text-muted-foreground font-mono text-xs tracking-wider hover:border-neon-purple/50 hover:text-neon-purple transition-all"
+                        id="share-room-btn"
+                      >
+                        <Share2 className="h-4 w-4" /> INVITE LINK
+                      </button>
+                      <button
+                        onClick={() => setShowResign(true)}
+                        className="flex items-center justify-center gap-2 py-3 border-2 border-destructive/50 text-destructive/70 font-mono text-xs tracking-wider hover:bg-destructive/10 hover:border-destructive transition-all"
+                        id="resign-btn"
+                      >
+                        <Flag className="h-4 w-4" /> RESIGN
+                      </button>
+                    </>
+                  )}
+                  <button
+                    onClick={leaveRoom}
+                    className="flex items-center justify-center gap-2 py-3 border-2 border-neon-purple/50 text-neon-purple font-mono text-xs tracking-wider hover:bg-neon-purple/10 transition-all"
+                    id="leave-room-btn"
+                  >
+                    <Home className="h-4 w-4" /> LEAVE BATTLEFIELD
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
+          )
         )}
       </div>
 

@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '@/hooks/use-auth'
+import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { Sparkles, BookOpen, ChevronRight, X, Volume2, VolumeX } from 'lucide-react'
 
@@ -109,78 +110,8 @@ const playRetroSound = (type: 'blip' | 'click' | 'chime', volume: number = 0.01)
 }
 
 export function OnboardingWizard() {
-  const { user: authUser, isLoading: authLoading } = useAuth()
-  
-  // Eager local state derived synchronously from cookies and localStorage to bypass any slow Supabase initialization
-  const [localUser, setLocalUser] = useState<any | null>(null)
-  const [localLoading, setLocalLoading] = useState(true)
-
-  useEffect(() => {
-    try {
-      const url = process.env.NEXT_PUBLIC_SUPABASE_URL
-      if (url) {
-        const projectId = url.split('//')[1]?.split('.')[0]
-        if (projectId) {
-          const storageKey = `sb-${projectId}-auth-token`
-          
-          let parsed: any = null
-          
-          // 1. Try cookie parsing first (highly likely for server action logins)
-          if (typeof window !== 'undefined' && document.cookie) {
-            const cookiesMap: { [key: string]: string } = {}
-            document.cookie.split(';').forEach(c => {
-              const parts = c.trim().split('=')
-              if (parts.length >= 2) {
-                cookiesMap[parts[0]] = parts.slice(1).join('=')
-              }
-            })
-            
-            let fullCookieVal = cookiesMap[storageKey] || ''
-            if (!fullCookieVal) {
-              let chunkIdx = 0
-              while (cookiesMap[`${storageKey}.${chunkIdx}`] !== undefined) {
-                fullCookieVal += cookiesMap[`${storageKey}.${chunkIdx}`]
-                chunkIdx++
-              }
-            }
-            
-            if (fullCookieVal) {
-              const decodedVal = decodeURIComponent(fullCookieVal)
-              if (decodedVal.startsWith('base64-')) {
-                const base64Str = decodedVal.substring(7)
-                const jsonStr = atob(base64Str)
-                parsed = JSON.parse(jsonStr)
-              } else {
-                try {
-                  parsed = JSON.parse(decodedVal)
-                } catch {
-                  // ignore
-                }
-              }
-            }
-          }
-          
-          // 2. Fall back to localStorage if cookie parsed nothing
-          if (!parsed) {
-            const localData = localStorage.getItem(storageKey)
-            if (localData) {
-              parsed = JSON.parse(localData)
-            }
-          }
-          
-          if (parsed && parsed.user) {
-            setLocalUser(parsed.user)
-          }
-        }
-      }
-    } catch (e) {
-      console.debug('Failed eager local user parse', e)
-    } finally {
-      setLocalLoading(false)
-    }
-  }, [])
-
-  const currentUser = authUser || localUser
+  const { user: currentUser, isLoading: authLoading } = useAuth()
+  const pathname = usePathname()
 
   // Onboarding visible states
   const [isOpen, setIsOpen] = useState(false)
@@ -197,8 +128,9 @@ export function OnboardingWizard() {
 
   // Track if user has completed onboarding before
   useEffect(() => {
-    if (localLoading) return
+    if (authLoading) return
     if (!currentUser) return
+    if (pathname !== '/profile') return
 
     const isCompleted = 
       localStorage.getItem('arcane_chess_onboarding_completed_guest') === 'true' ||
@@ -212,7 +144,7 @@ export function OnboardingWizard() {
       }, 200)
       return () => clearTimeout(timer)
     }
-  }, [currentUser, localLoading])
+  }, [currentUser, authLoading, pathname])
 
   // Typing Effect Logic
   useEffect(() => {
@@ -316,11 +248,14 @@ export function OnboardingWizard() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [isOpen, isTyping, stepIndex])
 
-  // Don't render anything if the eager local auth state is still loading
-  if (localLoading) return null
+  // Don't render anything while auth is loading
+  if (authLoading) return null
 
   // Don't render the wizard at all if the user is not logged in / registered
   if (!currentUser) return null
+
+  // Don't render the wizard unless we are in the lobby
+  if (pathname !== '/profile') return null
 
   // Determine current wizard styling colors based on theme
   const getThemeColors = (theme: 'purple' | 'cyan' | 'gold') => {
