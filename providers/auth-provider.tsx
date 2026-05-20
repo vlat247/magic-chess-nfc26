@@ -52,6 +52,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   useEffect(() => {
+    // Eager synchronous session hydration from localStorage to bypass any network/Supabase delay
+    try {
+      const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+      if (url) {
+        const projectId = url.split('//')[1]?.split('.')[0]
+        if (projectId) {
+          const storageKey = `sb-${projectId}-auth-token`
+          const localData = localStorage.getItem(storageKey)
+          if (localData) {
+            const parsed = JSON.parse(localData)
+            if (parsed && parsed.user) {
+              setSession(parsed)
+              setUser(parsed.user)
+              if (parsed.user.user_metadata?.profile) {
+                setProfile(parsed.user.user_metadata.profile)
+              }
+              setIsLoading(false)
+              fetchProfile(parsed.user.id)
+            }
+          }
+        }
+      }
+    } catch (e) {
+      console.debug('[AuthProvider] Eager hydration skipped:', e)
+    }
+
     const getInitialSession = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession()
@@ -71,6 +97,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, currentSession) => {
+        // If we have an eager session and onAuthStateChange fires with INITIAL_SESSION and null,
+        // ignore it to prevent wiping out our eager session and causing a 20-second delay.
+        if (event === 'INITIAL_SESSION' && !currentSession) {
+          const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+          const projectId = url?.split('//')[1]?.split('.')[0]
+          const storageKey = `sb-${projectId}-auth-token`
+          if (typeof window !== 'undefined' && localStorage.getItem(storageKey)) {
+            // Eager token exists, ignore this initial null event
+            return
+          }
+        }
+
         setSession(currentSession)
         setUser(currentSession?.user ?? null)
         

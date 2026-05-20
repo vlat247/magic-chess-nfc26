@@ -109,7 +109,37 @@ const playRetroSound = (type: 'blip' | 'click' | 'chime', volume: number = 0.01)
 }
 
 export function OnboardingWizard() {
-  const { user, isLoading } = useAuth()
+  const { user: authUser, isLoading: authLoading } = useAuth()
+  
+  // Eager local state derived synchronously from localStorage to bypass any slow Supabase initialization
+  const [localUser, setLocalUser] = useState<any | null>(null)
+  const [localLoading, setLocalLoading] = useState(true)
+
+  useEffect(() => {
+    try {
+      const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+      if (url) {
+        const projectId = url.split('//')[1]?.split('.')[0]
+        if (projectId) {
+          const storageKey = `sb-${projectId}-auth-token`
+          const localData = localStorage.getItem(storageKey)
+          if (localData) {
+            const parsed = JSON.parse(localData)
+            if (parsed && parsed.user) {
+              setLocalUser(parsed.user)
+            }
+          }
+        }
+      }
+    } catch (e) {
+      console.debug('Failed eager local user parse', e)
+    } finally {
+      setLocalLoading(false)
+    }
+  }, [])
+
+  const currentUser = authUser || localUser
+  const isLoadingState = authLoading && localLoading
   
   // Onboarding visible states
   const [isOpen, setIsOpen] = useState(false)
@@ -126,9 +156,9 @@ export function OnboardingWizard() {
 
   // Track if user has completed onboarding before
   useEffect(() => {
-    if (isLoading || !user) return
+    if (isLoadingState || !currentUser) return
 
-    const isCompleted = localStorage.getItem(`arcane_chess_onboarding_completed_${user.id}`) === 'true'
+    const isCompleted = localStorage.getItem(`arcane_chess_onboarding_completed_${currentUser.id}`) === 'true'
     if (!isCompleted) {
       // Delay slightly for dramatic introduction (0.2 seconds)
       const timer = setTimeout(() => {
@@ -137,7 +167,7 @@ export function OnboardingWizard() {
       }, 200)
       return () => clearTimeout(timer)
     }
-  }, [user, isLoading])
+  }, [currentUser, isLoadingState])
 
   // Typing Effect Logic
   useEffect(() => {
@@ -181,8 +211,8 @@ export function OnboardingWizard() {
   // Skip / Finish onboarding
   const handleComplete = () => {
     if (soundEnabled) playRetroSound('chime', 0.03)
-    if (user) {
-      localStorage.setItem(`arcane_chess_onboarding_completed_${user.id}`, 'true')
+    if (currentUser) {
+      localStorage.setItem(`arcane_chess_onboarding_completed_${currentUser.id}`, 'true')
     }
     setIsOpen(false)
   }
@@ -241,7 +271,7 @@ export function OnboardingWizard() {
   }, [isOpen, isTyping, stepIndex])
 
   // Don't render anything if auth state is loading or user is not logged in
-  if (isLoading || !user) return null
+  if (isLoadingState || !currentUser) return null
 
   // Determine current wizard styling colors based on theme
   const getThemeColors = (theme: 'purple' | 'cyan' | 'gold') => {
