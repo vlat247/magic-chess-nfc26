@@ -52,25 +52,67 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   useEffect(() => {
-    // Eager synchronous session hydration from localStorage to bypass any network/Supabase delay
+    // Eager synchronous session hydration from cookies and localStorage to bypass any network/Supabase delay
     try {
       const url = process.env.NEXT_PUBLIC_SUPABASE_URL
       if (url) {
         const projectId = url.split('//')[1]?.split('.')[0]
         if (projectId) {
           const storageKey = `sb-${projectId}-auth-token`
-          const localData = localStorage.getItem(storageKey)
-          if (localData) {
-            const parsed = JSON.parse(localData)
-            if (parsed && parsed.user) {
-              setSession(parsed)
-              setUser(parsed.user)
-              if (parsed.user.user_metadata?.profile) {
-                setProfile(parsed.user.user_metadata.profile)
+          
+          let parsed: any = null
+          
+          // 1. Try cookie parsing first (highly likely for server action logins)
+          if (typeof window !== 'undefined' && document.cookie) {
+            const cookiesMap: { [key: string]: string } = {}
+            document.cookie.split(';').forEach(c => {
+              const parts = c.trim().split('=')
+              if (parts.length >= 2) {
+                cookiesMap[parts[0]] = parts.slice(1).join('=')
               }
-              setIsLoading(false)
-              fetchProfile(parsed.user.id)
+            })
+            
+            let fullCookieVal = cookiesMap[storageKey] || ''
+            if (!fullCookieVal) {
+              let chunkIdx = 0
+              while (cookiesMap[`${storageKey}.${chunkIdx}`] !== undefined) {
+                fullCookieVal += cookiesMap[`${storageKey}.${chunkIdx}`]
+                chunkIdx++
+              }
             }
+            
+            if (fullCookieVal) {
+              const decodedVal = decodeURIComponent(fullCookieVal)
+              if (decodedVal.startsWith('base64-')) {
+                const base64Str = decodedVal.substring(7)
+                const jsonStr = atob(base64Str)
+                parsed = JSON.parse(jsonStr)
+              } else {
+                try {
+                  parsed = JSON.parse(decodedVal)
+                } catch {
+                  // ignore
+                }
+              }
+            }
+          }
+          
+          // 2. Fall back to localStorage if cookie parsed nothing
+          if (!parsed) {
+            const localData = localStorage.getItem(storageKey)
+            if (localData) {
+              parsed = JSON.parse(localData)
+            }
+          }
+          
+          if (parsed && parsed.user) {
+            setSession(parsed)
+            setUser(parsed.user)
+            if (parsed.user.user_metadata?.profile) {
+              setProfile(parsed.user.user_metadata.profile)
+            }
+            setIsLoading(false)
+            fetchProfile(parsed.user.id)
           }
         }
       }
@@ -103,9 +145,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const url = process.env.NEXT_PUBLIC_SUPABASE_URL
           const projectId = url?.split('//')[1]?.split('.')[0]
           const storageKey = `sb-${projectId}-auth-token`
-          if (typeof window !== 'undefined' && localStorage.getItem(storageKey)) {
-            // Eager token exists, ignore this initial null event
-            return
+          if (typeof window !== 'undefined') {
+            let hasCookieToken = false
+            if (document.cookie) {
+              hasCookieToken = document.cookie.includes(storageKey)
+            }
+            const hasLocalStorageToken = !!localStorage.getItem(storageKey)
+            
+            if (hasCookieToken || hasLocalStorageToken) {
+              // Eager token exists, ignore this initial null event
+              return
+            }
           }
         }
 

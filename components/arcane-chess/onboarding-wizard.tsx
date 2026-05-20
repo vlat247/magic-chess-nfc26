@@ -111,7 +111,7 @@ const playRetroSound = (type: 'blip' | 'click' | 'chime', volume: number = 0.01)
 export function OnboardingWizard() {
   const { user: authUser, isLoading: authLoading } = useAuth()
   
-  // Eager local state derived synchronously from localStorage to bypass any slow Supabase initialization
+  // Eager local state derived synchronously from cookies and localStorage to bypass any slow Supabase initialization
   const [localUser, setLocalUser] = useState<any | null>(null)
   const [localLoading, setLocalLoading] = useState(true)
 
@@ -122,12 +122,54 @@ export function OnboardingWizard() {
         const projectId = url.split('//')[1]?.split('.')[0]
         if (projectId) {
           const storageKey = `sb-${projectId}-auth-token`
-          const localData = localStorage.getItem(storageKey)
-          if (localData) {
-            const parsed = JSON.parse(localData)
-            if (parsed && parsed.user) {
-              setLocalUser(parsed.user)
+          
+          let parsed: any = null
+          
+          // 1. Try cookie parsing first (highly likely for server action logins)
+          if (typeof window !== 'undefined' && document.cookie) {
+            const cookiesMap: { [key: string]: string } = {}
+            document.cookie.split(';').forEach(c => {
+              const parts = c.trim().split('=')
+              if (parts.length >= 2) {
+                cookiesMap[parts[0]] = parts.slice(1).join('=')
+              }
+            })
+            
+            let fullCookieVal = cookiesMap[storageKey] || ''
+            if (!fullCookieVal) {
+              let chunkIdx = 0
+              while (cookiesMap[`${storageKey}.${chunkIdx}`] !== undefined) {
+                fullCookieVal += cookiesMap[`${storageKey}.${chunkIdx}`]
+                chunkIdx++
+              }
             }
+            
+            if (fullCookieVal) {
+              const decodedVal = decodeURIComponent(fullCookieVal)
+              if (decodedVal.startsWith('base64-')) {
+                const base64Str = decodedVal.substring(7)
+                const jsonStr = atob(base64Str)
+                parsed = JSON.parse(jsonStr)
+              } else {
+                try {
+                  parsed = JSON.parse(decodedVal)
+                } catch {
+                  // ignore
+                }
+              }
+            }
+          }
+          
+          // 2. Fall back to localStorage if cookie parsed nothing
+          if (!parsed) {
+            const localData = localStorage.getItem(storageKey)
+            if (localData) {
+              parsed = JSON.parse(localData)
+            }
+          }
+          
+          if (parsed && parsed.user) {
+            setLocalUser(parsed.user)
           }
         }
       }
