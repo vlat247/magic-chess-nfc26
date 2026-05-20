@@ -20,11 +20,17 @@ const AuthContext = createContext<AuthContextType>({
   refreshProfile: async () => {},
 })
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null)
-  const [session, setSession] = useState<Session | null>(null)
-  const [profile, setProfile] = useState<any | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+export function AuthProvider({ 
+  children, 
+  initialSession = null 
+}: { 
+  children: React.ReactNode
+  initialSession?: Session | null
+}) {
+  const [user, setUser] = useState<User | null>(initialSession?.user ?? null)
+  const [session, setSession] = useState<Session | null>(initialSession)
+  const [profile, setProfile] = useState<any | null>(initialSession?.user?.user_metadata?.profile ?? null)
+  const [isLoading, setIsLoading] = useState(!initialSession)
   const supabase = createClient()
 
   const fetchProfile = async (userId: string) => {
@@ -135,13 +141,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     }
 
-    getInitialSession()
+    if (initialSession) {
+      fetchProfile(initialSession.user.id)
+      setIsLoading(false)
+    } else {
+      getInitialSession()
+    }
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, currentSession) => {
         // If we have an eager session and onAuthStateChange fires with INITIAL_SESSION and null,
         // ignore it to prevent wiping out our eager session and causing a 20-second delay.
         if (event === 'INITIAL_SESSION' && !currentSession) {
+          if (initialSession) {
+            // Eager server session exists, ignore this initial null event
+            return
+          }
           const url = process.env.NEXT_PUBLIC_SUPABASE_URL
           const projectId = url?.split('//')[1]?.split('.')[0]
           const storageKey = `sb-${projectId}-auth-token`
