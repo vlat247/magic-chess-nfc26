@@ -3,7 +3,6 @@ import { Press_Start_2P, Geist, Jacquard_24 } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { AuthProvider } from '@/providers/auth-provider'
 import { OnboardingWizard } from '@/components/arcane-chess/onboarding-wizard'
-import { createClient } from '@/lib/supabase/server'
 import './globals.css'
 
 const pressStart = Press_Start_2P({ 
@@ -46,18 +45,15 @@ export const metadata: Metadata = {
   },
 }
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const supabase = await createClient()
-  const { data: { session } } = await supabase.auth.getSession()
-
   return (
     <html lang="en" className={`${pressStart.variable} ${geist.variable} ${jacquard.variable} bg-background`}>
       <body className="font-sans antialiased bg-background text-foreground">
-        <AuthProvider initialSession={session}>
+        <AuthProvider>
           {children}
           <OnboardingWizard />
         </AuthProvider>
@@ -66,4 +62,3 @@ export default async function RootLayout({
     </html>
   )
 }
-

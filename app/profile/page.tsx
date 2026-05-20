@@ -30,29 +30,19 @@ export default async function ProfilePage() {
     redirect('/')
   }
 
-  const { data: profile } = await supabase
-    .from('users')
-    .select('*')
-    .eq('id', user.id)
-    .single()
+  // Run all DB queries in parallel — cuts fetch time from sequential sum to max-of-one
+  const [
+    { data: profile },
+    { data: achievements },
+    { data: matches },
+    { data: subscription },
+  ] = await Promise.all([
+    supabase.from('users').select('*').eq('id', user.id).single(),
+    supabase.from('achievements').select('*').eq('user_id', user.id),
+    supabase.from('matches').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).limit(10),
+    supabase.from('subscriptions').select('*').eq('user_id', user.id).single(),
+  ])
 
-  const { data: achievements } = await supabase
-    .from('achievements')
-    .select('*')
-    .eq('user_id', user.id)
-
-  const { data: matches } = await supabase
-    .from('matches')
-    .select('*')
-    .eq('user_id', user.id)
-    .order('created_at', { ascending: false })
-    .limit(10)
-
-  const { data: subscription } = await supabase
-    .from('subscriptions')
-    .select('*')
-    .eq('user_id', user.id)
-    .single()
 
   const rating = profile?.rating ?? 1200
   const gamesPlayed = profile?.games_played ?? 0

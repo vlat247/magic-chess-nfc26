@@ -110,41 +110,93 @@ const playRetroSound = (type: 'blip' | 'click' | 'chime', volume: number = 0.01)
 }
 
 export function OnboardingWizard() {
-  const { user: currentUser, isLoading: authLoading } = useAuth()
+  const { user: authUser } = useAuth()
   const pathname = usePathname()
+
+  // Synchronously parse auth token from cookies/localStorage on first render.
+  // Using lazy useState initializer — runs once, synchronously, no useEffect needed.
+  // This means localUser is available on the very first render with zero async delay.
+  const [localUser] = useState<any | null>(() => {
+    if (typeof window === 'undefined') return null
+    try {
+      const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+      if (!url) return null
+      const projectId = url.split('//')[1]?.split('.')[0]
+      if (!projectId) return null
+      const storageKey = `sb-${projectId}-auth-token`
+
+      let parsed: any = null
+
+      // 1. Try cookies first
+      if (document.cookie) {
+        const cookiesMap: { [key: string]: string } = {}
+        document.cookie.split(';').forEach(c => {
+          const parts = c.trim().split('=')
+          if (parts.length >= 2) cookiesMap[parts[0]] = parts.slice(1).join('=')
+        })
+        let fullCookieVal = cookiesMap[storageKey] || ''
+        if (!fullCookieVal) {
+          let i = 0
+          while (cookiesMap[`${storageKey}.${i}`] !== undefined) {
+            fullCookieVal += cookiesMap[`${storageKey}.${i}`]
+            i++
+          }
+        }
+        if (fullCookieVal) {
+          const decoded = decodeURIComponent(fullCookieVal)
+          if (decoded.startsWith('base64-')) {
+            parsed = JSON.parse(atob(decoded.substring(7)))
+          } else {
+            try { parsed = JSON.parse(decoded) } catch { /* ignore */ }
+          }
+        }
+      }
+
+      // 2. Fallback to localStorage
+      if (!parsed) {
+        const raw = localStorage.getItem(storageKey)
+        if (raw) parsed = JSON.parse(raw)
+      }
+
+      return parsed?.user ?? null
+    } catch {
+      return null
+    }
+  })
+
+  // currentUser is available immediately from localUser, and later confirmed by authUser
+  const currentUser = authUser || localUser
 
   // Onboarding visible states
   const [isOpen, setIsOpen] = useState(false)
   const [stepIndex, setStepIndex] = useState(0)
-  
+
   // Audio preferences
   const [soundEnabled, setSoundEnabled] = useState(false)
-  
+
   // Text typing states
   const [typedText, setTypedText] = useState('')
   const [isTyping, setIsTyping] = useState(false)
   const typingTimerRef = useRef<NodeJS.Timeout | null>(null)
   const currentStep = DIALOGUE_STEPS[stepIndex]
 
-  // Track if user has completed onboarding before
+  // Trigger wizard on first visit to lobby — fires as soon as currentUser is known
   useEffect(() => {
-    if (authLoading) return
     if (!currentUser) return
     if (pathname !== '/profile') return
 
-    const isCompleted = 
+    const isCompleted =
       localStorage.getItem('arcane_chess_onboarding_completed_guest') === 'true' ||
-      (currentUser && localStorage.getItem(`arcane_chess_onboarding_completed_${currentUser.id}`) === 'true')
+      localStorage.getItem(`arcane_chess_onboarding_completed_${currentUser.id}`) === 'true'
 
     if (!isCompleted) {
-      // Delay slightly for dramatic introduction (0.2 seconds)
       const timer = setTimeout(() => {
         setIsOpen(true)
         setStepIndex(0)
       }, 200)
       return () => clearTimeout(timer)
     }
-  }, [currentUser, authLoading, pathname])
+  }, [currentUser, pathname])
 
   // Typing Effect Logic
   useEffect(() => {
@@ -247,9 +299,6 @@ export function OnboardingWizard() {
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [isOpen, isTyping, stepIndex])
-
-  // Don't render anything while auth is loading
-  if (authLoading) return null
 
   // Don't render the wizard at all if the user is not logged in / registered
   if (!currentUser) return null
