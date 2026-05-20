@@ -35,6 +35,7 @@ export class StockfishWorker {
   }
 
   public getBestMove(fen: string, depth: number) {
+    this.stopThinking()
     this.isThinking = true
     this.onMessageCallback?.({ isThinking: true })
     
@@ -44,6 +45,8 @@ export class StockfishWorker {
   }
 
   public evaluatePosition(fen: string, depth = 10) {
+    if (this.isThinking) return // Do not interrupt active AI move calculations
+    this.sendCommand("stop")
     this.sendCommand(`position fen ${fen}`)
     this.sendCommand(`go depth ${depth}`)
   }
@@ -84,11 +87,19 @@ export class StockfishWorker {
     // Extract Best Move (e.g. "bestmove e2e4 ponder e7e5")
     const bestMoveMatch = line.match(/bestmove ([a-h][1-8][a-h][1-8][qrbn]?)/)
     if (bestMoveMatch) {
+      const wasThinking = this.isThinking
       this.isThinking = false
-      this.onMessageCallback?.({ 
-        bestMove: bestMoveMatch[1],
-        isThinking: false
-      })
+      
+      if (wasThinking) {
+        this.onMessageCallback?.({ 
+          bestMove: bestMoveMatch[1],
+          isThinking: false
+        })
+      } else {
+        this.onMessageCallback?.({
+          isThinking: false
+        })
+      }
     }
   }
 

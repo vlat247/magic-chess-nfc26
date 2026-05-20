@@ -43,7 +43,7 @@ export async function signUpWithEmail(formData: { email: string; username: strin
     redirect('/profile')
   }
 
-  return { emailVerificationRequired: true }
+  return { emailVerificationRequired: false }
 }
 
 export async function loginAsGuest() {

@@ -1,10 +1,25 @@
 "use client"
 
-import Link from "next/link"
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@/hooks/use-auth"
+import { AuthModal } from "@/components/auth/auth-modal"
 import { Button } from "@/components/ui/button"
 import { MagicParticles } from "./magic-particles"
 
 export function CTASection() {
+  const router = useRouter()
+  const { user } = useAuth()
+  const [authModalOpen, setAuthModalOpen] = useState(false)
+
+  const handlePlayNow = () => {
+    if (user) {
+      router.push("/play")
+    } else {
+      setAuthModalOpen(true)
+    }
+  }
+
   return (
     <section className="relative py-24 md:py-32 px-4 overflow-hidden">
       {/* Dark dramatic background */}
@@ -58,13 +73,12 @@ export function CTASection() {
         
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link href="/play" passHref>
-            <Button 
-              className="px-10 py-6 bg-neon-purple hover:bg-neon-purple/80 text-primary-foreground text-xs md:text-sm pixel-border glow-purple transition-all hover:scale-105 cursor-pointer"
-            >
-              Play Now
-            </Button>
-          </Link>
+          <Button 
+            onClick={handlePlayNow}
+            className="px-10 py-6 bg-neon-purple hover:bg-neon-purple/80 text-primary-foreground text-xs md:text-sm pixel-border glow-purple transition-all hover:scale-105 cursor-pointer"
+          >
+            Play Now
+          </Button>
           <Button 
             variant="outline"
             className="px-10 py-6 bg-transparent border-2 border-neon-cyan text-neon-cyan hover:bg-neon-cyan/10 text-xs md:text-sm transition-all hover:scale-105 hover:text-white"
@@ -89,6 +103,8 @@ export function CTASection() {
           </div>
         </div>
       </div>
+      
+      <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />
     </section>
   )
 }

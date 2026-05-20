@@ -18,6 +18,9 @@ function toggleFenTurn(fen: string): string {
   if (parts.length > 1) {
     parts[1] = parts[1] === "w" ? "b" : "w"
   }
+  if (parts.length > 3) {
+    parts[3] = "-" // Clear en passant square target when switching turn via a spell
+  }
   return parts.join(" ")
 }
 

@@ -56,23 +56,32 @@ export function Header() {
           {/* Navigation — absolutely centered */}
           <nav className="hidden md:flex items-center gap-6 absolute left-1/2 -translate-x-1/2">
             {[
-              { href: '/profile',     label: 'Lobby',    Icon: LayoutGrid },
-              { href: '/play',        label: 'Play',     Icon: Swords     },
-              { href: '/leaderboard', label: 'Rankings', Icon: Trophy     },
-              { href: '/premium',     label: 'Shop',     Icon: Store      },
-            ].map(({ href, label, Icon }) => (
-              <Link
-                key={href}
-                href={href}
-                className="flex items-center gap-1.5 font-sans text-[10px] tracking-widest uppercase transition-colors duration-200 cursor-pointer"
-                style={{ color: '#8D99AE' }}
-                onMouseEnter={e => (e.currentTarget.style.color = '#FACC15')}
-                onMouseLeave={e => (e.currentTarget.style.color = '#8D99AE')}
-              >
-                <Icon className="h-3 w-3" />
-                {label}
-              </Link>
-            ))}
+              { href: '/profile',     label: 'Lobby',    Icon: LayoutGrid, protected: true },
+              { href: '/play',        label: 'Play',     Icon: Swords,     protected: true },
+              { href: '/leaderboard', label: 'Rankings', Icon: Trophy,     protected: false },
+              { href: '/premium',     label: 'Shop',     Icon: Store,      protected: false },
+            ].map(({ href, label, Icon, protected: isProtected }) => {
+              const handleClick = (e: React.MouseEvent) => {
+                if (isProtected && !user) {
+                  e.preventDefault()
+                  setAuthModalOpen(true)
+                }
+              }
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  onClick={handleClick}
+                  className="flex items-center gap-1.5 font-sans text-[10px] tracking-widest uppercase transition-colors duration-200 cursor-pointer"
+                  style={{ color: '#8D99AE' }}
+                  onMouseEnter={e => (e.currentTarget.style.color = '#FACC15')}
+                  onMouseLeave={e => (e.currentTarget.style.color = '#8D99AE')}
+                >
+                  <Icon className="h-3 w-3" />
+                  {label}
+                </Link>
+              )
+            })}
           </nav>
 
           {/* Auth */}

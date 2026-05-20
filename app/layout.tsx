@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Press_Start_2P, Geist, Jacquard_24 } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { AuthProvider } from '@/providers/auth-provider'
+import { OnboardingWizard } from '@/components/arcane-chess/onboarding-wizard'
 import './globals.css'
 
 const pressStart = Press_Start_2P({ 
@@ -54,6 +55,7 @@ export default function RootLayout({
       <body className="font-sans antialiased bg-background text-foreground">
         <AuthProvider>
           {children}
+          <OnboardingWizard />
         </AuthProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>

@@ -172,3 +172,35 @@ DROP TRIGGER IF EXISTS on_match_completed ON public.matches;
 CREATE TRIGGER on_match_completed
   AFTER INSERT ON public.matches
   FOR EACH ROW EXECUTE PROCEDURE public.process_match_stats();
+
+-- 5. Secure Row-Level Security Policies for Users Table
+-- Drop the original insecure policy that allowed any user to update their own fields
+DROP POLICY IF EXISTS "Users can update their own profile" ON public.users;
+
+-- Create a secure policy that only allows updates to cosmetic and public profile fields,
+-- preventing clients from tampering with ratings, ELO, stats, XP, level, or premium skin inventories.
+CREATE POLICY "Users can only update cosmetic and profile fields" 
+  ON public.users 
+  FOR UPDATE 
+  USING (auth.uid() = id)
+  WITH CHECK (
+    auth.uid() = id AND
+    EXISTS (
+      SELECT 1 FROM public.users
+      WHERE users.id = id
+        AND users.rating = rating
+        AND users.xp = xp
+        AND users.level = level
+        AND users.wins = wins
+        AND users.losses = losses
+        AND users.draws = draws
+        AND users.games_played = games_played
+        AND users.win_streak = win_streak
+        AND users.max_win_streak = max_win_streak
+        AND users.is_guest = is_guest
+        AND users.unlocked_board_skins = unlocked_board_skins
+        AND users.unlocked_piece_skins = unlocked_piece_skins
+        AND users.unlocked_spell_effects = unlocked_spell_effects
+    )
+  );
+

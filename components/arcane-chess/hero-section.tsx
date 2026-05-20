@@ -1,10 +1,25 @@
 "use client"
 
-import Link from "next/link"
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@/hooks/use-auth"
+import { AuthModal } from "@/components/auth/auth-modal"
 import { Button } from "@/components/ui/button"
 import { MagicParticles } from "./magic-particles"
 
 export function HeroSection() {
+  const router = useRouter()
+  const { user } = useAuth()
+  const [authModalOpen, setAuthModalOpen] = useState(false)
+
+  const handlePlayNow = () => {
+    if (user) {
+      router.push("/play")
+    } else {
+      setAuthModalOpen(true)
+    }
+  }
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Animated background */}
@@ -55,7 +70,7 @@ export function HeroSection() {
           <img src="/ice.png" alt="" className="absolute -top-[20%] -right-[50%] w-1/3 h-1/3 object-contain opacity-40 brightness-50 animate-float -rotate-45" style={{ animationDelay: '2.2s' }} />
         </div>
       </div>
-
+ 
       {/* Vignette effect from sides */}
       <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(10,5,25,0.95)_100%)] shadow-[inset_0_0_150px_rgba(0,0,0,1)] z-0" />
       
@@ -92,13 +107,12 @@ export function HeroSection() {
         
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link href="/play" passHref>
-            <Button 
-              className="px-8 py-6 bg-neon-purple hover:bg-neon-purple/80 text-primary-foreground text-xs md:text-sm pixel-border glow-purple transition-all hover:scale-105 cursor-pointer"
-            >
-              Play Now
-            </Button>
-          </Link>
+          <Button 
+            onClick={handlePlayNow}
+            className="px-8 py-6 bg-neon-purple hover:bg-neon-purple/80 text-primary-foreground text-xs md:text-sm pixel-border glow-purple transition-all hover:scale-105 cursor-pointer"
+          >
+            Play Now
+          </Button>
           <Button 
             variant="outline"
             className="px-8 py-6 bg-transparent border-2 border-neon-cyan text-neon-cyan hover:bg-neon-cyan/10 text-xs md:text-sm transition-all hover:scale-105 hover:text-white"
@@ -107,6 +121,8 @@ export function HeroSection() {
           </Button>
         </div>
       </div>
+      
+      <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />
       
       {/* Bottom fade */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />

@@ -31,6 +31,7 @@ export async function POST(req: NextRequest) {
       const turnLabel = m.moveIndex % 2 === 0 ? "White" : "Black";
       const moveNum = Math.floor(m.moveIndex / 2) + 1;
       return {
+        moveIndex: m.moveIndex,
         moveNumber: moveNum,
         turn: turnLabel,
         playedMove: m.san,
@@ -62,13 +63,13 @@ You MUST return a JSON object exactly conforming to this structure:
   "summary": "Provide a 3-4 sentence, highly engaging yet simple and easy-to-digest narrative summarizing the match in your Archmage persona. You MUST explicitly and clearly detail who dominated the battlefield (who commanded the upper hand, held center control, and dictated the flow of the match). Briefly mention the accuracy percentages, the key opening clash, and the decisive mistake that sealed the outcome.",
   "comments": [
     {
-      "moveIndex": number,
+      "moveIndex": number, // MUST match the exact integer 'moveIndex' value of the analyzed move provided in the prompt details. Do NOT make up new indices or use array indexes.
       "comment": "A 1-2 sentence tactical analysis. Be specific! Explain *why* the played move failed (e.g. hung a piece, exposed the Monarch to check, lost control of the Ley Lines) and *why* the suggested best move was superior. Avoid generic remarks like 'this move was bad'."
     }
   ]
 }
 
-Ensure your response is valid, parsable JSON. Do not include markdown code block syntax (like \`\`\`json) in the raw response, only output the JSON object itself.`
+Ensure your response is valid, parsable JSON. Do not include markdown code block syntax (like \`\`\`json) in the raw response, only output the JSON object itself.\``
 
     const userPrompt = `
 Analyze this completed chess match:
@@ -124,10 +125,9 @@ Provide the structured JSON analysis now.`
     const commentsMap: Record<number, string> = {}
     if (Array.isArray(coachAnalysis.comments)) {
       coachAnalysis.comments.forEach((c: any, index: number) => {
-        // If the model returned the move index relative to criticalMoves or as index,
-        // we can try to resolve it.
         const matchedMove = criticalMoves[index];
-        const moveIdx = typeof c.moveIndex === "number" && c.moveIndex >= 0 && moves[c.moveIndex]
+        const isActualCriticalMoveIdx = criticalMoves.some((m: any) => m.moveIndex === c.moveIndex);
+        const moveIdx = isActualCriticalMoveIdx
           ? c.moveIndex 
           : (matchedMove ? matchedMove.moveIndex : null);
         

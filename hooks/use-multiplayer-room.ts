@@ -57,6 +57,7 @@ export function useMultiplayerRoom(
 ): UseMultiplayerRoomReturn {
   const router = useRouter()
   const roomChannelRef = useRef<RoomChannel | null>(null)
+  const [roomChannel, setRoomChannel] = useState<RoomChannel | null>(null)
   const disconnectTimerRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const [disconnectCountdown, setDisconnectCountdown] = useState<number | null>(null)
 
@@ -91,7 +92,7 @@ export function useMultiplayerRoom(
 
   // Timer hook
   const { handleTimerSync } = useRoomTimer({
-    roomChannel: roomChannelRef.current,
+    roomChannel,
     active: gamePhase === 'active',
   })
 
@@ -100,6 +101,7 @@ export function useMultiplayerRoom(
     if (roomChannelRef.current) {
       roomChannelRef.current.unsubscribe()
       roomChannelRef.current = null
+      setRoomChannel(null)
     }
     if (disconnectTimerRef.current) {
       clearInterval(disconnectTimerRef.current)
@@ -239,6 +241,7 @@ export function useMultiplayerRoom(
       // Track our own presence
       channel.trackPresence(myUserId, myUsername)
       roomChannelRef.current = channel
+      setRoomChannel(channel)
       setConnectionStatus('connected')
 
       // Announce join
@@ -525,6 +528,6 @@ export function useMultiplayerRoom(
     leaveRoom,
     isMyTurn,
     disconnectCountdown,
-    roomChannel: roomChannelRef.current,
+    roomChannel: roomChannel,
   }
 }

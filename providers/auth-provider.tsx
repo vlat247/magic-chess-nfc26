@@ -58,7 +58,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setSession(session)
         setUser(session?.user ?? null)
         if (session?.user) {
-          await fetchProfile(session.user.id)
+          fetchProfile(session.user.id)
         }
       } catch (error) {
         console.error('Error getting session:', error)
@@ -75,7 +75,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(currentSession?.user ?? null)
         
         if (currentSession?.user) {
-          await fetchProfile(currentSession.user.id)
+          fetchProfile(currentSession.user.id)
         } else {
           setProfile(null)
         }
