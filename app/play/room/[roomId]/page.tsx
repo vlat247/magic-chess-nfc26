@@ -12,6 +12,7 @@ import { OpponentPanel } from '@/components/multiplayer/opponent-panel'
 import { RoomWaitingScreen } from '@/components/multiplayer/room-waiting-screen'
 import { DisconnectOverlay, ResignConfirm } from '@/components/multiplayer/disconnect-overlay'
 import { InviteModal } from '@/components/multiplayer/invite-modal'
+import { AuthModal } from '@/components/auth/auth-modal'
 
 import { useMultiplayerRoom } from '@/hooks/use-multiplayer-room'
 import { useMultiplayerStore } from '@/store/multiplayer-store'
@@ -88,6 +89,8 @@ export default function MultiplayerRoomPage() {
   const roomId = typeof params.roomId === 'string' ? params.roomId : ''
   const { user, profile, isLoading: authLoading } = useAuth()
   const username = profile?.username ?? `Mage#${user?.id?.slice(0, 4) ?? '????'}`
+
+  const [authModalOpen, setAuthModalOpen] = useState(false)
 
   // Multiplayer store state
   const gamePhase    = useMultiplayerStore((s) => s.gamePhase)
@@ -176,10 +179,22 @@ export default function MultiplayerRoomPage() {
     return (
       <main className="relative min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-[oklch(0.08_0.02_280)] to-[oklch(0.15_0.06_300)]">
         <MagicParticles />
-        <div className="relative z-10 text-center flex flex-col gap-4">
+        <div className="relative z-10 text-center flex flex-col gap-6 items-center">
           <p className="font-mono text-xs tracking-widest text-neon-gold">SIGN IN TO JOIN THIS BATTLE</p>
-          <Link href="/profile" className="font-mono text-[9px] tracking-widest text-neon-purple hover:text-neon-cyan transition-colors">← RETURN TO LOBBY</Link>
+          
+          <button
+            onClick={() => setAuthModalOpen(true)}
+            className="font-sans text-[10px] tracking-widest px-6 py-2.5 transition-all duration-200 active:scale-95 cursor-pointer bg-[#1E2530] hover:bg-[#2D3748] border border-[#4A5568] hover:border-[#FACC15] text-[#8D99AE] hover:text-[#FACC15] hover:shadow-[0_0_10px_rgba(250,204,21,0.2)] shadow-[2px_2px_0px_#000000] rounded-none uppercase font-bold"
+          >
+            SIGN IN
+          </button>
+
+          <Link href="/" className="font-mono text-[9px] tracking-widest text-neon-purple hover:text-neon-cyan transition-colors">
+            ← RETURN TO LOBBY
+          </Link>
         </div>
+
+        <AuthModal isOpen={authModalOpen} onClose={() => setAuthModalOpen(false)} />
       </main>
     )
   }
@@ -196,7 +211,7 @@ export default function MultiplayerRoomPage() {
         <MagicParticles />
         <div className="relative z-10 flex flex-col items-center gap-6 text-center max-w-sm px-4">
           <p className="font-mono text-xs tracking-widest text-destructive">{initError}</p>
-          <Link href="/profile" className="font-mono text-[9px] tracking-widest text-neon-purple hover:text-neon-cyan transition-colors">← RETURN TO LOBBY</Link>
+          <Link href={user ? "/profile" : "/"} className="font-mono text-[9px] tracking-widest text-neon-purple hover:text-neon-cyan transition-colors">← RETURN TO LOBBY</Link>
         </div>
       </main>
     )
