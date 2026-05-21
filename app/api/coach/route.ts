@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server"
 
 // API configuration
 const PROXY_API_URL = "https://ai.hackclub.com/proxy/v1/chat/completions"
-const DEFAULT_API_KEY = "sk-hc-v1-f45d3b3caa4c467bbc3cb07442b57563caa6151ea38e4593874f5b1a045af8c8"
 
 export async function POST(req: NextRequest) {
   try {
@@ -85,7 +84,11 @@ ${JSON.stringify(moveDescriptions, null, 2)}
 
 Provide the structured JSON analysis now.`
 
-    const apiKey = process.env.AI_COACH_API_KEY || DEFAULT_API_KEY
+    const apiKey = process.env.AI_COACH_API_KEY
+
+    if (!apiKey) {
+      throw new Error("AI_COACH_API_KEY environment variable is not configured.")
+    }
 
     // Call the Hack Club proxy API
     const response = await fetch(PROXY_API_URL, {

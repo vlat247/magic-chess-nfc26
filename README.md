@@ -113,7 +113,7 @@
     ```env
     NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
     NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-    AI_COACH_API_KEY=your_hackclub_api_key  # (По умолчанию используется встроенный ключ Hack Club)
+    AI_COACH_API_KEY=your_hackclub_api_key  # (Обязательно: API ключ Hack Club для работы ИИ-Тренера / Required for AI Coach)
     ```
 
 4.  **Разверните базу данных:**
